@@ -27,6 +27,8 @@ require('packer').startup(function()
   -- accurate syntax highlighting for typescript
   use 'nvim-treesitter/nvim-treesitter'
 
+  -- github copilot
+  use "github/copilot.vim"
 end)
 
 -- Set space as the leader key
