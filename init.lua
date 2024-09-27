@@ -18,8 +18,15 @@ require('packer').startup(function()
   -- code formatting (e.g., using biome)
   use 'mhartington/formatter.nvim'
 
-  -- colorizer for tailwind
+  -- colorizer for HTML/CSS (but not Tailwind)
   use 'norcalli/nvim-colorizer.lua'
+
+  -- colors for Tailwind
+  use 'themaxmarchuk/tailwindcss-colors.nvim'
+
+  -- accurate syntax highlighting for typescript
+  use 'nvim-treesitter/nvim-treesitter'
+
 end)
 
 -- Set space as the leader key
@@ -63,6 +70,10 @@ vim.api.nvim_create_autocmd("FileType", {
     vim.bo.expandtab = true   -- Use spaces instead of tabs
   end,
 })
+
+
+-- TypeScript organize inputs
+vim.api.nvim_set_keymap('n', '<leader>oi', '<cmd>lua vim.lsp.buf.code_action({ context = { only = { "source.organizeImports" } }, apply = true })<CR>', { noremap = true, silent = true })
 
 -- Import the LSP config plugin
 local lspconfig = require('lspconfig')
@@ -165,11 +176,15 @@ require('formatter').setup({
 lspconfig.tailwindcss.setup{
   on_attach = function(client, bufnr)
     -- Any additional LSP settings or keybindings you want for Tailwind
+    require("tailwindcss-colors").buf_attach(bufnr)
   end,
   filetypes = { "html", "javascriptreact", "typescriptreact", "css" }, -- Add any other file types where you use Tailwind
 }
 
--- Enable colorizer for CSS, HTML, JavaScript, and more
+-- TailwindCSS colors
+require('tailwindcss-colors').setup()
+
+-- Enable colorizer for CSS, HTML, JavaScript, and more, but not Tailwind
 require('colorizer').setup({
   'css',
   'javascript',
@@ -186,4 +201,19 @@ require('colorizer').setup({
   css      = true;         -- Enable all CSS features: rgb_fn, hsl_fn, names, hex codes
   css_fn   = true;         -- Enable all CSS *functions*: rgb_fn, hsl_fn
 })
+
+-- Accurate syntax highlighting for typescript
+require'nvim-treesitter.configs'.setup {
+  -- Install parsers for various languages
+  ensure_installed = { "javascript", "typescript", "tsx", "json", "html", "css" }, -- Add more languages as needed
+
+  -- Enable Treesitter-based syntax highlighting
+  highlight = {
+    enable = true,              -- Enable Treesitter highlighting
+    additional_vim_regex_highlighting = false, -- Disable Vim's regex-based highlighting
+  },
+
+  -- You can enable more Treesitter features as needed (optional)
+  indent = { enable = true },   -- Enable Treesitter-based indentation (optional)
+}
 
