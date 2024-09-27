@@ -57,6 +57,8 @@ vim.api.nvim_set_keymap('n', '<leader>.', '<C-l>', opts)
 -- Key binding to use Telescope to search files
 -- Set up keybinding to always show hidden files
 vim.api.nvim_set_keymap('n', '<leader>p', ":lua require('telescope.builtin').find_files({ hidden = true })<CR>", { noremap = true, silent = true })
+-- Telscope search inside files with ripgrep (rg)
+vim.api.nvim_set_keymap('n', '<leader>fg', ':Telescope live_grep<CR>', { noremap = true, silent = true })
 
 -- LSP integration with Telescope for TypeScript
 vim.api.nvim_set_keymap('n', '<leader>fs', '<cmd>Telescope lsp_document_symbols<CR>', { noremap = true, silent = true })
@@ -65,6 +67,21 @@ vim.api.nvim_set_keymap('n', '<leader>fd', '<cmd>Telescope diagnostics<CR>', { n
 -- Space + fs: Search document symbols (like variables, functions, etc.).
 -- Space + fr: Find all references to a symbol.
 -- Space + fd: Search through diagnostics (errors, warnings).
+
+require('telescope').setup{
+  defaults = {
+    vimgrep_arguments = {
+      'rg',          -- Ripgrep binary
+      '--color=never',
+      '--no-heading',
+      '--with-filename',
+      '--line-number',
+      '--column',
+      '--smart-case'
+    },
+    -- Other default settings
+  }
+}
 
 -- Key bindind to reload init.lua file
 vim.api.nvim_set_keymap('n', '<leader>r', ':luafile ~/.config/nvim/init.lua<CR>', { noremap = true, silent = true })
@@ -237,4 +254,11 @@ require'nvim-treesitter.configs'.setup {
   -- You can enable more Treesitter features as needed (optional)
   indent = { enable = true },   -- Enable Treesitter-based indentation (optional)
 }
+
+-- Show Minimap for all files by default
+vim.api.nvim_create_autocmd("BufReadPost", {
+  callback = function()
+    vim.cmd("Minimap")
+  end,
+})
 
