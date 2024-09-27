@@ -37,6 +37,9 @@ local opts = { noremap = true, silent = true }
 -- Enable 24-bit RGB color in the terminal
 vim.opt.termguicolors = true
 
+-- Show line numbers by default
+vim.opt.number = true
+
 -- Key mappings using leader key
 vim.api.nvim_set_keymap('n', '<leader>w', ':w<CR>', opts)
 vim.api.nvim_set_keymap('n', '<leader>h', 'gT', opts)
