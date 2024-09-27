@@ -44,7 +44,7 @@ vim.opt.number = true
 vim.api.nvim_set_keymap('n', '<leader>w', ':w<CR>', opts)
 vim.api.nvim_set_keymap('n', '<leader>h', 'gT', opts)
 vim.api.nvim_set_keymap('n', '<leader>l', 'gt', opts)
-vim.api.nvim_set_keymap('n', '<leader>n', ':tabnew<CR>:e ', opts)
+vim.api.nvim_set_keymap('n', '<leader>n', ':tabnew<CR><leader>p', { silent = true })
 vim.api.nvim_set_keymap('n', '<leader>q', ':q<CR>', opts)
 vim.api.nvim_set_keymap('n', '<leader>e', ':e ', opts)
 
@@ -60,6 +60,7 @@ vim.api.nvim_set_keymap('n', '<leader>.', '<C-l>', opts)
 -- Key binding to use Telescope to search files
 -- Set up keybinding to always show hidden files
 vim.api.nvim_set_keymap('n', '<leader>p', ":lua require('telescope.builtin').find_files({ hidden = true })<CR>", opts)
+
 -- Telscope search inside files with ripgrep (rg)
 vim.api.nvim_set_keymap('n', '<leader>fg', ':Telescope live_grep<CR>', opts)
 
