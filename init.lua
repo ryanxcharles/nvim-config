@@ -92,6 +92,27 @@ lspconfig.ts_ls.setup {
   on_attach = function(client, bufnr)
     -- Optionally, disable tsserver's formatting in favor of something like prettier
     client.server_capabilities.documentFormattingProvider = false
+
+    -- Add keybindings for common LSP features
+    local opts = { noremap = true, silent = true }
+
+    -- Go to definition
+    vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
+
+    -- Hover documentation
+    vim.api.nvim_buf_set_keymap(bufnr, 'n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
+
+    -- Find references
+    vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
+
+    -- Go to implementation
+    vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
+
+    -- Rename symbol
+    vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
+
+    -- Code actions
+    vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
   end,
 
   -- Ensure the server uses the right config for each project directory
@@ -102,6 +123,9 @@ lspconfig.ts_ls.setup {
 
   -- Command to launch the TypeScript Language Server via the global `pnpm` path
   cmd = { "typescript-language-server", "--stdio" },
+
+  -- Add capabilities for autocompletion
+  capabilities = require('cmp_nvim_lsp').default_capabilities(),
 }
 
 -- Set up nvim-cmp (auto-complete)
@@ -126,17 +150,6 @@ cmp.setup({
     { name = 'luasnip' },     -- Snippet completions
   }
 })
-
--- Ensure TypeScript server is integrated with nvim-cmp
-local capabilities = require('cmp_nvim_lsp').default_capabilities()
-
-require('lspconfig').ts_ls.setup {
-  capabilities = capabilities,
-  on_attach = function(client, bufnr)
-    -- Optional: Disable tsserver formatting if using another formatter like Prettier
-    client.server_capabilities.documentFormattingProvider = false
-  end,
-}
 
 require('formatter').setup({
   filetype = {
