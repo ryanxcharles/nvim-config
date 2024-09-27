@@ -58,6 +58,14 @@ vim.api.nvim_set_keymap('n', '<leader>.', '<C-l>', opts)
 -- Set up keybinding to always show hidden files
 vim.api.nvim_set_keymap('n', '<leader>p', ":lua require('telescope.builtin').find_files({ hidden = true })<CR>", { noremap = true, silent = true })
 
+-- LSP integration with Telescope for TypeScript
+vim.api.nvim_set_keymap('n', '<leader>fs', '<cmd>Telescope lsp_document_symbols<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>fr', '<cmd>Telescope lsp_references<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>fd', '<cmd>Telescope diagnostics<CR>', { noremap = true, silent = true })
+-- Space + fs: Search document symbols (like variables, functions, etc.).
+-- Space + fr: Find all references to a symbol.
+-- Space + fd: Search through diagnostics (errors, warnings).
+
 -- Key bindind to reload init.lua file
 vim.api.nvim_set_keymap('n', '<leader>r', ':luafile ~/.config/nvim/init.lua<CR>', { noremap = true, silent = true })
 
