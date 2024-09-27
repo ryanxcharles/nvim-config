@@ -59,14 +59,14 @@ vim.api.nvim_set_keymap('n', '<leader>.', '<C-l>', opts)
 
 -- Key binding to use Telescope to search files
 -- Set up keybinding to always show hidden files
-vim.api.nvim_set_keymap('n', '<leader>p', ":lua require('telescope.builtin').find_files({ hidden = true })<CR>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>p', ":lua require('telescope.builtin').find_files({ hidden = true })<CR>", opts)
 -- Telscope search inside files with ripgrep (rg)
-vim.api.nvim_set_keymap('n', '<leader>fg', ':Telescope live_grep<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>fg', ':Telescope live_grep<CR>', opts)
 
 -- LSP integration with Telescope for TypeScript
-vim.api.nvim_set_keymap('n', '<leader>fs', '<cmd>Telescope lsp_document_symbols<CR>', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<leader>fr', '<cmd>Telescope lsp_references<CR>', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<leader>fd', '<cmd>Telescope diagnostics<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>fs', '<cmd>Telescope lsp_document_symbols<CR>', opts)
+vim.api.nvim_set_keymap('n', '<leader>fr', '<cmd>Telescope lsp_references<CR>', opts)
+vim.api.nvim_set_keymap('n', '<leader>fd', '<cmd>Telescope diagnostics<CR>', opts)
 -- Space + fs: Search document symbols (like variables, functions, etc.).
 -- Space + fr: Find all references to a symbol.
 -- Space + fd: Search through diagnostics (errors, warnings).
@@ -87,7 +87,7 @@ require('telescope').setup{
 }
 
 -- Key bindind to reload init.lua file
-vim.api.nvim_set_keymap('n', '<leader>r', ':luafile ~/.config/nvim/init.lua<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>r', ':luafile ~/.config/nvim/init.lua<CR>', opts)
 
 -- two spaces for typescript/javascript/lua
 vim.api.nvim_create_autocmd("FileType", {
@@ -101,7 +101,7 @@ vim.api.nvim_create_autocmd("FileType", {
 
 
 -- TypeScript organize inputs
-vim.api.nvim_set_keymap('n', '<leader>oi', '<cmd>lua vim.lsp.buf.code_action({ context = { only = { "source.organizeImports" } }, apply = true })<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>oi', '<cmd>lua vim.lsp.buf.code_action({ context = { only = { "source.organizeImports" } }, apply = true })<CR>', opts)
 
 -- Import the LSP config plugin
 local lspconfig = require('lspconfig')
@@ -114,7 +114,7 @@ lspconfig.ts_ls.setup {
     client.server_capabilities.documentFormattingProvider = false
 
     -- Add keybindings for common LSP features
-    local opts = { noremap = true, silent = true }
+    local opts = opts
 
     -- Go to definition
     vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
