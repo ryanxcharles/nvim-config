@@ -28,7 +28,14 @@ require('packer').startup(function()
   use 'nvim-treesitter/nvim-treesitter'
 
   -- github copilot
-  use "github/copilot.vim"
+  use { 'github/copilot.vim' }
+  use {
+    "zbirenbaum/copilot-cmp",
+    after = { "copilot.vim" },
+    config = function()
+      require("copilot_cmp").setup()
+    end
+  }
 end)
 
 -- Set space as the leader key
@@ -267,4 +274,10 @@ vim.api.nvim_create_autocmd("BufReadPost", {
     vim.cmd("Minimap")
   end,
 })
+
+-- GitHub copilot
+-- Don't use tab, because we
+vim.g.copilot_no_tab_map = true
+-- Remap <C-J> to accept Copilot suggestions
+vim.api.nvim_set_keymap("i", "<C-.>", 'copilot#Accept("<CR>")', { silent = true, expr = true })
 
