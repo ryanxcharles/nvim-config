@@ -62,6 +62,12 @@ vim.api.nvim_set_keymap('n', ';h', ':wincmd h<CR>', opts)
 vim.api.nvim_set_keymap('n', ';l', ':wincmd l<CR>', opts)
 vim.api.nvim_set_keymap('n', ';k', ':wincmd k<CR>', opts)
 vim.api.nvim_set_keymap('n', ';j', ':wincmd j<CR>', opts)
+-- Move to window 1-5
+vim.api.nvim_set_keymap('n', ';1', ':1wincmd w<CR>', opts)
+vim.api.nvim_set_keymap('n', ';2', ':2wincmd w<CR>', opts)
+vim.api.nvim_set_keymap('n', ';3', ':3wincmd w<CR>', opts)
+vim.api.nvim_set_keymap('n', ';4', ':4wincmd w<CR>', opts)
+vim.api.nvim_set_keymap('n', ';5', ':5wincmd w<CR>', opts)
 
 -- Redraw screen
 vim.api.nvim_set_keymap('n', '<leader>.', '<C-l>', opts)
@@ -278,7 +284,7 @@ require('colorizer').setup({
   css_fn   = true;         -- Enable all CSS *functions*: rgb_fn, hsl_fn
 })
 
--- Accurate syntax highlighting for typescript
+-- Accurate syntax highlighting for TypeScript
 require'nvim-treesitter.configs'.setup {
   -- Install parsers for various languages
   ensure_installed = { "javascript", "typescript", "tsx", "json", "html", "css" }, -- Add more languages as needed
@@ -300,7 +306,7 @@ vim.api.nvim_create_autocmd("BufReadPost", {
   end,
 })
 
--- GitHub copilot
+-- GitHub Copilot
 -- Don't use tab, because we
 vim.g.copilot_no_tab_map = true
 -- Remap <C-J> to accept Copilot suggestions
