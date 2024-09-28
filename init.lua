@@ -36,6 +36,9 @@ require('packer').startup(function()
       require("copilot_cmp").setup()
     end
   }
+
+  -- rainbow delimiters
+  use 'hiphish/rainbow-delimiters.nvim'
 end)
 
 -- Set space as the leader key
@@ -319,3 +322,24 @@ vim.api.nvim_set_keymap("i", "<C-.>", 'copilot#Accept("<CR>")', { silent = true,
 vim.api.nvim_set_keymap('i', '<C-n>', 'copilot#Next()', { silent = true, expr = true })
 vim.api.nvim_set_keymap('i', '<C-p>', 'copilot#Previous()', { silent = true, expr = true })
 
+local rainbow_delimiters = require('rainbow-delimiters')
+
+vim.g.rainbow_delimiters = {
+    strategy = {
+        [''] = rainbow_delimiters.strategy['global'],
+        vim = rainbow_delimiters.strategy['local'],
+    },
+    query = {
+        [''] = 'rainbow-delimiters',
+        lua = 'rainbow-blocks',
+    },
+    highlight = {
+        'RainbowDelimiterRed',
+        'RainbowDelimiterYellow',
+        'RainbowDelimiterBlue',
+        'RainbowDelimiterOrange',
+        'RainbowDelimiterGreen',
+        'RainbowDelimiterViolet',
+        'RainbowDelimiterCyan',
+    },
+}
