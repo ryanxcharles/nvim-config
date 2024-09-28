@@ -158,6 +158,31 @@ lspconfig.ts_ls.setup {
   capabilities = require('cmp_nvim_lsp').default_capabilities(),
 }
 
+lspconfig.biome.setup {
+  on_attach = function(client, bufnr)
+    -- Enable diagnostic messages (linting)
+    vim.api.nvim_create_autocmd("BufWritePre", {
+      buffer = bufnr,
+      callback = function()
+        vim.lsp.buf.format({ bufnr = bufnr })
+      end
+    })
+  end,
+  cmd = { "biome", "lsp-proxy" },
+  filetypes = { "javascript", "javascriptreact", "json", "jsonc", "typescript", "typescript.tsx", "typescriptreact", "astro", "svelte", "vue", "css" },
+  root_dir = lspconfig.util.root_pattern('biome.json'),
+  settings = {
+    biome = {
+      diagnostics = {
+        enable = true, -- Enable linting diagnostics
+      },
+      format = {
+        enable = true, -- Enable auto-formatting if desired
+      }
+    }
+  },
+}
+
 -- Set up nvim-cmp (auto-complete)
 local cmp = require'cmp'
 
@@ -280,4 +305,7 @@ vim.api.nvim_create_autocmd("BufReadPost", {
 vim.g.copilot_no_tab_map = true
 -- Remap <C-J> to accept Copilot suggestions
 vim.api.nvim_set_keymap("i", "<C-.>", 'copilot#Accept("<CR>")', { silent = true, expr = true })
+-- Set custom keybindings for cycling through Copilot suggestions
+vim.api.nvim_set_keymap('i', '<C-n>', 'copilot#Next()', { silent = true, expr = true })
+vim.api.nvim_set_keymap('i', '<C-p>', 'copilot#Previous()', { silent = true, expr = true })
 
