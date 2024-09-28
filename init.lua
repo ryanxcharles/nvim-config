@@ -171,11 +171,6 @@ lspconfig.ts_ls.setup {
   capabilities = require('cmp_nvim_lsp').default_capabilities(),
 }
 
--- Make unused variables gray
--- vim.cmd [[
---   highlight! link LspDiagnosticsUnderlineUnused Comment
--- ]]
-
 lspconfig.biome.setup {
   on_attach = function(client, bufnr)
     -- Enable diagnostic messages (linting)
