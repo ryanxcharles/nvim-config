@@ -171,6 +171,11 @@ lspconfig.ts_ls.setup {
   capabilities = require('cmp_nvim_lsp').default_capabilities(),
 }
 
+-- Make unused variables gray
+-- vim.cmd [[
+--   highlight! link LspDiagnosticsUnderlineUnused Comment
+-- ]]
+
 lspconfig.biome.setup {
   on_attach = function(client, bufnr)
     -- Enable diagnostic messages (linting)
@@ -318,6 +323,7 @@ vim.api.nvim_create_autocmd("BufReadPost", {
 vim.g.copilot_no_tab_map = true
 -- Remap <C-.> to accept Copilot suggestions
 vim.api.nvim_set_keymap("i", "<C-.>", 'copilot#Accept("<CR>")', { silent = true, expr = true })
+vim.api.nvim_set_keymap("i", "<Tab>", 'copilot#Accept("<CR>")', { silent = true, expr = true })
 -- Set custom keybindings for cycling through Copilot suggestions
 vim.api.nvim_set_keymap('i', '<C-n>', 'copilot#Next()', { silent = true, expr = true })
 vim.api.nvim_set_keymap('i', '<C-p>', 'copilot#Previous()', { silent = true, expr = true })
