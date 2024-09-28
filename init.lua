@@ -62,12 +62,16 @@ vim.api.nvim_set_keymap('n', ';h', ':wincmd h<CR>', opts)
 vim.api.nvim_set_keymap('n', ';l', ':wincmd l<CR>', opts)
 vim.api.nvim_set_keymap('n', ';k', ':wincmd k<CR>', opts)
 vim.api.nvim_set_keymap('n', ';j', ':wincmd j<CR>', opts)
--- Move to window 1-5
+-- Move to window 1-9
 vim.api.nvim_set_keymap('n', ';1', ':1wincmd w<CR>', opts)
 vim.api.nvim_set_keymap('n', ';2', ':2wincmd w<CR>', opts)
 vim.api.nvim_set_keymap('n', ';3', ':3wincmd w<CR>', opts)
 vim.api.nvim_set_keymap('n', ';4', ':4wincmd w<CR>', opts)
 vim.api.nvim_set_keymap('n', ';5', ':5wincmd w<CR>', opts)
+vim.api.nvim_set_keymap('n', ';6', ':6wincmd w<CR>', opts)
+vim.api.nvim_set_keymap('n', ';7', ':7wincmd w<CR>', opts)
+vim.api.nvim_set_keymap('n', ';8', ':8wincmd w<CR>', opts)
+vim.api.nvim_set_keymap('n', ';9', ':9wincmd w<CR>', opts)
 
 -- Redraw screen
 vim.api.nvim_set_keymap('n', '<leader>.', '<C-l>', opts)
