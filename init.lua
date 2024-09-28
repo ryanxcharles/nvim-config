@@ -313,7 +313,7 @@ vim.api.nvim_create_autocmd("BufReadPost", {
 -- GitHub Copilot
 -- Don't use tab, because we
 vim.g.copilot_no_tab_map = true
--- Remap <C-J> to accept Copilot suggestions
+-- Remap <C-.> to accept Copilot suggestions
 vim.api.nvim_set_keymap("i", "<C-.>", 'copilot#Accept("<CR>")', { silent = true, expr = true })
 -- Set custom keybindings for cycling through Copilot suggestions
 vim.api.nvim_set_keymap('i', '<C-n>', 'copilot#Next()', { silent = true, expr = true })
