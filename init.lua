@@ -609,7 +609,7 @@ local tabline_bg =
 local tabline_sel_bg =
   vim.fn.synIDattr(vim.fn.synIDtrans(vim.fn.hlID("TabLineSel")), "bg")
 
--- Define custom highlight groups for diagnostics with transparent backgrounds
+-- Define custom highlight groups for diagnostics with specified backgrounds
 vim.api.nvim_set_hl(
   0,
   "TabLineDiagError",
@@ -652,17 +652,6 @@ vim.api.nvim_set_hl(
   "TabLineDiagHintSel",
   { fg = "#98be65", bg = tabline_sel_bg, bold = true }
 )
-
--- Define custom highlight groups for diagnostics in the tabline
--- vim.api.nvim_exec(
---   [[
---   highlight TabLineDiagError guifg=#ff6c6b guibg=NONE gui=bold
---   highlight TabLineDiagWarn guifg=#ECBE7B guibg=NONE gui=bold
---   highlight TabLineDiagInfo guifg=#51afef guibg=NONE gui=bold
---   highlight TabLineDiagHint guifg=#98be65 guibg=NONE gui=bold
--- ]],
---   false
--- )
 
 -- Custom tabline function to display all window names in each tab
 function MyTabline()
