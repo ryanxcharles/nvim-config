@@ -43,10 +43,8 @@ require("packer").startup(function()
   -- npm package completion
   use("David-Kunz/cmp-npm")
 
-  use({
-    "nvim-lualine/lualine.nvim",
-    requires = { "kyazdani42/nvim-web-devicons", opt = true }, -- Optional: File icons, but not required for diagnostics
-  })
+  -- status bar at the bottom - add diagnostics
+  use("nvim-lualine/lualine.nvim")
 end)
 
 -- Set space as the leader key
@@ -450,8 +448,10 @@ require("nvim-treesitter.configs").setup({
     "typescript",
     "tsx",
     "json",
+    "jsdoc",
     "html",
     "css",
+    "rust",
   }, -- Add more languages as needed
 
   -- Enable Treesitter-based syntax highlighting
@@ -641,12 +641,12 @@ function MyTabline()
       if diagnostic.warn > 0 then
         diagnostic_str = diagnostic_str .. " ⚠️ " .. diagnostic.warn
       end
-      -- if diagnostic.info > 0 then
-      --   diagnostic_str = diagnostic_str .. " ℹ️ " .. diagnostic.info
-      -- end
-      -- if diagnostic.hint > 0 then
-      --   diagnostic_str = diagnostic_str .. " 💡 " .. diagnostic.hint
-      -- end
+      if diagnostic.info > 0 then
+        diagnostic_str = diagnostic_str .. " ℹ️ " .. diagnostic.info
+      end
+      if diagnostic.hint > 0 then
+        diagnostic_str = diagnostic_str .. " 💡 " .. diagnostic.hint
+      end
 
       -- Append the buffer name and diagnostics to the tab string
       if not string.find(bufname, "-MINIMAP-") then -- Exclude Minimap buffers if present
@@ -676,3 +676,13 @@ end
 
 -- Set the custom tabline
 vim.o.tabline = "%!v:lua.MyTabline()"
+
+-- Function to refresh the tabline
+local function refresh_tabline()
+  vim.cmd("redrawtabline")
+end
+
+-- Set up an autocmd to refresh the tabline whenever diagnostics change
+vim.api.nvim_create_autocmd("DiagnosticChanged", {
+  callback = refresh_tabline,
+})
