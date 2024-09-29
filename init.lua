@@ -142,7 +142,7 @@ vim.api.nvim_set_keymap(
 -- Show all diagnostics on the current line in a floating window
 vim.api.nvim_set_keymap(
   "n",
-  "<leader>ld",
+  "<leader>d",
   "<cmd>lua vim.diagnostic.open_float(nil, { focusable = false })<CR>",
   opts
 )
