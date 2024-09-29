@@ -107,6 +107,22 @@ vim.api.nvim_exec(
   false
 )
 
+-- Telescope setup - use ripgrep for searching files
+require("telescope").setup({
+  defaults = {
+    vimgrep_arguments = {
+      "rg", -- Ripgrep binary
+      "--color=never",
+      "--no-heading",
+      "--with-filename",
+      "--line-number",
+      "--column",
+      "--smart-case",
+    },
+    -- Other default settings
+  },
+})
+
 -- Key binding to use Telescope to search files
 -- Set up keybinding to always show hidden files
 vim.api.nvim_set_keymap(
@@ -148,21 +164,6 @@ vim.api.nvim_set_keymap(
   "<cmd>lua vim.diagnostic.open_float(nil, { focusable = false })<CR>",
   opts
 )
-
-require("telescope").setup({
-  defaults = {
-    vimgrep_arguments = {
-      "rg", -- Ripgrep binary
-      "--color=never",
-      "--no-heading",
-      "--with-filename",
-      "--line-number",
-      "--column",
-      "--smart-case",
-    },
-    -- Other default settings
-  },
-})
 
 -- Key bindind to reload init.lua file
 vim.api.nvim_set_keymap(
