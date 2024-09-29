@@ -42,6 +42,11 @@ require("packer").startup(function()
 
   -- npm package completion
   use("David-Kunz/cmp-npm")
+
+  use({
+    "nvim-lualine/lualine.nvim",
+    requires = { "kyazdani42/nvim-web-devicons", opt = true }, -- Optional: File icons, but not required for diagnostics
+  })
 end)
 
 -- Set space as the leader key
@@ -532,5 +537,54 @@ vim.g.rainbow_delimiters = {
     "RainbowDelimiterLightBlue",
     "RainbowDelimiterLightGray",
   },
+}
+
+require('lualine').setup {
+  options = {
+    theme = 'gruvbox',  -- You can change this to your preferred color scheme
+    section_separators = {'▶️', '◀️'},  -- Use arrow emojis as section separators
+    component_separators = {'|', '|'},  -- Use simple vertical bars as component separators
+    disabled_filetypes = {}  -- Disable for specific filetypes if needed
+  },
+  sections = {
+    lualine_a = {'mode'},  -- Shows the current mode (e.g., Insert, Normal, etc.)
+    lualine_b = {'branch'},  -- Shows the current Git branch
+    lualine_c = {
+      {'filename'},  -- Shows the current file name
+      {
+        'diagnostics',
+        sources = {'nvim_lsp'},
+        sections = {'error', 'warn', 'info', 'hint'},
+        diagnostics_color = {
+          error = { fg = '#ff6c6b' },  -- Error color (red)
+          warn  = { fg = '#ECBE7B' },  -- Warning color (yellow)
+          info  = { fg = '#51afef' },  -- Info color (blue)
+          hint  = { fg = '#98be65' },  -- Hint color (green)
+        },
+        symbols = {
+          error = '🟥 ',  -- Red square for errors
+          warn  = '🟧 ',  -- Orange square for warnings
+          info  = '🟦 ',  -- Blue square for info
+          hint  = '💡 ',  -- Lightbulb for hints
+        },
+        colored = true,  -- Color the diagnostics
+        update_in_insert = false,  -- Update diagnostics in insert mode
+        always_visible = true,  -- Always show diagnostics, even if 0
+      }
+    },
+    lualine_x = {'encoding', 'fileformat', 'filetype'},  -- Shows encoding, file format, and type
+    lualine_y = {'progress'},  -- Shows file progress (percentage through file)
+    lualine_z = {'location'}   -- Shows line and column number
+  },
+  inactive_sections = {
+    lualine_a = {},
+    lualine_b = {},
+    lualine_c = {'filename'},
+    lualine_x = {'location'},
+    lualine_y = {},
+    lualine_z = {}
+  },
+  tabline = {},  -- Optional: You can also add a custom tabline here, if needed
+  extensions = {}
 }
 
