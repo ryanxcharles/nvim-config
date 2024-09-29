@@ -539,52 +539,114 @@ vim.g.rainbow_delimiters = {
   },
 }
 
-require('lualine').setup {
+require("lualine").setup({
   options = {
-    theme = 'gruvbox',  -- You can change this to your preferred color scheme
-    section_separators = {'▶️', '◀️'},  -- Use arrow emojis as section separators
-    component_separators = {'|', '|'},  -- Use simple vertical bars as component separators
-    disabled_filetypes = {}  -- Disable for specific filetypes if needed
+    -- theme = "auto", -- You can change this to your preferred color scheme
+    section_separators = { "▶️", "◀️" }, -- Use arrow emojis as section separators
+    component_separators = { "|", "|" }, -- Use simple vertical bars as component separators
+    disabled_filetypes = {}, -- Disable for specific filetypes if needed
   },
   sections = {
-    lualine_a = {'mode'},  -- Shows the current mode (e.g., Insert, Normal, etc.)
-    lualine_b = {'branch'},  -- Shows the current Git branch
+    lualine_a = { "mode" }, -- Shows the current mode (e.g., Insert, Normal, etc.)
+    lualine_b = {},
     lualine_c = {
-      {'filename'},  -- Shows the current file name
+      { "filename" }, -- Shows the current file name
       {
-        'diagnostics',
-        sources = {'nvim_lsp'},
-        sections = {'error', 'warn', 'info', 'hint'},
+        "diagnostics",
+        sources = { "nvim_lsp" },
+        sections = { "error", "warn", "info", "hint" },
         diagnostics_color = {
-          error = { fg = '#ff6c6b' },  -- Error color (red)
-          warn  = { fg = '#ECBE7B' },  -- Warning color (yellow)
-          info  = { fg = '#51afef' },  -- Info color (blue)
-          hint  = { fg = '#98be65' },  -- Hint color (green)
+          error = { fg = "#ff6c6b" }, -- Error color (red)
+          warn = { fg = "#ECBE7B" }, -- Warning color (yellow)
+          info = { fg = "#51afef" }, -- Info color (blue)
+          hint = { fg = "#98be65" }, -- Hint color (green)
         },
         symbols = {
-          error = '🟥 ',  -- Red square for errors
-          warn  = '🟧 ',  -- Orange square for warnings
-          info  = '🟦 ',  -- Blue square for info
-          hint  = '💡 ',  -- Lightbulb for hints
+          error = "🟥 ", -- Red square for errors
+          warn = "🟧 ", -- Orange square for warnings
+          info = "🟦 ", -- Blue square for info
+          hint = "💡 ", -- Lightbulb for hints
         },
-        colored = true,  -- Color the diagnostics
-        update_in_insert = false,  -- Update diagnostics in insert mode
-        always_visible = true,  -- Always show diagnostics, even if 0
-      }
+        colored = true, -- Color the diagnostics
+        update_in_insert = false, -- Update diagnostics in insert mode
+        always_visible = false, -- Always show diagnostics, even if 0
+      },
     },
-    lualine_x = {'encoding', 'fileformat', 'filetype'},  -- Shows encoding, file format, and type
-    lualine_y = {'progress'},  -- Shows file progress (percentage through file)
-    lualine_z = {'location'}   -- Shows line and column number
+    lualine_x = { "encoding", "fileformat", "filetype" }, -- Shows encoding, file format, and type
+    lualine_y = { "progress" }, -- Shows file progress (percentage through file)
+    lualine_z = { "location" }, -- Shows line and column number
   },
-  inactive_sections = {
-    lualine_a = {},
-    lualine_b = {},
-    lualine_c = {'filename'},
-    lualine_x = {'location'},
-    lualine_y = {},
-    lualine_z = {}
-  },
-  tabline = {},  -- Optional: You can also add a custom tabline here, if needed
-  extensions = {}
-}
+  inactive_sections = {},
+  tabline = {},
+  extensions = {},
+})
 
+-- Function to get diagnostic counts for a buffer
+local function get_diagnostics(bufnr)
+  local diagnostics = vim.diagnostic.get(bufnr)
+  local counts = { error = 0, warn = 0, info = 0, hint = 0 }
+
+  -- Count the diagnostics by severity
+  for _, diagnostic in ipairs(diagnostics) do
+    if diagnostic.severity == vim.diagnostic.severity.ERROR then
+      counts.error = counts.error + 1
+    elseif diagnostic.severity == vim.diagnostic.severity.WARN then
+      counts.warn = counts.warn + 1
+    elseif diagnostic.severity == vim.diagnostic.severity.INFO then
+      counts.info = counts.info + 1
+    elseif diagnostic.severity == vim.diagnostic.severity.HINT then
+      counts.hint = counts.hint + 1
+    end
+  end
+
+  return counts
+end
+
+-- Custom tabline function to display tabs (tab pages)
+function MyTabline()
+  local s = ""
+  local tabpages = vim.api.nvim_list_tabpages()
+  local current_tabpage = vim.api.nvim_get_current_tabpage()
+
+  -- Loop through each tab and add diagnostics for the active buffer in that tab
+  for _, tabpage in ipairs(tabpages) do
+    local bufnr =
+      vim.api.nvim_win_get_buf(vim.api.nvim_tabpage_get_win(tabpage))
+    local bufname = vim.fn.fnamemodify(vim.fn.bufname(bufnr), ":t")
+    local modified = vim.bo[bufnr].modified and " [+]" or ""
+    local diagnostic = get_diagnostics(bufnr)
+
+    -- Build the diagnostic string (only show non-zero counts)
+    local diagnostic_str = ""
+    if diagnostic.error > 0 then
+      diagnostic_str = diagnostic_str .. " 🟥" .. diagnostic.error
+    end
+    if diagnostic.warn > 0 then
+      diagnostic_str = diagnostic_str .. " 🟧" .. diagnostic.warn
+    end
+    if diagnostic.info > 0 then
+      diagnostic_str = diagnostic_str .. " 🟦" .. diagnostic.info
+    end
+    if diagnostic.hint > 0 then
+      diagnostic_str = diagnostic_str .. " 💡" .. diagnostic.hint
+    end
+
+    -- Highlight the current tab
+    if tabpage == current_tabpage then
+      s = s
+        .. " "
+        .. "%#TabLineSel#"
+        .. bufname
+        .. diagnostic_str
+        .. modified
+        .. " %#TabLine#"
+    else
+      s = s .. " " .. bufname .. diagnostic_str .. modified .. " "
+    end
+  end
+
+  return s
+end
+
+-- Set the custom tabline
+vim.o.tabline = "%!v:lua.MyTabline()"
