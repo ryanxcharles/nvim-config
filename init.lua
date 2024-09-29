@@ -603,16 +603,66 @@ local function get_diagnostics(bufnr)
   return counts
 end
 
--- Define custom highlight groups for diagnostics in the tabline
-vim.api.nvim_exec(
-  [[
-  highlight TabLineDiagError guifg=#ff6c6b gui=bold
-  highlight TabLineDiagWarn guifg=#ECBE7B gui=bold
-  highlight TabLineDiagInfo guifg=#51afef gui=bold
-  highlight TabLineDiagHint guifg=#98be65 gui=bold
-]],
-  false
+-- Get the background colors for TabLine and TabLineSel
+local tabline_bg =
+  vim.fn.synIDattr(vim.fn.synIDtrans(vim.fn.hlID("TabLine")), "bg")
+local tabline_sel_bg =
+  vim.fn.synIDattr(vim.fn.synIDtrans(vim.fn.hlID("TabLineSel")), "bg")
+
+-- Define custom highlight groups for diagnostics with transparent backgrounds
+vim.api.nvim_set_hl(
+  0,
+  "TabLineDiagError",
+  { fg = "#ff6c6b", bg = tabline_bg, bold = true }
 )
+vim.api.nvim_set_hl(
+  0,
+  "TabLineDiagWarn",
+  { fg = "#ECBE7B", bg = tabline_bg, bold = true }
+)
+vim.api.nvim_set_hl(
+  0,
+  "TabLineDiagInfo",
+  { fg = "#51afef", bg = tabline_bg, bold = true }
+)
+vim.api.nvim_set_hl(
+  0,
+  "TabLineDiagHint",
+  { fg = "#98be65", bg = tabline_bg, bold = true }
+)
+
+-- Define custom highlight groups for the selected tab
+vim.api.nvim_set_hl(
+  0,
+  "TabLineDiagErrorSel",
+  { fg = "#ff6c6b", bg = tabline_sel_bg, bold = true }
+)
+vim.api.nvim_set_hl(
+  0,
+  "TabLineDiagWarnSel",
+  { fg = "#ECBE7B", bg = tabline_sel_bg, bold = true }
+)
+vim.api.nvim_set_hl(
+  0,
+  "TabLineDiagInfoSel",
+  { fg = "#51afef", bg = tabline_sel_bg, bold = true }
+)
+vim.api.nvim_set_hl(
+  0,
+  "TabLineDiagHintSel",
+  { fg = "#98be65", bg = tabline_sel_bg, bold = true }
+)
+
+-- Define custom highlight groups for diagnostics in the tabline
+-- vim.api.nvim_exec(
+--   [[
+--   highlight TabLineDiagError guifg=#ff6c6b guibg=NONE gui=bold
+--   highlight TabLineDiagWarn guifg=#ECBE7B guibg=NONE gui=bold
+--   highlight TabLineDiagInfo guifg=#51afef guibg=NONE gui=bold
+--   highlight TabLineDiagHint guifg=#98be65 guibg=NONE gui=bold
+-- ]],
+--   false
+-- )
 
 -- Custom tabline function to display all window names in each tab
 function MyTabline()
@@ -658,28 +708,56 @@ function MyTabline()
       -- info = " ", -- Info icon
       -- hint = " ", -- Hint icon
       if diagnostic.error > 0 then
-        diagnostic_str = diagnostic_str
-          .. "%#TabLineDiagError#  "
-          .. diagnostic.error
-          .. tab_highlight_color
+        if tabpage == current_tabpage then
+          diagnostic_str = diagnostic_str
+            .. "%#TabLineDiagErrorSel#  "
+            .. diagnostic.error
+            .. tab_highlight_color
+        else
+          diagnostic_str = diagnostic_str
+            .. "%#TabLineDiagError#  "
+            .. diagnostic.error
+            .. tab_highlight_color
+        end
       end
       if diagnostic.warn > 0 then
-        diagnostic_str = diagnostic_str
-          .. "%#TabLineDiagWarn#  "
-          .. diagnostic.warn
-          .. tab_highlight_color
+        if tabpage == current_tabpage then
+          diagnostic_str = diagnostic_str
+            .. "%#TabLineDiagWarnSel#  "
+            .. diagnostic.warn
+            .. tab_highlight_color
+        else
+          diagnostic_str = diagnostic_str
+            .. "%#TabLineDiagWarn#  "
+            .. diagnostic.warn
+            .. tab_highlight_color
+        end
       end
       if diagnostic.info > 0 then
-        diagnostic_str = diagnostic_str
-          .. "%#TabLineDiagInfo#  "
-          .. diagnostic.info
-          .. tab_highlight_color
+        if tabpage == current_tabpage then
+          diagnostic_str = diagnostic_str
+            .. "%#TabLineDiagInfoSel#  "
+            .. diagnostic.info
+            .. tab_highlight_color
+        else
+          diagnostic_str = diagnostic_str
+            .. "%#TabLineDiagInfo#  "
+            .. diagnostic.info
+            .. tab_highlight_color
+        end
       end
       if diagnostic.hint > 0 then
-        diagnostic_str = diagnostic_str
-          .. "%#TabLineDiagHint#  "
-          .. diagnostic.hint
-          .. tab_highlight_color
+        if tabpage == current_tabpage then
+          diagnostic_str = diagnostic_str
+            .. "%#TabLineDiagHintSel#  "
+            .. diagnostic.hint
+            .. tab_highlight_color
+        else
+          diagnostic_str = diagnostic_str
+            .. "%#TabLineDiagHint#  "
+            .. diagnostic.hint
+            .. tab_highlight_color
+        end
       end
 
       -- Append the buffer name and diagnostics to the tab string
