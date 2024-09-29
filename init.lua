@@ -42,9 +42,6 @@ require("packer").startup(function()
 
   -- npm package completion
   use("David-Kunz/cmp-npm")
-
-  -- add error messages to the tabline
-  use("akinsho/bufferline.nvim")
 end)
 
 -- Set space as the leader key
@@ -160,7 +157,6 @@ require("telescope").setup({
       "--column",
       "--smart-case",
     },
-    path_display = { "truncate" },
     -- Other default settings
   },
 })
@@ -538,27 +534,3 @@ vim.g.rainbow_delimiters = {
   },
 }
 
--- Add error messages to the tabline
-require("bufferline").setup({
-  options = {
-    diagnostics = "nvim_lsp", -- Integrate with Neovim's LSP for diagnostics
-    diagnostics_indicator = function(count, level)
-      if level:match("error") then
-        return "🟥 " .. count -- Red square for errors
-      elseif level:match("warning") then
-        return "🟧 " .. count -- Orange square for warnings
-      elseif level:match("info") then
-        return "🟦 " .. count -- Blue square for info
-      else
-        return "💡 " .. count -- Lightbulb for hints
-      end
-    end,
-    show_buffer_icons = false,
-    show_buffer_close_icons = false,
-    show_close_icon = false,
-    separator_style = "slant",
-    offsets = {
-      { filetype = "NvimTree", text = "File Explorer", padding = 1 },
-    },
-  },
-})
