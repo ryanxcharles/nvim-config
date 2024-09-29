@@ -619,16 +619,16 @@ function MyTabline()
     -- Build the diagnostic string (only show non-zero counts)
     local diagnostic_str = ""
     if diagnostic.error > 0 then
-      diagnostic_str = diagnostic_str .. " 🟥" .. diagnostic.error
+      diagnostic_str = diagnostic_str .. " 🟥 " .. diagnostic.error
     end
     if diagnostic.warn > 0 then
-      diagnostic_str = diagnostic_str .. " 🟧" .. diagnostic.warn
+      diagnostic_str = diagnostic_str .. " 🟧 " .. diagnostic.warn
     end
     if diagnostic.info > 0 then
-      diagnostic_str = diagnostic_str .. " 🟦" .. diagnostic.info
+      diagnostic_str = diagnostic_str .. " 🟦 " .. diagnostic.info
     end
     if diagnostic.hint > 0 then
-      diagnostic_str = diagnostic_str .. " 💡" .. diagnostic.hint
+      diagnostic_str = diagnostic_str .. " 💡 " .. diagnostic.hint
     end
 
     -- Highlight the current tab
