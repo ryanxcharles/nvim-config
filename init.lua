@@ -563,10 +563,10 @@ require("lualine").setup({
           hint = { fg = "#98be65" }, -- Hint color (green)
         },
         symbols = {
-          error = "❌ ", -- Red square for errors
-          warn = "⚠️ ", -- Orange square for warnings
-          info = "ℹ️ ", -- Blue square for info
-          hint = "💡 ", -- Lightbulb for hints
+          error = " ", -- Error icon
+          warn = " ", -- Warning icon
+          info = " ", -- Info icon
+          hint = " ", -- Hint icon
         },
         colored = true, -- Color the diagnostics
         update_in_insert = false, -- Update diagnostics in insert mode
@@ -603,6 +603,17 @@ local function get_diagnostics(bufnr)
   return counts
 end
 
+-- Define custom highlight groups for diagnostics in the tabline
+vim.api.nvim_exec(
+  [[
+  highlight TabLineDiagError guifg=#ff6c6b gui=bold
+  highlight TabLineDiagWarn guifg=#ECBE7B gui=bold
+  highlight TabLineDiagInfo guifg=#51afef gui=bold
+  highlight TabLineDiagHint guifg=#98be65 gui=bold
+]],
+  false
+)
+
 -- Custom tabline function to display all window names in each tab
 function MyTabline()
   local s = ""
@@ -613,6 +624,13 @@ function MyTabline()
   for _, tabpage in ipairs(tabpages) do
     local windows = vim.api.nvim_tabpage_list_wins(tabpage) -- Get all windows in the tab
     local tab_str = ""
+
+    local tab_highlight_color = ""
+    if tabpage == current_tabpage then
+      tab_highlight_color = "%#TabLineSel#"
+    else
+      tab_highlight_color = "%#TabLine#"
+    end
 
     -- Loop through each window in the tab
     for _, win in ipairs(windows) do
@@ -635,17 +653,33 @@ function MyTabline()
 
       -- Build the diagnostic string (only show non-zero counts)
       local diagnostic_str = ""
+      -- error = " ", -- Error icon
+      -- warn = " ", -- Warning icon
+      -- info = " ", -- Info icon
+      -- hint = " ", -- Hint icon
       if diagnostic.error > 0 then
-        diagnostic_str = diagnostic_str .. " ❌ " .. diagnostic.error
+        diagnostic_str = diagnostic_str
+          .. "%#TabLineDiagError#  "
+          .. diagnostic.error
+          .. tab_highlight_color
       end
       if diagnostic.warn > 0 then
-        diagnostic_str = diagnostic_str .. " ⚠️ " .. diagnostic.warn
+        diagnostic_str = diagnostic_str
+          .. "%#TabLineDiagWarn#  "
+          .. diagnostic.warn
+          .. tab_highlight_color
       end
       if diagnostic.info > 0 then
-        diagnostic_str = diagnostic_str .. " ℹ️ " .. diagnostic.info
+        diagnostic_str = diagnostic_str
+          .. "%#TabLineDiagInfo#  "
+          .. diagnostic.info
+          .. tab_highlight_color
       end
       if diagnostic.hint > 0 then
-        diagnostic_str = diagnostic_str .. " 💡 " .. diagnostic.hint
+        diagnostic_str = diagnostic_str
+          .. "%#TabLineDiagHint#  "
+          .. diagnostic.hint
+          .. tab_highlight_color
       end
 
       -- Append the buffer name and diagnostics to the tab string
@@ -664,11 +698,7 @@ function MyTabline()
     tab_str = tab_str:sub(1, -4)
 
     -- Highlight the current tab
-    if tabpage == current_tabpage then
-      s = s .. "%#TabLineSel#" .. tab_str .. " %#TabLine#"
-    else
-      s = s .. "%#TabLine#" .. tab_str .. " "
-    end
+    s = s .. tab_highlight_color .. tab_str .. " %#TabLine#"
   end
 
   return s
