@@ -622,9 +622,10 @@ function MyTabline()
       local modified = vim.bo[bufnr].modified and " [+]" or ""
       local diagnostic = get_diagnostics(bufnr)
 
-       -- Extract the first letter of each folder in the path
+      -- Extract the first letter of each folder in the path
       local path_letters = ""
-      local full_path = vim.fn.fnamemodify(vim.fn.bufname(bufnr), ":.") or "[No Name]"
+      local full_path = vim.fn.fnamemodify(vim.fn.bufname(bufnr), ":.")
+        or "[No Name]"
       local folders = vim.split(vim.fn.fnamemodify(full_path, ":h"), "/")
       for _, folder in ipairs(folders) do
         if folder ~= "" then
@@ -648,7 +649,7 @@ function MyTabline()
       -- end
 
       -- Append the buffer name and diagnostics to the tab string
-      if not string.find(bufname, "MINIMAP") then -- Exclude Minimap buffers if present
+      if not string.find(bufname, "-MINIMAP-") then -- Exclude Minimap buffers if present
         tab_str = " "
           .. tab_str
           .. path_letters
