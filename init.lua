@@ -652,14 +652,27 @@ vim.api.nvim_set_hl(
   { fg = "#98be65", bg = tabline_sel_bg, bold = true }
 )
 
+_G.subtract_last_tabs_N = 0
+
 -- Custom tabline function to display all window names in each tab
 function MyTabline()
   local s = ""
   local tabpages = vim.api.nvim_list_tabpages()
   local current_tabpage = vim.api.nvim_get_current_tabpage()
 
-  -- Loop through each tab
-  for _, tabpage in ipairs(tabpages) do
+  local total_tabs = #tabpages or 0
+
+  -- Ensure that subtract_last_tabs_N does not exceed the total number of tabs
+  if _G.subtract_last_tabs_N >= total_tabs then
+    _G.subtract_last_tabs_N = total_tabs - 1
+  end
+
+  -- Calculate how many tabs to show
+  local max_visible_tabs = total_tabs - _G.subtract_last_tabs_N
+
+  -- Loop through each visible tab
+  for i = 1, max_visible_tabs do
+    local tabpage = tabpages[i]
     local windows = vim.api.nvim_tabpage_list_wins(tabpage) -- Get all windows in the tab
     local tab_str = ""
 
@@ -681,7 +694,6 @@ function MyTabline()
       -- Extract the first letter of each folder in the path
       local path_letters = ""
       local full_path = vim.fn.fnamemodify(vim.fn.bufname(bufnr), ":.")
-        or "[No Name]"
       local folders = vim.split(vim.fn.fnamemodify(full_path, ":h"), "/")
       for _, folder in ipairs(folders) do
         if folder ~= "" then
@@ -691,67 +703,38 @@ function MyTabline()
 
       -- Build the diagnostic string (only show non-zero counts)
       local diagnostic_str = ""
-      -- error = " ", -- Error icon
-      -- warn = " ", -- Warning icon
-      -- info = " ", -- Info icon
-      -- hint = " ", -- Hint icon
       if diagnostic.error > 0 then
-        if tabpage == current_tabpage then
-          diagnostic_str = diagnostic_str
-            .. "%#TabLineDiagErrorSel#  "
-            .. diagnostic.error
-            .. tab_highlight_color
-        else
-          diagnostic_str = diagnostic_str
-            .. "%#TabLineDiagError#  "
-            .. diagnostic.error
-            .. tab_highlight_color
-        end
+        diagnostic_str = diagnostic_str
+          .. (tabpage == current_tabpage and "%#TabLineDiagErrorSel#" or "%#TabLineDiagError#")
+          .. "  "
+          .. diagnostic.error
+          .. tab_highlight_color
       end
       if diagnostic.warn > 0 then
-        if tabpage == current_tabpage then
-          diagnostic_str = diagnostic_str
-            .. "%#TabLineDiagWarnSel#  "
-            .. diagnostic.warn
-            .. tab_highlight_color
-        else
-          diagnostic_str = diagnostic_str
-            .. "%#TabLineDiagWarn#  "
-            .. diagnostic.warn
-            .. tab_highlight_color
-        end
+        diagnostic_str = diagnostic_str
+          .. (tabpage == current_tabpage and "%#TabLineDiagWarnSel#" or "%#TabLineDiagWarn#")
+          .. "  "
+          .. diagnostic.warn
+          .. tab_highlight_color
       end
       if diagnostic.info > 0 then
-        if tabpage == current_tabpage then
-          diagnostic_str = diagnostic_str
-            .. "%#TabLineDiagInfoSel#  "
-            .. diagnostic.info
-            .. tab_highlight_color
-        else
-          diagnostic_str = diagnostic_str
-            .. "%#TabLineDiagInfo#  "
-            .. diagnostic.info
-            .. tab_highlight_color
-        end
+        diagnostic_str = diagnostic_str
+          .. (tabpage == current_tabpage and "%#TabLineDiagInfoSel#" or "%#TabLineDiagInfo#")
+          .. "  "
+          .. diagnostic.info
+          .. tab_highlight_color
       end
       if diagnostic.hint > 0 then
-        if tabpage == current_tabpage then
-          diagnostic_str = diagnostic_str
-            .. "%#TabLineDiagHintSel#  "
-            .. diagnostic.hint
-            .. tab_highlight_color
-        else
-          diagnostic_str = diagnostic_str
-            .. "%#TabLineDiagHint#  "
-            .. diagnostic.hint
-            .. tab_highlight_color
-        end
+        diagnostic_str = diagnostic_str
+          .. (tabpage == current_tabpage and "%#TabLineDiagHintSel#" or "%#TabLineDiagHint#")
+          .. "  "
+          .. diagnostic.hint
+          .. tab_highlight_color
       end
 
       -- Append the buffer name and diagnostics to the tab string
       if not string.find(bufname, "-MINIMAP-") then -- Exclude Minimap buffers if present
-        tab_str = " "
-          .. tab_str
+        tab_str = tab_str
           .. path_letters
           .. bufname
           .. diagnostic_str
@@ -767,6 +750,11 @@ function MyTabline()
     s = s .. tab_highlight_color .. tab_str .. " %#TabLine#"
   end
 
+  -- Add the right scroll indicator if there are hidden tabs
+  if _G.subtract_last_tabs_N > 0 then
+    s = s .. "%#TabLineSel# > %#TabLine#"
+  end
+
   return s
 end
 
@@ -774,11 +762,27 @@ end
 vim.o.tabline = "%!v:lua.MyTabline()"
 
 -- Function to refresh the tabline
-local function refresh_tabline()
+function _G.refresh_tabline()
   vim.cmd("redrawtabline")
 end
 
 -- Set up an autocmd to refresh the tabline whenever diagnostics change
 vim.api.nvim_create_autocmd("DiagnosticChanged", {
-  callback = refresh_tabline,
+  callback = _G.refresh_tabline,
 })
+
+-- Keybinding to scroll left (increase subtract_last_tabs_N)
+vim.api.nvim_set_keymap(
+  "n",
+  "<Leader>th",
+  ":lua _G.subtract_last_tabs_N = _G.subtract_last_tabs_N + 1; _G.refresh_tabline()<CR>",
+  { noremap = true, silent = true }
+)
+
+-- Keybinding to scroll right (decrease subtract_last_tabs_N)
+vim.api.nvim_set_keymap(
+  "n",
+  "<Leader>tl",
+  ":lua _G.subtract_last_tabs_N = math.max(0, _G.subtract_last_tabs_N - 1); _G.refresh_tabline()<CR>",
+  { noremap = true, silent = true }
+)
