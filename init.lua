@@ -87,6 +87,20 @@ vim.api.nvim_set_keymap("n", ";9", ":9wincmd w<CR>", opts)
 -- Redraw screen
 vim.api.nvim_set_keymap("n", "<leader>.", "<C-l>", opts)
 
+-- TODO: test
+-- Define a highlight group for TODO comments
+vim.api.nvim_command("highlight TodoComment guifg=#FA8603 gui=bold") -- Orange color with bold
+-- Automatically highlight TODO comments when entering a buffer
+vim.api.nvim_exec(
+  [[
+  augroup TodoHighlight
+    autocmd!
+    autocmd BufEnter,BufReadPost * call matchadd('TodoComment', 'TODO:')
+  augroup END
+]],
+  false
+)
+
 -- Key binding to use Telescope to search files
 -- Set up keybinding to always show hidden files
 vim.api.nvim_set_keymap(
