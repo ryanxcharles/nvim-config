@@ -541,13 +541,14 @@ vim.g.rainbow_delimiters = {
 
 require("lualine").setup({
   options = {
-    -- theme = "auto", -- You can change this to your preferred color scheme
+    theme = "onedark", -- You can change this to your preferred color scheme
     section_separators = { "▶️", "◀️" }, -- Use arrow emojis as section separators
     component_separators = { "|", "|" }, -- Use simple vertical bars as component separators
     disabled_filetypes = {}, -- Disable for specific filetypes if needed
   },
   sections = {
     lualine_a = { "mode" }, -- Shows the current mode (e.g., Insert, Normal, etc.)
+    -- lualine_b = { "branch" },
     lualine_b = {},
     lualine_c = {
       { "filename" }, -- Shows the current file name
@@ -602,46 +603,59 @@ local function get_diagnostics(bufnr)
   return counts
 end
 
--- Custom tabline function to display tabs (tab pages)
+-- Custom tabline function to display all window names in each tab
 function MyTabline()
   local s = ""
   local tabpages = vim.api.nvim_list_tabpages()
   local current_tabpage = vim.api.nvim_get_current_tabpage()
 
-  -- Loop through each tab and add diagnostics for the active buffer in that tab
+  -- Loop through each tab
   for _, tabpage in ipairs(tabpages) do
-    local bufnr =
-      vim.api.nvim_win_get_buf(vim.api.nvim_tabpage_get_win(tabpage))
-    local bufname = vim.fn.fnamemodify(vim.fn.bufname(bufnr), ":t")
-    local modified = vim.bo[bufnr].modified and " [+]" or ""
-    local diagnostic = get_diagnostics(bufnr)
+    local windows = vim.api.nvim_tabpage_list_wins(tabpage) -- Get all windows in the tab
+    local tab_str = ""
 
-    -- Build the diagnostic string (only show non-zero counts)
-    local diagnostic_str = ""
-    if diagnostic.error > 0 then
-      diagnostic_str = diagnostic_str .. " 🟥 " .. diagnostic.error
+    -- Loop through each window in the tab
+    for _, win in ipairs(windows) do
+      local bufnr = vim.api.nvim_win_get_buf(win)
+      local bufname = vim.fn.fnamemodify(vim.fn.bufname(bufnr), ":t")
+        or "[No Name]"
+      local modified = vim.bo[bufnr].modified and " [+]" or ""
+      local diagnostic = get_diagnostics(bufnr)
+
+      -- Build the diagnostic string (only show non-zero counts)
+      local diagnostic_str = ""
+      if diagnostic.error > 0 then
+        diagnostic_str = diagnostic_str .. " 🟥 " .. diagnostic.error
+      end
+      if diagnostic.warn > 0 then
+        diagnostic_str = diagnostic_str .. " 🟧 " .. diagnostic.warn
+      end
+      -- if diagnostic.info > 0 then
+      --   diagnostic_str = diagnostic_str .. " 🟦 " .. diagnostic.info
+      -- end
+      -- if diagnostic.hint > 0 then
+      --   diagnostic_str = diagnostic_str .. " 💡 " .. diagnostic.hint
+      -- end
+
+      -- Append the buffer name and diagnostics to the tab string
+      if not string.find(bufname, "MINIMAP") then -- Exclude Minimap buffers if present
+        tab_str = " "
+          .. tab_str
+          .. bufname
+          .. diagnostic_str
+          .. modified
+          .. " | "
+      end
     end
-    if diagnostic.warn > 0 then
-      diagnostic_str = diagnostic_str .. " 🟧 " .. diagnostic.warn
-    end
-    if diagnostic.info > 0 then
-      diagnostic_str = diagnostic_str .. " 🟦 " .. diagnostic.info
-    end
-    if diagnostic.hint > 0 then
-      diagnostic_str = diagnostic_str .. " 💡 " .. diagnostic.hint
-    end
+
+    -- Remove trailing " | " from the last window in the tab
+    tab_str = tab_str:sub(1, -4)
 
     -- Highlight the current tab
     if tabpage == current_tabpage then
-      s = s
-        .. " "
-        .. "%#TabLineSel#"
-        .. bufname
-        .. diagnostic_str
-        .. modified
-        .. " %#TabLine#"
+      s = s .. "%#TabLineSel#" .. tab_str .. " %#TabLine#"
     else
-      s = s .. " " .. bufname .. diagnostic_str .. modified .. " "
+      s = s .. "%#TabLine#" .. tab_str .. " "
     end
   end
 
