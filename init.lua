@@ -42,6 +42,9 @@ require("packer").startup(function()
 
   -- npm package completion
   use("David-Kunz/cmp-npm")
+
+  -- add error messages to the tabline
+  use("akinsho/bufferline.nvim")
 end)
 
 -- Set space as the leader key
@@ -116,29 +119,28 @@ vim.api.nvim_set_keymap(
 -- Telscope search inside files with ripgrep (rg)
 vim.api.nvim_set_keymap("n", "<leader>fg", ":Telescope live_grep<CR>", opts)
 
--- LSP integration with Telescope for TypeScript
+-- LSP integration with Telescope for TypeScript and other languages
+-- Space + fs: Search document symbols (like variables, functions, etc.).
 vim.api.nvim_set_keymap(
   "n",
   "<leader>fs",
   "<cmd>Telescope lsp_document_symbols<CR>",
   opts
 )
+-- Space + fr: Find all references to a symbol.
 vim.api.nvim_set_keymap(
   "n",
   "<leader>fr",
   "<cmd>Telescope lsp_references<CR>",
   opts
 )
+-- Space + fd: Search through diagnostics (errors, warnings).
 vim.api.nvim_set_keymap(
   "n",
   "<leader>fd",
   "<cmd>Telescope diagnostics<CR>",
   opts
 )
--- Space + fs: Search document symbols (like variables, functions, etc.).
--- Space + fr: Find all references to a symbol.
--- Space + fd: Search through diagnostics (errors, warnings).
---
 -- Show all diagnostics on the current line in a floating window
 vim.api.nvim_set_keymap(
   "n",
@@ -534,3 +536,28 @@ vim.g.rainbow_delimiters = {
     "RainbowDelimiterLightGray",
   },
 }
+
+-- Add error messages to the tabline
+require("bufferline").setup({
+  options = {
+    diagnostics = "nvim_lsp", -- Integrate with Neovim's LSP for diagnostics
+    diagnostics_indicator = function(count, level)
+      if level:match("error") then
+        return "🟥 " .. count -- Red square for errors
+      elseif level:match("warning") then
+        return "🟧 " .. count -- Orange square for warnings
+      elseif level:match("info") then
+        return "🟦 " .. count -- Blue square for info
+      else
+        return "💡 " .. count -- Lightbulb for hints
+      end
+    end,
+    show_buffer_icons = false,
+    show_buffer_close_icons = false,
+    show_close_icon = false,
+    separator_style = "slant",
+    offsets = {
+      { filetype = "NvimTree", text = "File Explorer", padding = 1 },
+    },
+  },
+})
