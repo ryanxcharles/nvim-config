@@ -548,8 +548,7 @@ require("lualine").setup({
   },
   sections = {
     lualine_a = { "mode" }, -- Shows the current mode (e.g., Insert, Normal, etc.)
-    -- lualine_b = { "branch" },
-    lualine_b = {},
+    lualine_b = { "branch", "diff", "diagnostics" },
     lualine_c = {
       { "filename" }, -- Shows the current file name
       {
