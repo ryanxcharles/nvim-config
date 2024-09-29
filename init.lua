@@ -160,6 +160,7 @@ require("telescope").setup({
       "--column",
       "--smart-case",
     },
+    path_display = { "truncate" },
     -- Other default settings
   },
 })
