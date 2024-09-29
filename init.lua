@@ -39,6 +39,9 @@ require("packer").startup(function()
 
   -- rainbow delimiters
   use("hiphish/rainbow-delimiters.nvim")
+
+  -- npm package completion
+  use("David-Kunz/cmp-npm")
 end)
 
 -- Set space as the leader key
@@ -135,6 +138,14 @@ vim.api.nvim_set_keymap(
 -- Space + fs: Search document symbols (like variables, functions, etc.).
 -- Space + fr: Find all references to a symbol.
 -- Space + fd: Search through diagnostics (errors, warnings).
+--
+-- Show all diagnostics on the current line in a floating window
+vim.api.nvim_set_keymap(
+  "n",
+  "<leader>ld",
+  "<cmd>lua vim.diagnostic.open_float(nil, { focusable = false })<CR>",
+  opts
+)
 
 require("telescope").setup({
   defaults = {
@@ -321,6 +332,7 @@ cmp.setup({
     { name = "buffer" }, -- Completions from current buffer
     { name = "path" }, -- Path completions
     { name = "luasnip" }, -- Snippet completions
+    { name = "npm", keyword_length = 3 }, -- NPM package completions
   },
 })
 
