@@ -563,9 +563,9 @@ require("lualine").setup({
           hint = { fg = "#98be65" }, -- Hint color (green)
         },
         symbols = {
-          error = "🟥 ", -- Red square for errors
-          warn = "🟧 ", -- Orange square for warnings
-          info = "🟦 ", -- Blue square for info
+          error = "❌ ", -- Red square for errors
+          warn = "⚠️ ", -- Orange square for warnings
+          info = "ℹ️ ", -- Blue square for info
           hint = "💡 ", -- Lightbulb for hints
         },
         colored = true, -- Color the diagnostics
@@ -636,13 +636,13 @@ function MyTabline()
       -- Build the diagnostic string (only show non-zero counts)
       local diagnostic_str = ""
       if diagnostic.error > 0 then
-        diagnostic_str = diagnostic_str .. " 🟥 " .. diagnostic.error
+        diagnostic_str = diagnostic_str .. " ❌ " .. diagnostic.error
       end
       if diagnostic.warn > 0 then
-        diagnostic_str = diagnostic_str .. " 🟧 " .. diagnostic.warn
+        diagnostic_str = diagnostic_str .. " ⚠️ " .. diagnostic.warn
       end
       -- if diagnostic.info > 0 then
-      --   diagnostic_str = diagnostic_str .. " 🟦 " .. diagnostic.info
+      --   diagnostic_str = diagnostic_str .. " ℹ️ " .. diagnostic.info
       -- end
       -- if diagnostic.hint > 0 then
       --   diagnostic_str = diagnostic_str .. " 💡 " .. diagnostic.hint
