@@ -324,9 +324,7 @@ lspconfig.biome.setup({
 })
 
 -- Set up nvim-cmp (auto-complete)
-local cmp = require("cmp")
-
-cmp.setup({
+require("cmp").setup({
   snippet = {
     expand = function(args)
       require("luasnip").lsp_expand(args.body) -- For `luasnip` users.
@@ -335,8 +333,8 @@ cmp.setup({
   mapping = {
     ["<C-Space>"] = cmp.mapping.complete(), -- Trigger completion manually
     ["<CR>"] = cmp.mapping.confirm({ select = true }), -- Confirm selection
-    ["<C-n>"] = cmp.mapping.select_next_item(), -- Navigate completion with <C-n>
-    ["<C-p>"] = cmp.mapping.select_prev_item(), -- Navigate completion with <C-p>
+    ["<C-.>"] = cmp.mapping.select_next_item(), -- Navigate completion next
+    ["<C-,>"] = cmp.mapping.select_prev_item(), -- Navigate completion previous
   },
   sources = {
     { name = "nvim_lsp" }, -- LSP completions (TypeScript, etc.)
