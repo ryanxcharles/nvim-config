@@ -327,8 +327,8 @@ cmp.setup({
   mapping = {
     ["<C-Space>"] = cmp.mapping.complete(), -- Trigger completion manually
     ["<CR>"] = cmp.mapping.confirm({ select = true }), -- Confirm selection
-    ["<Tab>"] = cmp.mapping.select_next_item(), -- Navigate completion with Tab
-    ["<S-Tab>"] = cmp.mapping.select_prev_item(),
+    ["<C-n>"] = cmp.mapping.select_next_item(), -- Navigate completion with <C-n>
+    ["<C-p>"] = cmp.mapping.select_prev_item(), -- Navigate completion with <C-p>
   },
   sources = {
     { name = "nvim_lsp" }, -- LSP completions (TypeScript, etc.)
@@ -473,19 +473,11 @@ vim.api.nvim_create_autocmd("BufReadPost", {
 })
 
 -- GitHub Copilot
-
--- Don't use tab, because we
+--
+-- Copilot uses tab to accept suggestions by default. If you want to use tab for
+-- something else, you can disable this behavior.
 -- vim.g.copilot_no_tab_map = true
--- ...actually, let's use tab
 
--- Sometimes, tab doesn't work, because it's used for other things. So, we'll
--- use <C-.> in addition to tab.
-vim.api.nvim_set_keymap(
-  "i",
-  "<C-.>",
-  'copilot#Accept("<CR>")',
-  { silent = true, expr = true }
-)
 -- Set custom keybindings for cycling through Copilot suggestions
 vim.api.nvim_set_keymap(
   "i",
