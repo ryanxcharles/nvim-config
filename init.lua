@@ -59,6 +59,9 @@ require("packer").startup(function()
 
   -- Status bar at the bottom - add diagnostics (errors, warnings, etc.)
   use("nvim-lualine/lualine.nvim")
+
+  -- git integration
+  use("tpope/vim-fugitive")
 end)
 
 -- Set space as the leader key. Space is the biggest key and the easiest to
@@ -795,6 +798,9 @@ end
 
 -- Set the custom tabline
 vim.o.tabline = "%!v:lua.MyTabline()"
+
+-- Always show the tabline
+vim.opt.showtabline = 2
 
 -- Function to refresh the tabline
 function _G.refresh_tabline()
