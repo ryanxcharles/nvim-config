@@ -142,7 +142,8 @@ require("telescope").setup({
       "--column",
       "--smart-case",
       "--hidden", -- Search hidden files, because we use .server and .client
-      "--glob", "!**/.git/**",     -- Exclude the .git folder
+      "--glob",
+      "!**/.git/**", -- Exclude the .git folder
     },
     -- Other default settings
   },
@@ -761,16 +762,17 @@ function MyTabline()
       -- Append the buffer name and diagnostics to the tab string
       if not string.find(bufname, "-MINIMAP-") then -- Exclude Minimap buffers if present
         tab_str = tab_str
+          .. " "
           .. path_letters
           .. bufname
           .. diagnostic_str
           .. modified
-          .. " | "
+          .. " |"
       end
     end
 
     -- Remove trailing " | " from the last window in the tab
-    tab_str = tab_str:sub(1, -4)
+    tab_str = tab_str:sub(1, -3)
 
     -- Highlight the current tab
     s = s .. tab_highlight_color .. tab_str .. " %#TabLine#"
