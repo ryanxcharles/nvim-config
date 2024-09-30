@@ -63,6 +63,9 @@ require("packer").startup(function()
 
   -- git integration
   use("tpope/vim-fugitive")
+
+  -- markdown + toml
+  use("plasticboy/vim-markdown")
 end)
 
 -- Set space as the leader key. Space is the biggest key and the easiest to
@@ -519,6 +522,18 @@ require("nvim-treesitter.configs").setup({
   -- You can enable more Treesitter features as needed (optional)
   indent = { enable = true }, -- Enable Treesitter-based indentation (optional)
 })
+
+-- Create an autocmd to manually set TOML syntax for front matter inside Markdown
+vim.api.nvim_exec([[
+  augroup MarkdownFrontmatter
+    autocmd!
+    autocmd BufRead,BufNewFile *.md
+      \ if getline(1) =~ '^+++' && getline(3) =~ '^+++' |
+      \   call matchadd('toml', '^\.\.\.') |
+      \   set syntax=markdown |
+      \ endif
+  augroup END
+]], false)
 
 -- Show Minimap for all files by default
 vim.api.nvim_create_autocmd("BufReadPost", {
