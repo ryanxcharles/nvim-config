@@ -1,3 +1,10 @@
+-- The following tools must be installed to use this configuration:
+-- nvim v0.10.1+ (Neovim)
+-- ripgrip v14.1.1 (for Telescope)
+-- stylua v0.20.0 (for Lua formatting)
+-- biome v1.9.2 (for TypeScript formatting)
+-- Nerdfonts (for icons)
+
 -- ~/.config/nvim/init.lua
 require("packer").startup(function()
   -- Use Packer to manage plugins
