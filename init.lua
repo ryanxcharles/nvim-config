@@ -141,6 +141,8 @@ require("telescope").setup({
       "--line-number",
       "--column",
       "--smart-case",
+      "--hidden", -- Search hidden files, because we use .server and .client
+      "--glob", "!**/.git/**",     -- Exclude the .git folder
     },
     -- Other default settings
   },
@@ -188,7 +190,7 @@ vim.api.nvim_set_keymap(
   opts
 )
 
--- Key bindind to reload init.lua file
+-- Key binding to reload init.lua file
 vim.api.nvim_set_keymap(
   "n",
   "<leader>r",
