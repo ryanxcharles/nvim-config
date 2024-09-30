@@ -345,6 +345,7 @@ require("cmp").setup({
   },
 })
 
+-- Formatter setup for any languages that need it
 require("formatter").setup({
   filetype = {
     lua = {
@@ -538,6 +539,7 @@ vim.g.rainbow_delimiters = {
   },
 }
 
+-- Customize the statusline with lualine
 require("lualine").setup({
   options = {
     theme = "onedark", -- You can change this to your preferred color scheme
@@ -655,6 +657,8 @@ vim.api.nvim_set_hl(
   { fg = "#98be65", bg = tabline_sel_bg, bold = true }
 )
 
+-- Set up a global variable to keep track of how many tabs to subtract - see my
+-- explanation below
 _G.subtract_last_tabs_N = 0
 
 -- Custom tabline function to display all window names in each tab
@@ -778,7 +782,9 @@ vim.api.nvim_create_autocmd("DiagnosticChanged", {
 -- automatically renders only the last portion of the tabline, my solution to
 -- tab scrolling is to have some key shortcuts to render only the last number
 -- of tabs. By keying to the left, you remove the display of the last tab, and
--- by keying to the right, you add it back.
+-- by keying to the right, you add it back. This is kind of a hack, but it
+-- shouldn't normally happen, because you should keep the number of tabs
+-- visible on the screen normally.
 
 -- Keybinding to scroll left (increase subtract_last_tabs_N)
 vim.api.nvim_set_keymap(
