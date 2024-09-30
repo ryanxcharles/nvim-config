@@ -473,7 +473,7 @@ vim.api.nvim_create_autocmd("BufReadPost", {
 })
 
 -- GitHub Copilot
---
+
 -- Copilot uses tab to accept suggestions by default. If you want to use tab for
 -- something else, you can disable this behavior.
 -- vim.g.copilot_no_tab_map = true
