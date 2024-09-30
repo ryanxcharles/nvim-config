@@ -98,6 +98,21 @@ vim.api.nvim_set_keymap("n", ";7", ":7wincmd w<CR>", opts)
 vim.api.nvim_set_keymap("n", ";8", ":8wincmd w<CR>", opts)
 vim.api.nvim_set_keymap("n", ";9", ":9wincmd w<CR>", opts)
 
+-- Scroll down by 20% of the window height
+vim.api.nvim_set_keymap(
+  "n",
+  "<Leader>pd",
+  ':lua vim.cmd("normal! " .. math.floor(vim.fn.winheight(0) * 0.2) .. "jzz")<CR>',
+  { noremap = true, silent = true }
+)
+-- Scroll up by 20% of the window height
+vim.api.nvim_set_keymap(
+  "n",
+  "<Leader>pu",
+  ':lua vim.cmd("normal! " .. math.floor(vim.fn.winheight(0) * 0.2) .. "kzz")<CR>',
+  { noremap = true, silent = true }
+)
+
 -- Redraw screen
 vim.api.nvim_set_keymap("n", "<leader>.", "<C-l>", opts)
 
