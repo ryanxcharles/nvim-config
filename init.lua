@@ -4,6 +4,7 @@
 -- stylua v0.20.0 (for Lua formatting)
 -- biome v1.9.2 (for TypeScript formatting)
 -- Nerdfonts (for icons)
+-- git (for git integration)
 
 -- ~/.config/nvim/init.lua
 require("packer").startup(function()
@@ -196,8 +197,22 @@ vim.api.nvim_set_keymap(
 -- Show all diagnostics on the current line in a floating window
 vim.api.nvim_set_keymap(
   "n",
-  "<leader>d",
+  "<leader>ds",
   "<cmd>lua vim.diagnostic.open_float(nil, { focusable = false })<CR>",
+  opts
+)
+-- Go to the next diagnostic (error, warning, etc.)
+vim.api.nvim_set_keymap(
+  "n",
+  "<leader>dn",
+  ":lua vim.diagnostic.goto_next()<CR>",
+  opts
+)
+-- Go to the previous diagnostic (error, warning, etc.)
+vim.api.nvim_set_keymap(
+  "n",
+  "<leader>dp",
+  ":lua vim.diagnostic.goto_prev()<CR>",
   opts
 )
 
