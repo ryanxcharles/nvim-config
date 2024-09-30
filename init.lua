@@ -505,6 +505,9 @@ require("nvim-treesitter.configs").setup({
     "html",
     "css",
     "rust",
+    "markdown",
+    "markdown_inline",
+    "toml",
   }, -- Add more languages as needed
 
   -- Enable Treesitter-based syntax highlighting
