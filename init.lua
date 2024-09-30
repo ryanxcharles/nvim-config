@@ -66,6 +66,12 @@ require("packer").startup(function()
 
   -- markdown + toml
   use("plasticboy/vim-markdown")
+
+  -- TypeScript: :TypescriptRenameFile
+  -- use({
+  --   "jose-elias-alvarez/typescript.nvim",
+  --   requires = { "neovim/nvim-lspconfig" },
+  -- })
 end)
 
 -- Set space as the leader key. Space is the biggest key and the easiest to
@@ -524,7 +530,8 @@ require("nvim-treesitter.configs").setup({
 })
 
 -- Create an autocmd to manually set TOML syntax for front matter inside Markdown
-vim.api.nvim_exec([[
+vim.api.nvim_exec(
+  [[
   augroup MarkdownFrontmatter
     autocmd!
     autocmd BufRead,BufNewFile *.md
@@ -533,7 +540,9 @@ vim.api.nvim_exec([[
       \   set syntax=markdown |
       \ endif
   augroup END
-]], false)
+]],
+  false
+)
 
 -- Show Minimap for all files by default
 vim.api.nvim_create_autocmd("BufReadPost", {
@@ -837,12 +846,25 @@ vim.opt.showtabline = 2
 
 -- Function to refresh the tabline
 function _G.refresh_tabline()
-  vim.cmd("redrawtabline")
+  -- Only refresh the tabline if the current buffer is valid
+  if vim.api.nvim_buf_is_valid(vim.api.nvim_get_current_buf()) then
+    vim.cmd("redrawtabline")
+  end
 end
 
 -- Set up an autocmd to refresh the tabline whenever diagnostics change
 vim.api.nvim_create_autocmd("DiagnosticChanged", {
-  callback = _G.refresh_tabline,
+  pattern = "*",
+  callback = function()
+    local ft = vim.bo.filetype
+    -- Do not run the diagnostic refresh for specific filetypes
+    if
+      ft ~= "packer"
+      and vim.api.nvim_buf_is_valid(vim.api.nvim_get_current_buf())
+    then
+      _G.refresh_tabline()
+    end
+  end,
 })
 
 -- The custom tabline is set up, but sometimes it is too long. Because nvim
