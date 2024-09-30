@@ -101,14 +101,14 @@ vim.api.nvim_set_keymap("n", ";9", ":9wincmd w<CR>", opts)
 -- Scroll down by 20% of the window height
 vim.api.nvim_set_keymap(
   "n",
-  "<Leader>pd",
+  "<Leader>sd",
   ':lua vim.cmd("normal! " .. math.floor(vim.fn.winheight(0) * 0.2) .. "jzz")<CR>',
   { noremap = true, silent = true }
 )
 -- Scroll up by 20% of the window height
 vim.api.nvim_set_keymap(
   "n",
-  "<Leader>pu",
+  "<Leader>su",
   ':lua vim.cmd("normal! " .. math.floor(vim.fn.winheight(0) * 0.2) .. "kzz")<CR>',
   { noremap = true, silent = true }
 )
