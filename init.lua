@@ -1,12 +1,19 @@
 -- ~/.config/nvim/init.lua
 require("packer").startup(function()
+  -- Use Packer to manage plugins
   use("wbthomason/packer.nvim") -- Packer manages itself
+
+  -- Telescope for fuzzy finding
   use("nvim-telescope/telescope.nvim") -- Telescope
   use("nvim-lua/plenary.nvim") -- Required by telescope
-  use("wfxr/minimap.vim") -- Use ":Minimap"
-  use("neovim/nvim-lspconfig") -- language server for typescript, etc.
 
-  -- a series of auto-complete related plugins
+  -- Minimap for a preview of the file
+  use("wfxr/minimap.vim") -- Use ":Minimap"
+
+  -- LSP for TypeScript, etc.
+  use("neovim/nvim-lspconfig")
+
+  -- A series of auto-complete related plugins
   use("hrsh7th/nvim-cmp") -- Autocompletion plugin
   use("hrsh7th/cmp-nvim-lsp") -- LSP source for nvim-cmp
   use("hrsh7th/cmp-buffer") -- Buffer source for nvim-cmp
@@ -15,19 +22,19 @@ require("packer").startup(function()
   use("saadparwaiz1/cmp_luasnip") -- Snippet completion
   use("L3MON4D3/LuaSnip") -- Snippet engine
 
-  -- code formatting (e.g., using biome)
+  -- Code formatting (e.g., using biome)
   use("mhartington/formatter.nvim")
 
-  -- colorizer for HTML/CSS (but not Tailwind)
+  -- Colorizer for HTML/CSS (but not Tailwind)
   use("norcalli/nvim-colorizer.lua")
 
-  -- colors for Tailwind
+  -- Colors for Tailwind
   use("themaxmarchuk/tailwindcss-colors.nvim")
 
-  -- accurate syntax highlighting for typescript
+  -- Accurate syntax highlighting for typescript
   use("nvim-treesitter/nvim-treesitter")
 
-  -- github copilot
+  -- Github Copilot
   use({ "github/copilot.vim" })
   use({
     "zbirenbaum/copilot-cmp",
@@ -37,17 +44,18 @@ require("packer").startup(function()
     end,
   })
 
-  -- rainbow delimiters
+  -- Rainbow delimiters
   use("hiphish/rainbow-delimiters.nvim")
 
-  -- npm package completion
+  -- NPM package completion
   use("David-Kunz/cmp-npm")
 
-  -- status bar at the bottom - add diagnostics
+  -- Status bar at the bottom - add diagnostics (errors, warnings, etc.)
   use("nvim-lualine/lualine.nvim")
 end)
 
--- Set space as the leader key
+-- Set space as the leader key. Space is the biggest key and the easiest to
+-- hit, so it makes a good leader key.
 vim.g.mapleader = " "
 
 local opts = { noremap = true, silent = true }
@@ -93,7 +101,7 @@ vim.api.nvim_set_keymap("n", ";9", ":9wincmd w<CR>", opts)
 -- Redraw screen
 vim.api.nvim_set_keymap("n", "<leader>.", "<C-l>", opts)
 
--- TODO: test
+-- TODO: test todo highlighting
 -- Define a highlight group for TODO comments
 vim.api.nvim_command("highlight TodoComment guifg=#FA8603 gui=bold") -- Orange color with bold
 -- Automatically highlight TODO comments when entering a buffer
@@ -173,7 +181,7 @@ vim.api.nvim_set_keymap(
   opts
 )
 
--- two spaces for typescript/javascript/lua
+-- Two spaces for TypeScript/JavaScript/lua
 vim.api.nvim_create_autocmd("FileType", {
   pattern = {
     "javascript",
@@ -188,14 +196,6 @@ vim.api.nvim_create_autocmd("FileType", {
     vim.bo.expandtab = true -- Use spaces instead of tabs
   end,
 })
-
--- TypeScript organize inputs
-vim.api.nvim_set_keymap(
-  "n",
-  "<leader>oi",
-  '<cmd>lua vim.lsp.buf.code_action({ context = { only = { "source.organizeImports" } }, apply = true })<CR>',
-  opts
-)
 
 -- Import the LSP config plugin
 local lspconfig = require("lspconfig")
@@ -261,6 +261,14 @@ lspconfig.ts_ls.setup({
       "n",
       "<leader>ca",
       "<cmd>lua vim.lsp.buf.code_action()<CR>",
+      opts
+    )
+
+    -- Shortcut to organize imports
+    vim.api.nvim_set_keymap(
+      "n",
+      "<leader>oi",
+      '<cmd>lua vim.lsp.buf.code_action({ context = { only = { "source.organizeImports" } }, apply = true })<CR>',
       opts
     )
   end,
@@ -574,6 +582,10 @@ require("lualine").setup({
   extensions = {},
 })
 
+-- lualine is great for the statusline, but I decided to create my own custom
+-- tabline for how I deal with tabs. There is some setup code to begin with,
+-- and then a custom function for the tabline.
+
 -- Function to get diagnostic counts for a buffer
 local function get_diagnostics(bufnr)
   local diagnostics = vim.diagnostic.get(bufnr)
@@ -763,6 +775,12 @@ end
 vim.api.nvim_create_autocmd("DiagnosticChanged", {
   callback = _G.refresh_tabline,
 })
+
+-- The custom tabline is set up, but sometimes it is too long. Because nvim
+-- automatically renders only the last portion of the tabline, my solution to
+-- tab scrolling is to have some key shortcuts to render only the last number
+-- of tabs. By keying to the left, you remove the display of the last tab, and
+-- by keying to the right, you add it back.
 
 -- Keybinding to scroll left (increase subtract_last_tabs_N)
 vim.api.nvim_set_keymap(
