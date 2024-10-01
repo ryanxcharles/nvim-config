@@ -907,7 +907,7 @@ require("neo-tree").setup({
     use_libuv_file_watcher = true, -- Automatically refresh the tree when files change
     filtered_items = {
       hide_dotfiles = false,
-    }
+    },
   },
   buffers = {
     follow_current_file = true, -- Automatically focus on the current buffer
@@ -918,3 +918,12 @@ require("neo-tree").setup({
     },
   },
 })
+
+-- Keybinding to toggle Neo-tree
+vim.api.nvim_set_keymap("n", "<Leader>tt", ":Neotree toggle<CR>", opts)
+-- Neo-tree files
+vim.api.nvim_set_keymap("n", "<Leader>tf", ":Neotree files<CR>", opts)
+-- Neo-tree buffers
+vim.api.nvim_set_keymap("n", "<Leader>tb", ":Neotree buffers<CR>", opts)
+-- Neo-tree git status
+vim.api.nvim_set_keymap("n", "<Leader>tg", ":Neotree git_status<CR>", opts)
