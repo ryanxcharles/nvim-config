@@ -88,7 +88,7 @@ local opts = { noremap = true, silent = true }
 -- Disable folding by default
 vim.opt.foldenable = false
 
--- Show cursor line and cursor column
+-- Show cursor line
 vim.opt.cursorline = true
 -- vim.opt.cursorcolumn = true
 
@@ -942,8 +942,7 @@ vim.api.nvim_exec(
 )
 
 -- Set a dim background for inactive windows
-vim.api.nvim_set_hl(0, "NormalNC", { bg = "#2E3440" }) -- Replace with your preferred color
--- vim.api.nvim_set_hl(0, "NormalNC", { bg = "#161616" }) -- Replace with your preferred color
+vim.api.nvim_set_hl(0, "NormalNC", { bg = "#2e3440" }) -- Replace with your preferred color
 
 -- Set custom highlight for CursorLine (hide cursorline when leaving window)
 vim.api.nvim_exec([[
