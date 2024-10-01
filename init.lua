@@ -933,7 +933,7 @@ vim.api.nvim_exec(
   augroup ActiveWindow
     autocmd!
     " Apply different highlight for the active window
-    autocmd WinEnter,BufWinEnter,TabEnter * setlocal winhighlight=Normal:Normal
+    autocmd WinEnter,BufWinEnter,TabEnter,CmdwinEnter * setlocal winhighlight=Normal:Normal
     " Apply dimmed highlight for the inactive window
     autocmd WinLeave,BufWinLeave,TabLeave * setlocal winhighlight=Normal:NormalNC
   augroup END
