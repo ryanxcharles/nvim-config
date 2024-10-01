@@ -137,6 +137,15 @@ vim.api.nvim_set_keymap("n", "<leader>j", "30jzz", opts)
 -- Scroll up by 30 lines
 vim.api.nvim_set_keymap("n", "<leader>k", "30kzz", opts)
 
+-- Like * but without jumping to the next instance. i.e., it highlights the
+-- current word.
+vim.api.nvim_set_keymap(
+  "n", 
+  "<leader>*", 
+  [[:lua vim.fn.setreg("/", "\\<" .. vim.fn.expand("<cword>") .. "\\>") vim.opt.hlsearch = true<CR>]], 
+  { noremap = true, silent = true }
+)
+
 -- Redraw screen
 vim.api.nvim_set_keymap("n", "<leader>.", "<C-l>", opts)
 
