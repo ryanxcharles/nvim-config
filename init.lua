@@ -88,6 +88,10 @@ local opts = { noremap = true, silent = true }
 -- Disable folding by default
 vim.opt.foldenable = false
 
+-- Show cursor line and cursor column
+vim.opt.cursorline = true
+vim.opt.cursorcolumn = true
+
 -- Enable 24-bit RGB color in the terminal
 vim.opt.termguicolors = true
 
@@ -932,3 +936,19 @@ vim.api.nvim_set_keymap("n", "<leader>tf", ":Neotree files<CR>", opts)
 vim.api.nvim_set_keymap("n", "<leader>tb", ":Neotree buffers<CR>", opts)
 -- Neo-tree git status
 vim.api.nvim_set_keymap("n", "<leader>tg", ":Neotree git_status<CR>", opts)
+
+-- Set different background for active and inactive windows
+vim.api.nvim_exec([[
+  augroup ActiveWindow
+    autocmd!
+    " Apply different highlight for the active window
+    autocmd WinEnter * setlocal winhighlight=Normal:Normal
+    " Apply dimmed highlight for the inactive window
+    autocmd WinLeave * setlocal winhighlight=Normal:NormalNC
+  augroup END
+]], false)
+
+-- Set a dim background for inactive windows
+-- vim.api.nvim_set_hl(0, "NormalNC", { bg = "#2E3440" }) -- Replace with your preferred color
+vim.api.nvim_set_hl(0, "NormalNC", { bg = "#161616" }) -- Replace with your preferred color
+
