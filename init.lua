@@ -133,9 +133,9 @@ vim.api.nvim_set_keymap("n", ";9", ":9wincmd w<CR>", opts)
 vim.api.nvim_set_keymap("n", ";=", ":wincmd =<CR>", opts)
 
 -- Scroll down by 30 lines
-vim.api.nvim_set_keymap("n", "<leader>j", "30j", opts)
+vim.api.nvim_set_keymap("n", "<leader>j", "30jzz", opts)
 -- Scroll up by 30 lines
-vim.api.nvim_set_keymap("n", "<leader>k", "30k", opts)
+vim.api.nvim_set_keymap("n", "<leader>k", "30kzz", opts)
 
 -- Redraw screen
 vim.api.nvim_set_keymap("n", "<leader>.", "<C-l>", opts)
