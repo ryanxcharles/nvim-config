@@ -927,6 +927,13 @@ vim.api.nvim_set_keymap("n", "<leader>tb", ":Neotree buffers<CR>", opts)
 -- Neo-tree git status
 vim.api.nvim_set_keymap("n", "<leader>tg", ":Neotree git_status<CR>", opts)
 
+-- Redefine the :only command to include :e
+-- This is useful specifically for:
+-- :Git diff | Only
+vim.cmd([[
+  command! -bar Only execute 'only' | execute 'edit' | redraw!
+]])
+
 -- Set different background for active and inactive windows
 vim.api.nvim_exec(
   [[
