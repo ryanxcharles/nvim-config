@@ -85,6 +85,9 @@ vim.g.mapleader = " "
 
 local opts = { noremap = true, silent = true }
 
+-- Disable folding by default
+vim.opt.foldenable = false
+
 -- Enable 24-bit RGB color in the terminal
 vim.opt.termguicolors = true
 
