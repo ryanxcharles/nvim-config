@@ -128,19 +128,19 @@ vim.api.nvim_set_keymap("n", ";9", ":9wincmd w<CR>", opts)
 -- Make all windows equal size
 vim.api.nvim_set_keymap("n", ";=", ":wincmd =<CR>", opts)
 
--- Scroll down by 20% of the window height
+-- Scroll down by 30 lines
 vim.api.nvim_set_keymap(
   "n",
-  "<Leader>sd",
-  ':lua vim.cmd("normal! " .. math.floor(vim.fn.winheight(0) * 0.2) .. "jzz")<CR>',
-  { noremap = true, silent = true }
+  "<leader>j",
+  '30j',
+  opts
 )
--- Scroll up by 20% of the window height
+-- Scroll up by 30 lines
 vim.api.nvim_set_keymap(
   "n",
-  "<Leader>su",
-  ':lua vim.cmd("normal! " .. math.floor(vim.fn.winheight(0) * 0.2) .. "kzz")<CR>',
-  { noremap = true, silent = true }
+  "<leader>k",
+  '30k',
+  opts
 )
 
 -- Redraw screen
@@ -888,7 +888,7 @@ vim.api.nvim_create_autocmd("DiagnosticChanged", {
 -- Keybinding to scroll left (increase subtract_last_tabs_N)
 vim.api.nvim_set_keymap(
   "n",
-  "<Leader>th",
+  "<leader>th",
   ":lua _G.subtract_last_tabs_N = _G.subtract_last_tabs_N + 1; _G.refresh_tabline()<CR>",
   { noremap = true, silent = true }
 )
@@ -896,7 +896,7 @@ vim.api.nvim_set_keymap(
 -- Keybinding to scroll right (decrease subtract_last_tabs_N)
 vim.api.nvim_set_keymap(
   "n",
-  "<Leader>tl",
+  "<leader>tl",
   ":lua _G.subtract_last_tabs_N = math.max(0, _G.subtract_last_tabs_N - 1); _G.refresh_tabline()<CR>",
   { noremap = true, silent = true }
 )
@@ -925,10 +925,10 @@ require("neo-tree").setup({
 })
 
 -- Keybinding to toggle Neo-tree
-vim.api.nvim_set_keymap("n", "<Leader>tt", ":Neotree toggle<CR>", opts)
+vim.api.nvim_set_keymap("n", "<leader>tt", ":Neotree toggle<CR>", opts)
 -- Neo-tree files
-vim.api.nvim_set_keymap("n", "<Leader>tf", ":Neotree files<CR>", opts)
+vim.api.nvim_set_keymap("n", "<leader>tf", ":Neotree files<CR>", opts)
 -- Neo-tree buffers
-vim.api.nvim_set_keymap("n", "<Leader>tb", ":Neotree buffers<CR>", opts)
+vim.api.nvim_set_keymap("n", "<leader>tb", ":Neotree buffers<CR>", opts)
 -- Neo-tree git status
-vim.api.nvim_set_keymap("n", "<Leader>tg", ":Neotree git_status<CR>", opts)
+vim.api.nvim_set_keymap("n", "<leader>tg", ":Neotree git_status<CR>", opts)
