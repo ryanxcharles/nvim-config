@@ -895,7 +895,7 @@ vim.api.nvim_set_keymap(
   { noremap = true, silent = true }
 )
 
--- Neo-tree setup
+-- Neo-tree setup (neotree)
 require("neo-tree").setup({
   close_if_last_window = true, -- Closes Neo-tree if it's the last open window
   popup_border_style = "rounded", -- Rounded border for popups
@@ -921,7 +921,7 @@ require("neo-tree").setup({
 -- Keybinding to toggle Neo-tree
 vim.api.nvim_set_keymap("n", "<leader>tt", ":Neotree toggle<CR>", opts)
 -- Neo-tree files
-vim.api.nvim_set_keymap("n", "<leader>tf", ":Neotree files<CR>", opts)
+vim.api.nvim_set_keymap("n", "<leader>tf", ":Neotree filesystem<CR>", opts)
 -- Neo-tree buffers
 vim.api.nvim_set_keymap("n", "<leader>tb", ":Neotree buffers<CR>", opts)
 -- Neo-tree git status
