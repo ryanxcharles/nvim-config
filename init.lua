@@ -933,9 +933,9 @@ vim.api.nvim_exec(
   augroup ActiveWindow
     autocmd!
     " Apply different highlight for the active window
-    autocmd WinEnter * setlocal winhighlight=Normal:Normal
+    autocmd WinEnter,BufWinEnter,TabEnter * setlocal winhighlight=Normal:Normal
     " Apply dimmed highlight for the inactive window
-    autocmd WinLeave * setlocal winhighlight=Normal:NormalNC
+    autocmd WinLeave,BufWinLeave,TabLeave * setlocal winhighlight=Normal:NormalNC
   augroup END
 ]],
   false
@@ -945,7 +945,8 @@ vim.api.nvim_exec(
 vim.api.nvim_set_hl(0, "NormalNC", { bg = "#2e3440" }) -- Replace with your preferred color
 
 -- Set custom highlight for CursorLine (hide cursorline when leaving window)
-vim.api.nvim_exec([[
+vim.api.nvim_exec(
+  [[
   augroup CursorLineControl
     autocmd!
     " When entering a window, set CursorLine to normal color
@@ -954,5 +955,6 @@ vim.api.nvim_exec([[
     " When leaving a window, hide the CursorLine by setting it to the background color
     autocmd WinLeave * highlight CursorLine ctermbg=NONE guibg=bg
   augroup END
-]], false)
-
+]],
+  false
+)
