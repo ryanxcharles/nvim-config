@@ -90,7 +90,7 @@ vim.opt.foldenable = false
 
 -- Show cursor line and cursor column
 vim.opt.cursorline = true
-vim.opt.cursorcolumn = true
+-- vim.opt.cursorcolumn = true
 
 -- Enable 24-bit RGB color in the terminal
 vim.opt.termguicolors = true
@@ -133,19 +133,9 @@ vim.api.nvim_set_keymap("n", ";9", ":9wincmd w<CR>", opts)
 vim.api.nvim_set_keymap("n", ";=", ":wincmd =<CR>", opts)
 
 -- Scroll down by 30 lines
-vim.api.nvim_set_keymap(
-  "n",
-  "<leader>j",
-  '30j',
-  opts
-)
+vim.api.nvim_set_keymap("n", "<leader>j", "30j", opts)
 -- Scroll up by 30 lines
-vim.api.nvim_set_keymap(
-  "n",
-  "<leader>k",
-  '30k',
-  opts
-)
+vim.api.nvim_set_keymap("n", "<leader>k", "30k", opts)
 
 -- Redraw screen
 vim.api.nvim_set_keymap("n", "<leader>.", "<C-l>", opts)
@@ -938,7 +928,8 @@ vim.api.nvim_set_keymap("n", "<leader>tb", ":Neotree buffers<CR>", opts)
 vim.api.nvim_set_keymap("n", "<leader>tg", ":Neotree git_status<CR>", opts)
 
 -- Set different background for active and inactive windows
-vim.api.nvim_exec([[
+vim.api.nvim_exec(
+  [[
   augroup ActiveWindow
     autocmd!
     " Apply different highlight for the active window
@@ -946,9 +937,23 @@ vim.api.nvim_exec([[
     " Apply dimmed highlight for the inactive window
     autocmd WinLeave * setlocal winhighlight=Normal:NormalNC
   augroup END
-]], false)
+]],
+  false
+)
 
 -- Set a dim background for inactive windows
--- vim.api.nvim_set_hl(0, "NormalNC", { bg = "#2E3440" }) -- Replace with your preferred color
-vim.api.nvim_set_hl(0, "NormalNC", { bg = "#161616" }) -- Replace with your preferred color
+vim.api.nvim_set_hl(0, "NormalNC", { bg = "#2E3440" }) -- Replace with your preferred color
+-- vim.api.nvim_set_hl(0, "NormalNC", { bg = "#161616" }) -- Replace with your preferred color
+
+-- Set custom highlight for CursorLine (hide cursorline when leaving window)
+vim.api.nvim_exec([[
+  augroup CursorLineControl
+    autocmd!
+    " When entering a window, set CursorLine to normal color
+    autocmd WinEnter * setlocal cursorline
+    autocmd WinEnter * highlight CursorLine ctermbg=NONE guibg=#2e3440
+    " When leaving a window, hide the CursorLine by setting it to the background color
+    autocmd WinLeave * highlight CursorLine ctermbg=NONE guibg=bg
+  augroup END
+]], false)
 
