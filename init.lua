@@ -389,6 +389,12 @@ lspconfig.biome.setup({
   },
 })
 
+-- Create a custom command :Lint to run biome lint with --fix and --unsafe options
+-- This is useful for sorting tailwind classes
+vim.api.nvim_create_user_command('Lint', function()
+  vim.cmd('!biome lint --fix --unsafe')
+end, {})
+
 local cmp = require("cmp")
 
 -- Set up nvim-cmp (auto-complete)
