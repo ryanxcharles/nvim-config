@@ -254,6 +254,7 @@ vim.api.nvim_create_autocmd("FileType", {
     "javascriptreact",
     "typescriptreact",
     "lua",
+    "markdown",
   },
   callback = function()
     vim.bo.tabstop = 2 -- Number of spaces for a tab
