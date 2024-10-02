@@ -86,7 +86,7 @@ vim.g.mapleader = " "
 local opts = { noremap = true, silent = true }
 
 -- Disable folding by default
-vim.opt.foldenable = false
+-- vim.opt.foldenable = false
 
 -- Show cursor line
 vim.opt.cursorline = true
@@ -540,7 +540,15 @@ require("nvim-treesitter.configs").setup({
 
   -- You can enable more Treesitter features as needed (optional)
   indent = { enable = true }, -- Enable Treesitter-based indentation (optional)
+
+  -- Folding
+  fold = { enable = true }, -- Enable Treesitter-based folding (optional)
 })
+
+-- Use Treesitter for folding
+vim.opt.foldmethod = "expr"
+vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
+vim.opt.foldenable = false -- Disable folding by default
 
 -- Create an autocmd to manually set TOML syntax for front matter inside Markdown
 vim.api.nvim_exec(
