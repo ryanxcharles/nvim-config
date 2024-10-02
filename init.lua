@@ -353,13 +353,13 @@ lspconfig.ts_ls.setup({
 
 lspconfig.biome.setup({
   on_attach = function(client, bufnr)
-    -- Enable diagnostic messages (linting)
-    vim.api.nvim_create_autocmd("BufWritePre", {
-      buffer = bufnr,
-      callback = function()
-        vim.lsp.buf.format({ bufnr = bufnr })
-      end,
-    })
+    -- Format on save (disabled for now)
+    -- vim.api.nvim_create_autocmd("BufWritePre", {
+    --   buffer = bufnr,
+    --   callback = function()
+    --     vim.lsp.buf.format({ bufnr = bufnr })
+    --   end,
+    -- })
   end,
   cmd = { "biome", "lsp-proxy" },
   filetypes = {
