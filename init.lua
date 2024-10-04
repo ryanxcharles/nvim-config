@@ -132,17 +132,27 @@ vim.api.nvim_set_keymap("n", ";9", ":9wincmd w<CR>", opts)
 -- Make all windows equal size
 vim.api.nvim_set_keymap("n", ";=", ":wincmd =<CR>", opts)
 
--- Scroll down by 30 lines
-vim.api.nvim_set_keymap("n", "<leader>j", "30jzz", opts)
--- Scroll up by 30 lines
-vim.api.nvim_set_keymap("n", "<leader>k", "30kzz", opts)
+-- Scroll down by 25% of the window height
+vim.api.nvim_set_keymap(
+  "n",
+  "<leader>j",
+  ":lua vim.cmd('normal! ' .. math.floor(vim.fn.winheight(0) * 0.25) .. 'jzz')<CR>",
+  opts
+)
+-- Scroll up by 25% of the window height
+vim.api.nvim_set_keymap(
+  "n",
+  "<leader>k",
+  ":lua vim.cmd('normal! ' .. math.floor(vim.fn.winheight(0) * 0.25) .. 'kzz')<CR>",
+  opts
+)
 
 -- Like * but without jumping to the next instance. i.e., it highlights the
 -- current word.
 vim.api.nvim_set_keymap(
-  "n", 
-  "<leader>*", 
-  [[:lua vim.fn.setreg("/", "\\<" .. vim.fn.expand("<cword>") .. "\\>") vim.opt.hlsearch = true<CR>]], 
+  "n",
+  "<leader>*",
+  [[:lua vim.fn.setreg("/", "\\<" .. vim.fn.expand("<cword>") .. "\\>") vim.opt.hlsearch = true<CR>]],
   { noremap = true, silent = true }
 )
 
@@ -391,8 +401,8 @@ lspconfig.biome.setup({
 
 -- Create a custom command :Lint to run biome lint with --fix and --unsafe options
 -- This is useful for sorting tailwind classes
-vim.api.nvim_create_user_command('Fix', function()
-  vim.cmd('!biome lint --fix --unsafe')
+vim.api.nvim_create_user_command("Fix", function()
+  vim.cmd("!biome lint --fix --unsafe")
 end, {})
 
 local cmp = require("cmp")
