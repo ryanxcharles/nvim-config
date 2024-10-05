@@ -666,6 +666,8 @@ vim.g.rainbow_delimiters = {
   },
 }
 
+local CodeCompanionLualine = require("./code-companion-lualine")
+
 -- Customize the statusline with lualine
 require("lualine").setup({
   options = {
@@ -700,7 +702,7 @@ require("lualine").setup({
         always_visible = false, -- Always show diagnostics, even if 0
       },
     },
-    lualine_x = { "encoding", "fileformat", "filetype" }, -- Shows encoding, file format, and type
+    lualine_x = { "encoding", "fileformat", "filetype", CodeCompanionLualine }, -- Shows encoding, file format, and type
     lualine_y = { "progress" }, -- Shows file progress (percentage through file)
     lualine_z = { "location" }, -- Shows line and column number
   },
