@@ -15,9 +15,6 @@ require("packer").startup(function()
   use("nvim-telescope/telescope.nvim") -- Telescope
   use("nvim-lua/plenary.nvim") -- Required by telescope
 
-  -- Minimap for a preview of the file
-  use("wfxr/minimap.vim") -- Use ":Minimap"
-
   -- LSP for TypeScript, etc.
   use("neovim/nvim-lspconfig")
 
@@ -582,13 +579,6 @@ vim.api.nvim_exec(
   false
 )
 
--- Show Minimap for all files by default
-vim.api.nvim_create_autocmd("BufReadPost", {
-  callback = function()
-    vim.cmd("Minimap")
-  end,
-})
-
 -- GitHub Copilot
 
 -- Copilot uses tab to accept suggestions by default. If you want to use tab for
@@ -850,15 +840,22 @@ function MyTabline()
       end
 
       -- Append the buffer name and diagnostics to the tab string
-      if not string.find(bufname, "-MINIMAP-") then -- Exclude Minimap buffers if present
-        tab_str = tab_str
-          .. " "
-          .. path_letters
-          .. bufname
-          .. diagnostic_str
-          .. modified
-          .. " |"
-      end
+      tab_str = tab_str
+        .. " "
+        .. path_letters
+        .. bufname
+        .. diagnostic_str
+        .. modified
+        .. " |"
+      -- if not string.find(bufname, "-MINIMAP-") then -- Exclude Minimap buffers if present
+      --   tab_str = tab_str
+      --     .. " "
+      --     .. path_letters
+      --     .. bufname
+      --     .. diagnostic_str
+      --     .. modified
+      --     .. " |"
+      -- end
     end
 
     -- Remove trailing " | " from the last window in the tab
