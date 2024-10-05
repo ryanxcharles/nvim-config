@@ -77,6 +77,27 @@ require("packer").startup(function()
 
   -- Codewindow ("minimap" alternative)
   use("gorbit99/codewindow.nvim")
+
+  -- Dressing - better input boxes and other UI elements
+  use("stevearc/dressing.nvim")
+
+  -- Code companion - for chat and code sharing with AI
+  use({
+    "olimorris/codecompanion.nvim",
+    config = function()
+      require("codecompanion").setup()
+    end,
+    requires = {
+      "nvim-lua/plenary.nvim",
+      "nvim-treesitter/nvim-treesitter",
+      "hrsh7th/nvim-cmp", -- Optional: For using slash commands and variables in the chat buffer
+      "nvim-telescope/telescope.nvim", -- Optional: For using slash commands
+      "stevearc/dressing.nvim", -- Optional: Improves `vim.ui.select`
+    },
+  })
+
+  -- Better comment/uncomment blocks or selection
+  use("tpope/vim-commentary")
 end)
 
 -- Set space as the leader key. Space is the biggest key and the easiest to
