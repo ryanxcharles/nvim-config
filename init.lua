@@ -173,17 +173,6 @@ vim.api.nvim_exec(
   false
 )
 
-local codewindow = require("codewindow")
-codewindow.setup({
-  -- <leader>mo - open the minimap
-  -- <leader>mc - close the minimap
-  -- <leader>mf - focus/unfocus the minimap
-  -- <leader>mm - toggle the minimap
-  minimap_width = 10,
-  auto_enable = true,
-})
-codewindow.apply_default_keybinds()
-
 -- Telescope setup - use ripgrep for searching files
 require("telescope").setup({
   defaults = {
@@ -973,15 +962,39 @@ vim.cmd([[
   command! -bar Only execute 'only' | execute 'edit' | redraw!
 ]])
 
+local codewindow = require("codewindow")
+codewindow.setup({
+  -- <leader>mo - open the minimap
+  -- <leader>mc - close the minimap
+  -- <leader>mf - focus/unfocus the minimap
+  -- <leader>mm - toggle the minimap
+  minimap_width = 10,
+  auto_enable = true,
+  -- no window border
+  -- order options: 'none', 'single', 'double', 'shadow', 'rounded'
+  window_border = "single",
+})
+codewindow.apply_default_keybinds()
+
+-- Highlight settings for active and inactive codewindow borders
+vim.api.nvim_set_hl(0, "CodewindowBorderActive", { fg = "#81a1c1" }) -- Active border color
+vim.api.nvim_set_hl(
+  0,
+  "CodewindowBorderInactive",
+  { bg = "#2e3440", fg = "#4c566a" }
+) -- Inactive border color
+vim.api.nvim_set_hl(0, "CodewindowBorder", { bg = "#2e3440", fg = "#4c566a" }) -- Inactive border color
+vim.api.nvim_set_hl(0, "CodewindowBackground", { bg = "#2e3440" })
+
 -- Set different background for active and inactive windows
 vim.api.nvim_exec(
   [[
   augroup ActiveWindow
     autocmd!
     " Apply different highlight for the active window
-    autocmd WinEnter,BufEnter,TabEnter * setlocal winhighlight=Normal:Normal
+    autocmd WinEnter,BufEnter,TabEnter * setlocal winhighlight=Normal:Normal,FloatBorder:CodewindowBorderActive
     " Apply dimmed highlight for the inactive window
-    autocmd WinLeave,BufLeave,TabLeave * setlocal winhighlight=Normal:NormalNC
+    autocmd WinLeave,BufLeave,TabLeave * setlocal winhighlight=Normal:NormalNC,FloatBorder:CodewindowBorderInactive
   augroup END
 ]],
   false
