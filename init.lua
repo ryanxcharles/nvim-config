@@ -74,6 +74,9 @@ require("packer").startup(function()
       "MunifTanjim/nui.nvim", -- Required dependency for UI components
     },
   })
+
+  -- Codewindow ("minimap" alternative)
+  use("gorbit99/codewindow.nvim")
 end)
 
 -- Set space as the leader key. Space is the biggest key and the easiest to
@@ -169,6 +172,17 @@ vim.api.nvim_exec(
 ]],
   false
 )
+
+local codewindow = require("codewindow")
+codewindow.setup({
+  -- <leader>mo - open the minimap
+  -- <leader>mc - close the minimap
+  -- <leader>mf - focus/unfocus the minimap
+  -- <leader>mm - toggle the minimap
+  minimap_width = 10,
+  auto_enable = true,
+})
+codewindow.apply_default_keybinds()
 
 -- Telescope setup - use ripgrep for searching files
 require("telescope").setup({
@@ -840,22 +854,16 @@ function MyTabline()
       end
 
       -- Append the buffer name and diagnostics to the tab string
-      tab_str = tab_str
-        .. " "
-        .. path_letters
-        .. bufname
-        .. diagnostic_str
-        .. modified
-        .. " |"
       -- if not string.find(bufname, "-MINIMAP-") then -- Exclude Minimap buffers if present
-      --   tab_str = tab_str
-      --     .. " "
-      --     .. path_letters
-      --     .. bufname
-      --     .. diagnostic_str
-      --     .. modified
-      --     .. " |"
-      -- end
+      if not string.find(bufname, "CodeWindow") then -- Exclude Codewindow buffers if present
+        tab_str = tab_str
+          .. " "
+          .. path_letters
+          .. bufname
+          .. diagnostic_str
+          .. modified
+          .. " |"
+      end
     end
 
     -- Remove trailing " | " from the last window in the tab
