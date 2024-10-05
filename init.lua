@@ -177,18 +177,28 @@ vim.api.nvim_set_keymap(
   "n",
   "<Leader>*",
   [[:lua vim.fn.setreg("/", "\\<" .. vim.fn.expand("<cword>") .. "\\>") vim.opt.hlsearch = true<CR>]],
-  { noremap = true, silent = true }
+  opts
 )
 
 -- Redraw screen
 vim.api.nvim_set_keymap("n", "<Leader>.", "<C-l>", opts)
 
 -- CodeCompanion key bindings
-vim.api.nvim_set_keymap("n", "<C-a>", "<cmd>CodeCompanionActions<cr>", { noremap = true, silent = true })
-vim.api.nvim_set_keymap("v", "<C-a>", "<cmd>CodeCompanionActions<cr>", { noremap = true, silent = true })
-vim.api.nvim_set_keymap("n", "<LocalLeader>a", "<cmd>CodeCompanionChat Toggle<cr>", { noremap = true, silent = true })
-vim.api.nvim_set_keymap("v", "<LocalLeader>a", "<cmd>CodeCompanionChat Toggle<cr>", { noremap = true, silent = true })
-vim.api.nvim_set_keymap("v", "ga", "<cmd>CodeCompanionChat Add<cr>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap("n", "<C-a>", "<cmd>CodeCompanionActions<cr>", opts)
+vim.api.nvim_set_keymap("v", "<C-a>", "<cmd>CodeCompanionActions<cr>", opts)
+vim.api.nvim_set_keymap(
+  "n",
+  "<LocalLeader>a",
+  "<cmd>CodeCompanionChat Toggle<cr>",
+  opts
+)
+vim.api.nvim_set_keymap(
+  "v",
+  "<LocalLeader>a",
+  "<cmd>CodeCompanionChat Toggle<cr>",
+  opts
+)
+vim.api.nvim_set_keymap("v", "ga", "<cmd>CodeCompanionChat Add<cr>", opts)
 
 -- Expand 'cc' into 'CodeCompanion' in the command line
 vim.cmd([[cab cc CodeCompanion]])
@@ -948,7 +958,7 @@ vim.api.nvim_set_keymap(
   "n",
   "<Leader>th",
   ":lua _G.subtract_last_tabs_N = _G.subtract_last_tabs_N + 1; _G.refresh_tabline()<CR>",
-  { noremap = true, silent = true }
+  opts
 )
 
 -- Keybinding to scroll right (decrease subtract_last_tabs_N)
@@ -956,7 +966,7 @@ vim.api.nvim_set_keymap(
   "n",
   "<Leader>tl",
   ":lua _G.subtract_last_tabs_N = math.max(0, _G.subtract_last_tabs_N - 1); _G.refresh_tabline()<CR>",
-  { noremap = true, silent = true }
+  opts
 )
 
 -- Neo-tree setup (neotree)
