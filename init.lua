@@ -126,17 +126,17 @@ vim.opt.number = true
 vim.opt.tabstop = 2
 
 -- Key mappings using leader key
-vim.api.nvim_set_keymap("n", "<leader>w", ":w<CR>", opts)
-vim.api.nvim_set_keymap("n", "<leader>h", "gT", opts)
-vim.api.nvim_set_keymap("n", "<leader>l", "gt", opts)
+vim.api.nvim_set_keymap("n", "<Leader>w", ":w<CR>", opts)
+vim.api.nvim_set_keymap("n", "<Leader>h", "gT", opts)
+vim.api.nvim_set_keymap("n", "<Leader>l", "gt", opts)
 vim.api.nvim_set_keymap(
   "n",
-  "<leader>n",
-  ":tabnew<CR><leader>e",
+  "<Leader>n",
+  ":tabnew<CR><Leader>e",
   { silent = true }
 )
-vim.api.nvim_set_keymap("n", "<leader>q", ":q<CR>", opts)
---vim.api.nvim_set_keymap("n", "<leader>e", ":e ", opts)
+vim.api.nvim_set_keymap("n", "<Leader>q", ":q<CR>", opts)
+--vim.api.nvim_set_keymap("n", "<Leader>e", ":e ", opts)
 
 -- Window navigation
 vim.api.nvim_set_keymap("n", ";h", ":wincmd h<CR>", opts)
@@ -159,14 +159,14 @@ vim.api.nvim_set_keymap("n", ";=", ":wincmd =<CR>", opts)
 -- Scroll down by 25% of the window height
 vim.api.nvim_set_keymap(
   "n",
-  "<leader>j",
+  "<Leader>j",
   ":lua vim.cmd('normal! ' .. math.floor(vim.fn.winheight(0) * 0.25) .. 'jzz')<CR>",
   opts
 )
 -- Scroll up by 25% of the window height
 vim.api.nvim_set_keymap(
   "n",
-  "<leader>k",
+  "<Leader>k",
   ":lua vim.cmd('normal! ' .. math.floor(vim.fn.winheight(0) * 0.25) .. 'kzz')<CR>",
   opts
 )
@@ -175,13 +175,13 @@ vim.api.nvim_set_keymap(
 -- current word.
 vim.api.nvim_set_keymap(
   "n",
-  "<leader>*",
+  "<Leader>*",
   [[:lua vim.fn.setreg("/", "\\<" .. vim.fn.expand("<cword>") .. "\\>") vim.opt.hlsearch = true<CR>]],
   { noremap = true, silent = true }
 )
 
 -- Redraw screen
-vim.api.nvim_set_keymap("n", "<leader>.", "<C-l>", opts)
+vim.api.nvim_set_keymap("n", "<Leader>.", "<C-l>", opts)
 
 -- CodeCompanion key bindings
 vim.api.nvim_set_keymap("n", "<C-a>", "<cmd>CodeCompanionActions<cr>", { noremap = true, silent = true })
@@ -230,54 +230,54 @@ require("telescope").setup({
 -- Set up keybinding to always show hidden files
 vim.api.nvim_set_keymap(
   "n",
-  "<leader>e",
+  "<Leader>e",
   ":lua require('telescope.builtin').find_files({ hidden = true })<CR>",
   opts
 )
 
 -- Telscope search inside files with ripgrep (rg)
-vim.api.nvim_set_keymap("n", "<leader>fg", ":Telescope live_grep<CR>", opts)
+vim.api.nvim_set_keymap("n", "<Leader>fg", ":Telescope live_grep<CR>", opts)
 
 -- LSP integration with Telescope for TypeScript and other languages
 -- Space + fs: Search document symbols (like variables, functions, etc.).
 vim.api.nvim_set_keymap(
   "n",
-  "<leader>fs",
+  "<Leader>fs",
   "<cmd>Telescope lsp_document_symbols<CR>",
   opts
 )
 -- Space + fr: Find all references to a symbol.
 vim.api.nvim_set_keymap(
   "n",
-  "<leader>fr",
+  "<Leader>fr",
   "<cmd>Telescope lsp_references<CR>",
   opts
 )
 -- Space + fd: Search through diagnostics (errors, warnings).
 vim.api.nvim_set_keymap(
   "n",
-  "<leader>fd",
+  "<Leader>fd",
   "<cmd>Telescope diagnostics<CR>",
   opts
 )
 -- Show all diagnostics on the current line in a floating window
 vim.api.nvim_set_keymap(
   "n",
-  "<leader>ds",
+  "<Leader>ds",
   "<cmd>lua vim.diagnostic.open_float(nil, { focusable = false })<CR>",
   opts
 )
 -- Go to the next diagnostic (error, warning, etc.)
 vim.api.nvim_set_keymap(
   "n",
-  "<leader>dn",
+  "<Leader>dn",
   ":lua vim.diagnostic.goto_next()<CR>",
   opts
 )
 -- Go to the previous diagnostic (error, warning, etc.)
 vim.api.nvim_set_keymap(
   "n",
-  "<leader>dp",
+  "<Leader>dp",
   ":lua vim.diagnostic.goto_prev()<CR>",
   opts
 )
@@ -285,7 +285,7 @@ vim.api.nvim_set_keymap(
 -- Key binding to reload init.lua file
 vim.api.nvim_set_keymap(
   "n",
-  "<leader>r",
+  "<Leader>r",
   ":luafile ~/.config/nvim/init.lua<CR>",
   opts
 )
@@ -360,7 +360,7 @@ lspconfig.ts_ls.setup({
     vim.api.nvim_buf_set_keymap(
       bufnr,
       "n",
-      "<leader>rn",
+      "<Leader>rn",
       "<cmd>lua vim.lsp.buf.rename()<CR>",
       opts
     )
@@ -369,7 +369,7 @@ lspconfig.ts_ls.setup({
     vim.api.nvim_buf_set_keymap(
       bufnr,
       "n",
-      "<leader>ca",
+      "<Leader>ca",
       "<cmd>lua vim.lsp.buf.code_action()<CR>",
       opts
     )
@@ -377,7 +377,7 @@ lspconfig.ts_ls.setup({
     -- Shortcut to organize imports
     vim.api.nvim_set_keymap(
       "n",
-      "<leader>oi",
+      "<Leader>oi",
       '<cmd>lua vim.lsp.buf.code_action({ context = { only = { "source.organizeImports" } }, apply = true })<CR>',
       opts
     )
@@ -946,7 +946,7 @@ vim.api.nvim_create_autocmd("DiagnosticChanged", {
 -- Keybinding to scroll left (increase subtract_last_tabs_N)
 vim.api.nvim_set_keymap(
   "n",
-  "<leader>th",
+  "<Leader>th",
   ":lua _G.subtract_last_tabs_N = _G.subtract_last_tabs_N + 1; _G.refresh_tabline()<CR>",
   { noremap = true, silent = true }
 )
@@ -954,7 +954,7 @@ vim.api.nvim_set_keymap(
 -- Keybinding to scroll right (decrease subtract_last_tabs_N)
 vim.api.nvim_set_keymap(
   "n",
-  "<leader>tl",
+  "<Leader>tl",
   ":lua _G.subtract_last_tabs_N = math.max(0, _G.subtract_last_tabs_N - 1); _G.refresh_tabline()<CR>",
   { noremap = true, silent = true }
 )
@@ -983,13 +983,13 @@ require("neo-tree").setup({
 })
 
 -- Keybinding to toggle Neo-tree
-vim.api.nvim_set_keymap("n", "<leader>tt", ":Neotree toggle<CR>", opts)
+vim.api.nvim_set_keymap("n", "<Leader>tt", ":Neotree toggle<CR>", opts)
 -- Neo-tree files
-vim.api.nvim_set_keymap("n", "<leader>tf", ":Neotree filesystem<CR>", opts)
+vim.api.nvim_set_keymap("n", "<Leader>tf", ":Neotree filesystem<CR>", opts)
 -- Neo-tree buffers
-vim.api.nvim_set_keymap("n", "<leader>tb", ":Neotree buffers<CR>", opts)
+vim.api.nvim_set_keymap("n", "<Leader>tb", ":Neotree buffers<CR>", opts)
 -- Neo-tree git status
-vim.api.nvim_set_keymap("n", "<leader>tg", ":Neotree git_status<CR>", opts)
+vim.api.nvim_set_keymap("n", "<Leader>tg", ":Neotree git_status<CR>", opts)
 
 -- Redefine the :only command to include :e
 -- This is useful specifically for:
@@ -1000,10 +1000,10 @@ vim.cmd([[
 
 local codewindow = require("codewindow")
 codewindow.setup({
-  -- <leader>mo - open the minimap
-  -- <leader>mc - close the minimap
-  -- <leader>mf - focus/unfocus the minimap
-  -- <leader>mm - toggle the minimap
+  -- <Leader>mo - open the minimap
+  -- <Leader>mc - close the minimap
+  -- <Leader>mf - focus/unfocus the minimap
+  -- <Leader>mm - toggle the minimap
   minimap_width = 10,
   auto_enable = true,
   -- no window border
