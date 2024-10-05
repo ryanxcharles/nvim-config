@@ -98,6 +98,9 @@ require("packer").startup(function()
 
   -- Better comment/uncomment blocks or selection
   use("tpope/vim-commentary")
+
+  -- Surround: add, change, and delete surroundings
+  use("tpope/vim-surround")
 end)
 
 -- Set space as the leader key. Space is the biggest key and the easiest to
