@@ -14,6 +14,12 @@ require("packer").startup(function()
   -- Telescope for fuzzy finding
   use("nvim-telescope/telescope.nvim") -- Telescope
   use("nvim-lua/plenary.nvim") -- Required by telescope
+  --
+  -- Used to use .gitignore for Telescope
+  use({
+    "nvim-telescope/telescope-fzf-native.nvim",
+    run = "make",
+  })
 
   -- LSP for TypeScript, etc.
   use("neovim/nvim-lspconfig")
@@ -236,12 +242,15 @@ require("telescope").setup({
   },
 })
 
+-- Load the telescope-fzf-native extension
+require("telescope").load_extension("fzf")
+
 -- Key binding to use Telescope to search files
--- Set up keybinding to always show hidden files
+-- Set up keybinding to always show hidden files and respect .gitignore
 vim.api.nvim_set_keymap(
   "n",
   "<Leader>e",
-  ":lua require('telescope.builtin').find_files({ hidden = true, file_ignore_patterns = { '.git' } })<CR>",
+  ":lua require('telescope').extensions.fzf.git_files({ hidden = true, file_ignore_patterns = { '.git' } })<CR>",
   opts
 )
 
