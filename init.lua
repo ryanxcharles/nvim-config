@@ -241,7 +241,7 @@ require("telescope").setup({
 vim.api.nvim_set_keymap(
   "n",
   "<Leader>e",
-  ":lua require('telescope.builtin').find_files({ hidden = true })<CR>",
+  ":lua require('telescope.builtin').find_files({ hidden = true, file_ignore_patterns = { '.git' } })<CR>",
   opts
 )
 
