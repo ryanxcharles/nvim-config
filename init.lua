@@ -1056,6 +1056,7 @@ vim.cmd([[
   command! -bar Only execute 'only' | execute 'edit' | redraw!
 ]])
 
+-- Codewindow setup
 local codewindow = require("codewindow")
 codewindow.setup({
   -- <Leader>mo - open the minimap
@@ -1063,9 +1064,9 @@ codewindow.setup({
   -- <Leader>mf - focus/unfocus the minimap
   -- <Leader>mm - toggle the minimap
   minimap_width = 10,
-  auto_enable = true,
+  auto_enable = false,
   -- no window border
-  -- order options: 'none', 'single', 'double', 'shadow', 'rounded'
+  -- border options: 'none', 'single', 'double'
   window_border = "single",
 })
 codewindow.apply_default_keybinds()
@@ -1110,4 +1111,5 @@ vim.api.nvim_exec(
   augroup END
 ]],
   false
+
 )
