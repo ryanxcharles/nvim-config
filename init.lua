@@ -122,8 +122,10 @@ vim.opt.termguicolors = true
 -- Show line numbers by default
 vim.opt.number = true
 
--- Number of spaces for a tab
-vim.opt.tabstop = 2
+-- Number of spaces for a tab by default
+vim.opt.tabstop = 2 -- Number of spaces for a tab
+vim.opt.shiftwidth = 2 -- Number of spaces for auto-indent
+vim.opt.expandtab = true -- Use spaces instead of tabs
 
 -- Key mappings using leader key
 vim.api.nvim_set_keymap("n", "<Leader>w", ":w<CR>", opts)
@@ -308,6 +310,7 @@ vim.api.nvim_create_autocmd("FileType", {
     "typescriptreact",
     "lua",
     "markdown",
+    "css",
   },
   callback = function()
     vim.bo.tabstop = 2 -- Number of spaces for a tab
