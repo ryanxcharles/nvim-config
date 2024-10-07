@@ -134,7 +134,7 @@ vim.api.nvim_set_keymap("n", "<Leader>l", "gt", opts)
 vim.api.nvim_set_keymap(
   "n",
   "<Leader>n",
-  ":tabnew<CR><Leader>e",
+  ":tabnew<CR>",
   { silent = true }
 )
 vim.api.nvim_set_keymap("n", "<Leader>q", ":q<CR>", opts)
