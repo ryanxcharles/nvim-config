@@ -131,14 +131,9 @@ vim.opt.expandtab = true -- Use spaces instead of tabs
 vim.api.nvim_set_keymap("n", "<Leader>w", ":w<CR>", opts)
 vim.api.nvim_set_keymap("n", "<Leader>h", "gT", opts)
 vim.api.nvim_set_keymap("n", "<Leader>l", "gt", opts)
-vim.api.nvim_set_keymap(
-  "n",
-  "<Leader>n",
-  ":tabnew<CR>",
-  { silent = true }
-)
+vim.api.nvim_set_keymap("n", "<Leader>n", ":tabnew<CR>", { silent = true })
 vim.api.nvim_set_keymap("n", "<Leader>q", ":q<CR>", opts)
---vim.api.nvim_set_keymap("n", "<Leader>e", ":e ", opts)
+vim.api.nvim_set_keymap("n", "<Leader>v", ":vsp<CR>:wincmd l<CR>", opts)
 
 -- Window navigation
 vim.api.nvim_set_keymap("n", ";h", ":wincmd h<CR>", opts)
