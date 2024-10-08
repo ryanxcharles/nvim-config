@@ -561,16 +561,18 @@ require("formatter").setup({
   },
 })
 
--- TailwindCSS colors
+-- Step 1: Set up tailwindcss-colors globally
 require("tailwindcss-colors").setup()
 
--- TailwindCSS Language Server setup
+-- Step 2: Set up TailwindCSS Language Server and attach tailwindcss-colors to the current buffer
 lspconfig.tailwindcss.setup({
   on_attach = function(client, bufnr)
-    -- Any additional LSP settings or keybindings you want for Tailwind
+    -- Attach tailwindcss-colors to the current buffer
     require("tailwindcss-colors").buf_attach(bufnr)
+
+    -- Add any additional LSP settings or keybindings for Tailwind here
   end,
-  filetypes = { "html", "javascriptreact", "typescriptreact", "css" }, -- Add any other file types where you use Tailwind
+  filetypes = { "html", "javascriptreact", "typescriptreact", "css" }, -- Add other file types where you use Tailwind
 })
 
 -- -- Ensure tailwindcss-colors is attached whenever the LSP client is attached
