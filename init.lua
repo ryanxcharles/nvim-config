@@ -131,7 +131,7 @@ vim.opt.expandtab = true -- Use spaces instead of tabs
 vim.api.nvim_set_keymap("n", "<Leader>w", ":w<CR>", opts)
 vim.api.nvim_set_keymap("n", "<Leader>h", "gT", opts)
 vim.api.nvim_set_keymap("n", "<Leader>l", "gt", opts)
-vim.api.nvim_set_keymap("n", "<Leader>n", ":tabnew<CR>", { silent = true })
+vim.api.nvim_set_keymap("n", "<Leader>n", ":tabnew<CR><Leader>e", { silent = true })
 vim.api.nvim_set_keymap("n", "<Leader>q", ":q<CR>", opts)
 vim.api.nvim_set_keymap("n", "<Leader>v", ":vsp<CR>:wincmd l<CR>", opts)
 
@@ -547,13 +547,31 @@ require("formatter").setup({
 lspconfig.tailwindcss.setup({
   on_attach = function(client, bufnr)
     -- Any additional LSP settings or keybindings you want for Tailwind
-    require("tailwindcss-colors").buf_attach(bufnr)
+    -- require("tailwindcss-colors").buf_attach(bufnr)
   end,
   filetypes = { "html", "javascriptreact", "typescriptreact", "css" }, -- Add any other file types where you use Tailwind
 })
 
 -- TailwindCSS colors
 require("tailwindcss-colors").setup()
+
+-- Ensure tailwindcss-colors is attached whenever the LSP client is attached
+vim.api.nvim_create_autocmd("LspAttach", {
+  callback = function(args)
+    local client = vim.lsp.get_client_by_id(args.data.client_id)
+    if client.name == "tailwindcss" then
+      require("tailwindcss-colors").buf_attach(args.buf)
+    end
+  end,
+})
+
+-- Autocmd to reattach tailwindcss-colors when entering the buffer
+vim.api.nvim_create_autocmd("BufEnter", {
+  pattern = { "*.html", "*.css", "*.jsx", "*.tsx", "*.js", "*.ts" },
+  callback = function()
+    require("tailwindcss-colors").buf_attach(0)
+  end,
+})
 
 -- Enable colorizer for CSS, HTML, JavaScript, and more, but not Tailwind
 require("colorizer").setup({
