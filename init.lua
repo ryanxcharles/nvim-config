@@ -131,7 +131,12 @@ vim.opt.expandtab = true -- Use spaces instead of tabs
 vim.api.nvim_set_keymap("n", "<Leader>w", ":w<CR>", opts)
 vim.api.nvim_set_keymap("n", "<Leader>h", "gT", opts)
 vim.api.nvim_set_keymap("n", "<Leader>l", "gt", opts)
-vim.api.nvim_set_keymap("n", "<Leader>n", ":tabnew<CR><Leader>e", { silent = true })
+vim.api.nvim_set_keymap(
+  "n",
+  "<Leader>n",
+  ":tabnew<CR><Leader>e",
+  { silent = true }
+)
 vim.api.nvim_set_keymap("n", "<Leader>q", ":q<CR>", opts)
 vim.api.nvim_set_keymap("n", "<Leader>v", ":vsp<CR>:wincmd l<CR>", opts)
 
@@ -217,6 +222,7 @@ vim.api.nvim_exec(
 -- Telescope setup - use ripgrep for searching files
 require("telescope").setup({
   defaults = {
+    file_ignore_patterns = { "node_modules" }, -- Exclude node_modules from typeahead matching
     vimgrep_arguments = {
       "rg", -- Ripgrep binary
       "--color=never",
@@ -398,6 +404,18 @@ lspconfig.ts_ls.setup({
 
   -- Command to launch the TypeScript Language Server via the global `pnpm` path
   cmd = { "typescript-language-server", "--stdio" },
+
+  settings = {
+    -- Add TypeScript-specific settings
+    typescript = {
+      -- Enable the ts language server for JavaScript files
+      preferences = {
+        tsserver = {
+          exclude = { "**/node_modules/**" },
+        },
+      },
+    },
+  },
 
   -- Add capabilities for autocompletion
   capabilities = require("cmp_nvim_lsp").default_capabilities(),
@@ -1129,5 +1147,4 @@ vim.api.nvim_exec(
   augroup END
 ]],
   false
-
 )
