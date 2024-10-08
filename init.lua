@@ -561,6 +561,9 @@ require("formatter").setup({
   },
 })
 
+-- TailwindCSS colors
+require("tailwindcss-colors").setup()
+
 -- TailwindCSS Language Server setup
 lspconfig.tailwindcss.setup({
   on_attach = function(client, bufnr)
@@ -569,9 +572,6 @@ lspconfig.tailwindcss.setup({
   end,
   filetypes = { "html", "javascriptreact", "typescriptreact", "css" }, -- Add any other file types where you use Tailwind
 })
-
--- TailwindCSS colors
-require("tailwindcss-colors").setup()
 
 -- -- Ensure tailwindcss-colors is attached whenever the LSP client is attached
 -- vim.api.nvim_create_autocmd("LspAttach", {
