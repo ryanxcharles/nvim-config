@@ -547,7 +547,7 @@ require("formatter").setup({
 lspconfig.tailwindcss.setup({
   on_attach = function(client, bufnr)
     -- Any additional LSP settings or keybindings you want for Tailwind
-    -- require("tailwindcss-colors").buf_attach(bufnr)
+    require("tailwindcss-colors").buf_attach(bufnr)
   end,
   filetypes = { "html", "javascriptreact", "typescriptreact", "css" }, -- Add any other file types where you use Tailwind
 })
@@ -555,23 +555,23 @@ lspconfig.tailwindcss.setup({
 -- TailwindCSS colors
 require("tailwindcss-colors").setup()
 
--- Ensure tailwindcss-colors is attached whenever the LSP client is attached
-vim.api.nvim_create_autocmd("LspAttach", {
-  callback = function(args)
-    local client = vim.lsp.get_client_by_id(args.data.client_id)
-    if client.name == "tailwindcss" then
-      require("tailwindcss-colors").buf_attach(args.buf)
-    end
-  end,
-})
+-- -- Ensure tailwindcss-colors is attached whenever the LSP client is attached
+-- vim.api.nvim_create_autocmd("LspAttach", {
+--   callback = function(args)
+--     local client = vim.lsp.get_client_by_id(args.data.client_id)
+--     if client.name == "tailwindcss" then
+--       require("tailwindcss-colors").buf_attach(args.buf)
+--     end
+--   end,
+-- })
 
--- Autocmd to reattach tailwindcss-colors when entering the buffer
-vim.api.nvim_create_autocmd("BufEnter", {
-  pattern = { "*.html", "*.css", "*.jsx", "*.tsx", "*.js", "*.ts" },
-  callback = function()
-    require("tailwindcss-colors").buf_attach(0)
-  end,
-})
+-- -- Autocmd to reattach tailwindcss-colors when entering the buffer
+-- vim.api.nvim_create_autocmd("BufEnter", {
+--   pattern = { "*.html", "*.css", "*.jsx", "*.tsx", "*.js", "*.ts" },
+--   callback = function()
+--     require("tailwindcss-colors").buf_attach(0)
+--   end,
+-- })
 
 -- Enable colorizer for CSS, HTML, JavaScript, and more, but not Tailwind
 require("colorizer").setup({
