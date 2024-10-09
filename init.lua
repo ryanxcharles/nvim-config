@@ -33,9 +33,6 @@ require("packer").startup(function()
   -- Colorizer for HTML/CSS (but not Tailwind)
   use("norcalli/nvim-colorizer.lua")
 
-  -- Colors for Tailwind
-  use("themaxmarchuk/tailwindcss-colors.nvim")
-
   -- Accurate syntax highlighting for typescript
   use("nvim-treesitter/nvim-treesitter")
 
@@ -561,37 +558,6 @@ require("formatter").setup({
   },
 })
 
--- Step 1: Set up tailwindcss-colors globally
-require("tailwindcss-colors").setup()
-
--- Step 2: Set up TailwindCSS Language Server and attach tailwindcss-colors to the current buffer
-lspconfig.tailwindcss.setup({
-  on_attach = function(client, bufnr)
-    -- Attach tailwindcss-colors to the current buffer
-    require("tailwindcss-colors").buf_attach(bufnr)
-
-    -- Add any additional LSP settings or keybindings for Tailwind here
-  end,
-  filetypes = { "html", "javascriptreact", "typescriptreact", "css" }, -- Add other file types where you use Tailwind
-})
-
--- -- Ensure tailwindcss-colors is attached whenever the LSP client is attached
--- vim.api.nvim_create_autocmd("LspAttach", {
---   callback = function(args)
---     local client = vim.lsp.get_client_by_id(args.data.client_id)
---     if client.name == "tailwindcss" then
---       require("tailwindcss-colors").buf_attach(args.buf)
---     end
---   end,
--- })
-
--- -- Autocmd to reattach tailwindcss-colors when entering the buffer
--- vim.api.nvim_create_autocmd("BufEnter", {
---   pattern = { "*.html", "*.css", "*.jsx", "*.tsx", "*.js", "*.ts" },
---   callback = function()
---     require("tailwindcss-colors").buf_attach(0)
---   end,
--- })
 
 -- Enable colorizer for CSS, HTML, JavaScript, and more, but not Tailwind
 require("colorizer").setup({
