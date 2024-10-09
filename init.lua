@@ -5,6 +5,7 @@
 -- biome v1.9.2 (for TypeScript formatting)
 -- Nerdfonts (for icons)
 -- git (for git integration)
+-- tailwindcss-language-server (for Tailwind CSS completions and colors)
 
 -- ~/.config/nvim/init.lua
 require("packer").startup(function()
