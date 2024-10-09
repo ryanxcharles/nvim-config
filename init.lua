@@ -455,6 +455,14 @@ lspconfig.biome.setup({
   },
 })
 
+
+lspconfig.tailwindcss.setup({
+  on_attach = function(client, bufnr)
+    -- Add any additional LSP settings or keybindings for Tailwind here
+  end,
+  filetypes = { "html", "javascriptreact", "typescriptreact", "css" }, -- Add other file types where you use Tailwind
+})
+
 -- Create a custom command :Lint to run biome lint with --fix and --unsafe options
 -- This is useful for sorting tailwind classes
 vim.api.nvim_create_user_command("Fix", function()
@@ -573,7 +581,6 @@ require("colorizer").setup({
     css_fn = false, -- Enable all CSS *functions*: rgb_fn, hsl_fn
     -- Available modes for `mode`: foreground, background,  virtualtext
     mode = "background", -- Set the display mode.
-    -- Available methods are false / true / "normal" / "lsp" / "both"
     -- True is same as normal
     tailwind = true, -- Enable tailwind colors
     -- parsers can contain values used in |user_default_options|
