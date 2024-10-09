@@ -240,36 +240,41 @@ vim.api.nvim_set_keymap("v", "ga", "<cmd>CodeCompanionChat Add<cr>", opts)
 vim.cmd([[cab cc CodeCompanion]])
 
 -- Tailwind CSS key bindings (tailwind-tools)
-vim.api.nvim_set_keymap(
-  "n",
-  "tw",
-  ":TailwindNextClass<CR>",
-  { noremap = true, silent = true }
-)
-vim.api.nvim_set_keymap(
-  "n",
-  "tp",
-  ":TailwindPrevClass<CR>",
-  { noremap = true, silent = true }
-)
-vim.api.nvim_set_keymap(
-  "n",
-  "tt",
-  ":TailwindConcealToggle<CR>",
-  { noremap = true, silent = true }
-)
-vim.api.nvim_set_keymap(
-  "n",
-  "tr",
-  ":TailwindConcealDisable<CR>",
-  { noremap = true, silent = true }
-)
-vim.api.nvim_set_keymap(
-  "n",
-  "tc",
-  ":TailwindConcealEnable<CR>",
-  { noremap = true, silent = true }
-)
+-- These are disbled for now because they have the following flaw. The code
+-- only detects strings that start with "className", e.g. it detects the
+-- "class" attribute in JSX, but it does not detect other strings that contain
+-- Tailwind classes. However, I very often use Tailwind classes in other
+-- strings, so this is not useful for me.
+-- vim.api.nvim_set_keymap(
+--   "n",
+--   "tw",
+--   ":TailwindNextClass<CR>",
+--   { noremap = true, silent = true }
+-- )
+-- vim.api.nvim_set_keymap(
+--   "n",
+--   "tp",
+--   ":TailwindPrevClass<CR>",
+--   { noremap = true, silent = true }
+-- )
+-- vim.api.nvim_set_keymap(
+--   "n",
+--   "tt",
+--   ":TailwindConcealToggle<CR>",
+--   { noremap = true, silent = true }
+-- )
+-- vim.api.nvim_set_keymap(
+--   "n",
+--   "tr",
+--   ":TailwindConcealDisable<CR>",
+--   { noremap = true, silent = true }
+-- )
+-- vim.api.nvim_set_keymap(
+--   "n",
+--   "tc",
+--   ":TailwindConcealEnable<CR>",
+--   { noremap = true, silent = true }
+-- )
 
 -- TODO: test todo highlighting
 -- Define a highlight group for TODO comments
@@ -535,12 +540,14 @@ lspconfig.tailwindcss.setup({
 })
 
 -- Enable Tailwind CSS concealment by default (tailwind-tools)
-vim.api.nvim_create_autocmd("BufEnter", {
-  buffer = bufnr,
-  callback = function()
-    vim.cmd("TailwindConcealEnable")
-  end,
-})
+-- Disabled because it doesn't work on arbitrary strings (only those starting
+-- with "className") which is not useful for me.
+-- vim.api.nvim_create_autocmd("BufEnter", {
+--   buffer = bufnr,
+--   callback = function()
+--     vim.cmd("TailwindConcealEnable")
+--   end,
+-- })
 
 -- Create a custom command :Lint to run biome lint with --fix and --unsafe options
 -- This is useful for sorting tailwind classes
