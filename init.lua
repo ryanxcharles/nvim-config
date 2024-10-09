@@ -98,6 +98,22 @@ require("packer").startup(function()
 
   -- Surround: add, change, and delete surroundings
   use("tpope/vim-surround")
+
+  -- Tailwind CSS tools
+  use({
+    "luckasRanarison/tailwind-tools.nvim",
+    requires = {
+      { "nvim-treesitter/nvim-treesitter" },
+      { "nvim-telescope/telescope.nvim", optional = true },
+      { "neovim/nvim-lspconfig", optional = true },
+    },
+    run = ":UpdateRemotePlugins",
+    config = function()
+      require("tailwind-tools").setup({
+        -- Your configuration for tailwind-tools goes here
+      })
+    end,
+  })
 end)
 
 -- Set space as the leader key. Space is the biggest key and the easiest to
@@ -455,7 +471,6 @@ lspconfig.biome.setup({
   },
 })
 
-
 lspconfig.tailwindcss.setup({
   on_attach = function(client, bufnr)
     -- Add any additional LSP settings or keybindings for Tailwind here
@@ -568,7 +583,14 @@ require("formatter").setup({
 
 -- Enable colorizer for CSS, HTML, JavaScript, and more, but not Tailwind
 require("colorizer").setup({
-  filetypes = { "html", "css", "javascript", "typescript", "javascriptreact", "typescriptreact" },
+  filetypes = {
+    "html",
+    "css",
+    "javascript",
+    "typescript",
+    "javascriptreact",
+    "typescriptreact",
+  },
   user_default_options = {
     RGB = true, -- #RGB hex codes
     RRGGBB = true, -- #RRGGBB hex codes
