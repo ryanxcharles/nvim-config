@@ -115,6 +115,16 @@ require("packer").startup(function()
       })
     end,
   })
+
+  use({
+    "roobert/tailwindcss-colorizer-cmp.nvim",
+    -- optionally, override the default options:
+    config = function()
+      require("tailwindcss-colorizer-cmp").setup({
+        color_square_width = 2,
+      })
+    end,
+  })
 end)
 
 -- Set space as the leader key. Space is the biggest key and the easiest to
@@ -549,6 +559,9 @@ cmp.setup({
     { name = "path" }, -- Path completions
     { name = "luasnip" }, -- Snippet completions
     { name = "npm", keyword_length = 3 }, -- NPM package completions
+  },
+  formatting = {
+    format = require("tailwindcss-colorizer-cmp").formatter,
   },
 })
 
