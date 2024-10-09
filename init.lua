@@ -218,6 +218,38 @@ vim.api.nvim_set_keymap("v", "ga", "<cmd>CodeCompanionChat Add<cr>", opts)
 -- Expand 'cc' into 'CodeCompanion' in the command line
 vim.cmd([[cab cc CodeCompanion]])
 
+-- Tailwind CSS key bindings (tailwind-tools)
+vim.api.nvim_set_keymap(
+  "n",
+  "tw",
+  ":TailwindNextClass<CR>",
+  { noremap = true, silent = true }
+)
+vim.api.nvim_set_keymap(
+  "n",
+  "tp",
+  ":TailwindPrevClass<CR>",
+  { noremap = true, silent = true }
+)
+vim.api.nvim_set_keymap(
+  "n",
+  "tt",
+  ":TailwindConcealToggle<CR>",
+  { noremap = true, silent = true }
+)
+vim.api.nvim_set_keymap(
+  "n",
+  "tr",
+  ":TailwindConcealDisable<CR>",
+  { noremap = true, silent = true }
+)
+vim.api.nvim_set_keymap(
+  "n",
+  "tc",
+  ":TailwindConcealEnable<CR>",
+  { noremap = true, silent = true }
+)
+
 -- TODO: test todo highlighting
 -- Define a highlight group for TODO comments
 vim.api.nvim_command("highlight TodoComment guifg=#FA8603 gui=bold") -- Orange color with bold
@@ -342,9 +374,6 @@ lspconfig.ts_ls.setup({
   on_attach = function(client, bufnr)
     -- Optionally, disable tsserver's formatting in favor of something like prettier
     client.server_capabilities.documentFormattingProvider = false
-
-    -- Add keybindings for common LSP features
-    local opts = opts
 
     -- Go to definition
     vim.api.nvim_buf_set_keymap(
@@ -473,9 +502,23 @@ lspconfig.biome.setup({
 
 lspconfig.tailwindcss.setup({
   on_attach = function(client, bufnr)
+    -- vim.api.nvim_create_autocmd("BufEnter", {
+    --   buffer = bufnr,
+    --   callback = function()
+    --     vim.cmd("TailwindConcealEnable")
+    --   end,
+    -- })
     -- Add any additional LSP settings or keybindings for Tailwind here
   end,
   filetypes = { "html", "javascriptreact", "typescriptreact", "css" }, -- Add other file types where you use Tailwind
+})
+
+-- Enable Tailwind CSS concealment by default (tailwind-tools)
+vim.api.nvim_create_autocmd("BufEnter", {
+  buffer = bufnr,
+  callback = function()
+    vim.cmd("TailwindConcealEnable")
+  end,
 })
 
 -- Create a custom command :Lint to run biome lint with --fix and --unsafe options
@@ -604,7 +647,7 @@ require("colorizer").setup({
     -- Available modes for `mode`: foreground, background,  virtualtext
     mode = "background", -- Set the display mode.
     -- True is same as normal
-    tailwind = true, -- Enable tailwind colors
+    tailwind = false, -- Disable tailwind colors (using tailwind-tools instead)
     -- parsers can contain values used in |user_default_options|
     sass = { enable = false, parsers = { "css" } }, -- Enable sass colors
     virtualtext = "■",
