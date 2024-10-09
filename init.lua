@@ -137,11 +137,14 @@ require("packer").startup(function()
   })
 end)
 
+local opts = { noremap = true, silent = true }
+
 -- Set space as the leader key. Space is the biggest key and the easiest to
 -- hit, so it makes a good leader key.
 vim.g.mapleader = " "
 
-local opts = { noremap = true, silent = true }
+-- Lines that wrap will indent to the same level as the start of the line
+vim.opt.breakindent = true
 
 -- Disable folding by default
 -- vim.opt.foldenable = false
