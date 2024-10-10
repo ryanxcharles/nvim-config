@@ -164,6 +164,8 @@ vim.opt.number = true
 vim.opt.tabstop = 2 -- Number of spaces for a tab
 vim.opt.shiftwidth = 2 -- Number of spaces for auto-indent
 vim.opt.expandtab = true -- Use spaces instead of tabs
+vim.opt.autoindent = true -- Auto-indent new lines
+vim.opt.smartindent = true -- Smart indenting for C-like languages
 
 -- Key mappings using leader key
 vim.api.nvim_set_keymap("n", "<Leader>w", ":w<CR>", opts)
@@ -392,6 +394,8 @@ vim.api.nvim_create_autocmd("FileType", {
     vim.bo.tabstop = 2 -- Number of spaces for a tab
     vim.bo.shiftwidth = 2 -- Number of spaces for auto-indent
     vim.bo.expandtab = true -- Use spaces instead of tabs
+    vim.opt.autoindent = true -- Auto-indent new lines
+    vim.opt.smartindent = true -- Smart indenting for C-like languages
   end,
 })
 
@@ -718,7 +722,7 @@ require("nvim-treesitter.configs").setup({
   },
 
   -- You can enable more Treesitter features as needed (optional)
-  indent = { enable = true }, -- Enable Treesitter-based indentation (optional)
+  -- indent = { enable = true }, -- Enable Treesitter-based indentation (optional)
 
   -- Folding
   fold = { enable = true }, -- Enable Treesitter-based folding (optional)
