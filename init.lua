@@ -245,43 +245,6 @@ vim.api.nvim_set_keymap("v", "ga", "<cmd>CodeCompanionChat Add<cr>", opts)
 -- Expand 'cc' into 'CodeCompanion' in the command line
 vim.cmd([[cab cc CodeCompanion]])
 
--- Tailwind CSS key bindings (tailwind-tools)
--- These are disbled for now because they have the following flaw. The code
--- only detects strings that start with "className", e.g. it detects the
--- "class" attribute in JSX, but it does not detect other strings that contain
--- Tailwind classes. However, I very often use Tailwind classes in other
--- strings, so this is not useful for me.
--- vim.api.nvim_set_keymap(
---   "n",
---   "tw",
---   ":TailwindNextClass<CR>",
---   { noremap = true, silent = true }
--- )
--- vim.api.nvim_set_keymap(
---   "n",
---   "tp",
---   ":TailwindPrevClass<CR>",
---   { noremap = true, silent = true }
--- )
--- vim.api.nvim_set_keymap(
---   "n",
---   "tt",
---   ":TailwindConcealToggle<CR>",
---   { noremap = true, silent = true }
--- )
--- vim.api.nvim_set_keymap(
---   "n",
---   "tr",
---   ":TailwindConcealDisable<CR>",
---   { noremap = true, silent = true }
--- )
--- vim.api.nvim_set_keymap(
---   "n",
---   "tc",
---   ":TailwindConcealEnable<CR>",
---   { noremap = true, silent = true }
--- )
-
 -- TODO: test todo highlighting
 -- Define a highlight group for TODO comments
 vim.api.nvim_command("highlight TodoComment guifg=#FA8603 gui=bold") -- Orange color with bold
@@ -500,12 +463,6 @@ lspconfig.ts_ls.setup({
 lspconfig.biome.setup({
   on_attach = function(client, bufnr)
     -- Format on save (disabled for now)
-    -- vim.api.nvim_create_autocmd("BufWritePre", {
-    --   buffer = bufnr,
-    --   callback = function()
-    --     vim.lsp.buf.format({ bufnr = bufnr })
-    --   end,
-    -- })
   end,
   cmd = { "biome", "lsp-proxy" },
   filetypes = {
@@ -536,26 +493,10 @@ lspconfig.biome.setup({
 
 lspconfig.tailwindcss.setup({
   on_attach = function(client, bufnr)
-    -- vim.api.nvim_create_autocmd("BufEnter", {
-    --   buffer = bufnr,
-    --   callback = function()
-    --     vim.cmd("TailwindConcealEnable")
-    --   end,
-    -- })
     -- Add any additional LSP settings or keybindings for Tailwind here
   end,
   filetypes = { "html", "javascriptreact", "typescriptreact", "css" }, -- Add other file types where you use Tailwind
 })
-
--- Enable Tailwind CSS concealment by default (tailwind-tools)
--- Disabled because it doesn't work on arbitrary strings (only those starting
--- with "className") which is not useful for me.
--- vim.api.nvim_create_autocmd("BufEnter", {
---   buffer = bufnr,
---   callback = function()
---     vim.cmd("TailwindConcealEnable")
---   end,
--- })
 
 -- Create a custom command :Lint to run biome lint with --fix and --unsafe options
 -- This is useful for sorting tailwind classes
