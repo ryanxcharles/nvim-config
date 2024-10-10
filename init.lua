@@ -6,6 +6,7 @@
 -- Nerdfonts (for icons)
 -- git (for git integration)
 -- tailwindcss-language-server (for Tailwind CSS completions and colors)
+-- typescript-language-server (for TypeScript completions and diagnostics)
 
 -- ~/.config/nvim/init.lua
 require("packer").startup(function()
