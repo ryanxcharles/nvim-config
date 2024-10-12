@@ -571,6 +571,23 @@ rust_tools.setup({
   },
 })
 
+-- rust: integration with crates.nvim for managing dependencies
+require("crates").setup({
+  null_ls = {
+    enabled = true, -- Enable null-ls integration (optional)
+    name = "crates.nvim",
+  },
+})
+
+-- Optional keybinding to update dependencies with `crates.nvim`
+vim.api.nvim_set_keymap(
+  "n",
+  "<Leader>cu",
+  ":lua require('crates').update_crate()<CR>",
+  { noremap = true, silent = true }
+)
+
+
 -- Create a custom command :Lint to run biome lint with --fix and --unsafe options
 -- This is useful for sorting tailwind classes
 vim.api.nvim_create_user_command("Fix", function()
