@@ -518,6 +518,60 @@ lspconfig.tailwindcss.setup({
   filetypes = { "html", "javascriptreact", "typescriptreact", "css" }, -- Add other file types where you use Tailwind
 })
 
+local rust_tools = require("rust-tools")
+
+-- rust: Rust tools setup with rust-analyzer
+rust_tools.setup({
+  server = {
+    on_attach = function(client, bufnr)
+      -- Keybindings for LSP features in Rust files
+      local opts = { noremap = true, silent = true }
+      vim.api.nvim_buf_set_keymap(
+        bufnr,
+        "n",
+        "gd",
+        "<cmd>lua vim.lsp.buf.definition()<CR>",
+        opts
+      )
+      vim.api.nvim_buf_set_keymap(
+        bufnr,
+        "n",
+        "K",
+        "<cmd>lua vim.lsp.buf.hover()<CR>",
+        opts
+      )
+      vim.api.nvim_buf_set_keymap(
+        bufnr,
+        "n",
+        "<Leader>ca",
+        "<cmd>lua vim.lsp.buf.code_action()<CR>",
+        opts
+      )
+      vim.api.nvim_buf_set_keymap(
+        bufnr,
+        "n",
+        "<Leader>rn",
+        "<cmd>lua vim.lsp.buf.rename()<CR>",
+        opts
+      )
+
+      -- Format on save
+      vim.api.nvim_create_autocmd("BufWritePre", {
+        pattern = { "*.rs" },
+        callback = function()
+          vim.lsp.buf.format({ async = true })
+        end,
+      })
+    end,
+    settings = {
+      ["rust-analyzer"] = {
+        cargo = { allFeatures = true },
+        checkOnSave = { command = "clippy" }, -- Run clippy on save
+      },
+    },
+  },
+})
+
 -- Create a custom command :Lint to run biome lint with --fix and --unsafe options
 -- This is useful for sorting tailwind classes
 vim.api.nvim_create_user_command("Fix", function()
