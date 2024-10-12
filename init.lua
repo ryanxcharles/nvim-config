@@ -137,6 +137,12 @@ require("packer").startup(function()
     end,
   })
 
+  -- null-ls.nvim for code actions, formatting, and more. used with rust.
+  use({
+    "jose-elias-alvarez/null-ls.nvim",
+    requires = { "nvim-lua/plenary.nvim" },
+  })
+
   -- rust: Rust tools for enhanced features
   use({
     "simrat39/rust-tools.nvim",
@@ -586,7 +592,6 @@ vim.api.nvim_set_keymap(
   ":lua require('crates').update_crate()<CR>",
   { noremap = true, silent = true }
 )
-
 
 -- Create a custom command :Lint to run biome lint with --fix and --unsafe options
 -- This is useful for sorting tailwind classes
