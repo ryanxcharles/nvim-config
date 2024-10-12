@@ -674,7 +674,7 @@ require("nvim-treesitter.configs").setup({
   },
 
   -- You can enable more Treesitter features as needed (optional)
-  -- indent = { enable = true }, -- Enable Treesitter-based indentation (optional)
+  indent = { enable = true }, -- Enable Treesitter-based indentation (optional)
 
   -- Folding
   fold = { enable = true }, -- Enable Treesitter-based folding (optional)
