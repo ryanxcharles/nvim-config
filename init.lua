@@ -136,6 +136,15 @@ require("packer").startup(function()
       require("alpha").setup(require("alpha.themes.startify").config)
     end,
   })
+
+  -- rust: Rust tools for enhanced features
+  use({
+    "simrat39/rust-tools.nvim",
+    requires = { "neovim/nvim-lspconfig" },
+  })
+
+  -- rust: Manage dependencies from Cargo.toml
+  use("saecki/crates.nvim")
 end)
 
 local opts = { noremap = true, silent = true }
