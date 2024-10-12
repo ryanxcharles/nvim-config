@@ -965,6 +965,14 @@ require("lualine").setup({
   extensions = {},
 })
 
+-- Create an autocmd to refresh lualine when the directory changes
+vim.api.nvim_create_autocmd('DirChanged', {
+  pattern = '*',
+  callback = function()
+    require('lualine').refresh() -- Refresh lualine to reflect the new CWD
+  end,
+})
+
 -- lualine is great for the statusline, but I decided to create my own custom
 -- tabline for how I deal with tabs. There is some setup code to begin with,
 -- and then a custom function for the tabline.
