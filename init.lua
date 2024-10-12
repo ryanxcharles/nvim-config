@@ -7,6 +7,7 @@
 -- git (for git integration)
 -- tailwindcss-language-server (for Tailwind CSS completions and colors)
 -- typescript-language-server (for TypeScript completions and diagnostics)
+-- rust/cargo (for Rust tools)
 
 -- ~/.config/nvim/init.lua
 require("packer").startup(function()
@@ -352,10 +353,15 @@ vim.api.nvim_set_keymap(
 -- Key binding to reload init.lua file
 vim.api.nvim_set_keymap(
   "n",
-  "<Leader>r",
+  "<Leader>rl",
   ":luafile ~/.config/nvim/init.lua<CR>",
   opts
 )
+
+-- rust: Rust-specific keybindings
+vim.api.nvim_set_keymap("n", "<Leader>rr", ":!cargo run<CR>", opts)
+vim.api.nvim_set_keymap("n", "<Leader>rt", ":!cargo test<CR>", opts)
+vim.api.nvim_set_keymap("n", "<Leader>rb", ":!cargo build<CR>", opts)
 
 -- Two spaces for TypeScript/JavaScript/lua
 vim.api.nvim_create_autocmd("FileType", {
@@ -696,6 +702,16 @@ require("formatter").setup({
         }
       end,
     },
+    rust = {
+      -- rust: Rustfmt for Rust files
+      function()
+        return {
+          exe = "rustfmt", -- Make sure `rustfmt` is installed
+          args = { "--emit", "stdout" }, -- Emit formatted output to stdout
+          stdin = true,
+        }
+      end,
+    },
   },
 })
 
@@ -909,7 +925,16 @@ require("lualine").setup({
     lualine_a = { "mode" }, -- Shows the current mode (e.g., Insert, Normal, etc.)
     lualine_b = { "branch", "diff", "diagnostics" },
     lualine_c = {
-      { "filename" }, -- Shows the current file name
+      {
+        "filename", -- Shows the current file name
+        path = 1, -- 1 = relative path, 2 = absolute path
+      },
+      {
+        function()
+          return vim.fn.getcwd() -- Displays the CWD
+        end,
+        icon = "📁", -- Optional: Add a folder icon
+      },
       {
         "diagnostics",
         sources = { "nvim_lsp" },
