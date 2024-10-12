@@ -525,7 +525,6 @@ rust_tools.setup({
   server = {
     on_attach = function(client, bufnr)
       -- Keybindings for LSP features in Rust files
-      local opts = { noremap = true, silent = true }
       vim.api.nvim_buf_set_keymap(
         bufnr,
         "n",
@@ -556,12 +555,12 @@ rust_tools.setup({
       )
 
       -- Format on save
-      vim.api.nvim_create_autocmd("BufWritePre", {
-        pattern = { "*.rs" },
-        callback = function()
-          vim.lsp.buf.format({ async = true })
-        end,
-      })
+      -- vim.api.nvim_create_autocmd("BufWritePre", {
+      --   pattern = { "*.rs" },
+      --   callback = function()
+      --     vim.lsp.buf.format({ async = true })
+      --   end,
+      -- })
     end,
     settings = {
       ["rust-analyzer"] = {
