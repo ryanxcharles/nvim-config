@@ -397,6 +397,29 @@ vim.api.nvim_create_autocmd("FileType", {
 -- Import the LSP config plugin
 local lspconfig = require("lspconfig")
 
+-- We are going to set up TypeScript for node.js, and deno separately
+
+-- Function to detect if the project is a Deno project
+-- local function is_deno_project()
+--   -- Check if the project has a deno.json or deno.jsonc file
+--   local found =
+--     lspconfig.util.root_pattern("deno.json", "deno.jsonc")(vim.fn.getcwd())
+--   return found ~= nil
+-- end
+
+-- Deno TypeScript LSP setup
+lspconfig.denols.setup({
+  root_dir = lspconfig.util.root_pattern("deno.json", "deno.jsonc"), -- Use deno.json to detect project root
+  init_options = {
+    enable = true,
+    lint = true,
+    unstable = true, -- Enable unstable features if needed
+  },
+  on_attach = function(client)
+    print("Deno LSP attached!")
+  end,
+})
+
 -- TypeScript Language Server setup
 lspconfig.ts_ls.setup({
   -- This function attaches common settings when the LSP attaches to a buffer
@@ -468,7 +491,15 @@ lspconfig.ts_ls.setup({
   end,
 
   -- Ensure the server uses the right config for each project directory
-  root_dir = lspconfig.util.root_pattern("tsconfig.json"),
+  root_dir = function(fname)
+    -- Disable tsserver if this is a Deno project
+    -- if is_deno_project() then
+    --   return nil -- Don't attach tsserver
+    -- end
+    return lspconfig.util.root_pattern("package.json", "tsconfig.json")(fname)
+  end,
+
+  single_file_support = false,
 
   -- Add additional configuration options if needed (e.g., filetypes)
   filetypes = { "typescript", "typescriptreact", "typescript.tsx" },
@@ -966,10 +997,10 @@ require("lualine").setup({
 })
 
 -- Create an autocmd to refresh lualine when the directory changes
-vim.api.nvim_create_autocmd('DirChanged', {
-  pattern = '*',
+vim.api.nvim_create_autocmd("DirChanged", {
+  pattern = "*",
   callback = function()
-    require('lualine').refresh() -- Refresh lualine to reflect the new CWD
+    require("lualine").refresh() -- Refresh lualine to reflect the new CWD
   end,
 })
 
