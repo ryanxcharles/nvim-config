@@ -137,6 +137,59 @@ require("packer").startup(function()
 
   -- rust: Manage dependencies from Cargo.toml
   use("saecki/crates.nvim")
+
+  -- avante: cursor-like AI for Neovim
+  use({
+    "yetone/avante.nvim",
+    event = "VeryLazy", -- Load on lazy events (optional)
+    config = function()
+      require("avante").setup({
+        -- add any options here if needed
+      })
+    end,
+    -- run = "make", -- Build command (use this if you build from source)
+    -- run = "powershell -ExecutionPolicy Bypass -File Build.ps1 -BuildFromSource false", -- For Windows
+    requires = {
+      -- Required dependencies
+      "nvim-treesitter/nvim-treesitter",
+      "stevearc/dressing.nvim",
+      "nvim-lua/plenary.nvim",
+      "MunifTanjim/nui.nvim",
+
+      -- Optional dependencies
+      { "nvim-tree/nvim-web-devicons", opt = true }, -- Optional for icons
+      { "zbirenbaum/copilot.lua", opt = true }, -- Optional for Copilot integration
+
+      -- Support for image pasting
+      -- {
+      --   "HakonHarnes/img-clip.nvim",
+      --   -- event = "VeryLazy",
+      --   config = function()
+      --     require("img-clip").setup({
+      --       default = {
+      --         embed_image_as_base64 = false,
+      --         prompt_for_file_name = false,
+      --         drag_and_drop = {
+      --           insert_mode = true,
+      --         },
+      --         use_absolute_path = true, -- Required for Windows users
+      --       },
+      --     })
+      --   end,
+      -- },
+
+      -- Markdown rendering support
+      -- {
+      --   "MeanderingProgrammer/render-markdown.nvim",
+      --   ft = { "markdown", "Avante" }, -- File types to activate on
+      --   config = function()
+      --     require("render-markdown").setup({
+      --       file_types = { "markdown", "Avante" },
+      --     })
+      --   end,
+      -- },
+    },
+  })
 end)
 
 local opts = { noremap = true, silent = true }
