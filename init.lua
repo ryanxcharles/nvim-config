@@ -141,13 +141,14 @@ require("packer").startup(function()
   -- avante: cursor-like AI for Neovim
   use({
     "yetone/avante.nvim",
-    event = "VeryLazy", -- Load on lazy events (optional)
+    -- event = "VeryLazy", -- Load on lazy events (optional)
     config = function()
+      require('avante_lib').load()
       require("avante").setup({
         -- add any options here if needed
       })
     end,
-    -- run = "make", -- Build command (use this if you build from source)
+    run = "make BUILD_FROM_SOURCE=true", -- Build command (use this if you build from source)
     -- run = "powershell -ExecutionPolicy Bypass -File Build.ps1 -BuildFromSource false", -- For Windows
     requires = {
       -- Required dependencies
@@ -158,7 +159,7 @@ require("packer").startup(function()
 
       -- Optional dependencies
       { "nvim-tree/nvim-web-devicons", opt = true }, -- Optional for icons
-      { "zbirenbaum/copilot.lua", opt = true }, -- Optional for Copilot integration
+      -- { "zbirenbaum/copilot.lua", opt = true }, -- Optional for Copilot integration
 
       -- Support for image pasting
       -- {
