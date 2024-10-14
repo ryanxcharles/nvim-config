@@ -81,21 +81,6 @@ require("packer").startup(function()
   -- Dressing - better input boxes and other UI elements
   use("stevearc/dressing.nvim")
 
-  -- Code companion - for chat and code sharing with AI
-  use({
-    "olimorris/codecompanion.nvim",
-    config = function()
-      require("codecompanion").setup()
-    end,
-    requires = {
-      "nvim-lua/plenary.nvim",
-      "nvim-treesitter/nvim-treesitter",
-      "hrsh7th/nvim-cmp", -- Optional: For using slash commands and variables in the chat buffer
-      "nvim-telescope/telescope.nvim", -- Optional: For using slash commands
-      "stevearc/dressing.nvim", -- Optional: Improves `vim.ui.select`
-    },
-  })
-
   -- Better comment/uncomment blocks or selection
   use("tpope/vim-commentary")
 
@@ -240,26 +225,6 @@ vim.api.nvim_set_keymap(
 
 -- Redraw screen
 vim.api.nvim_set_keymap("n", "<Leader>.", "<C-l>", opts)
-
--- CodeCompanion key bindings
-vim.api.nvim_set_keymap("n", "<C-a>", "<cmd>CodeCompanionActions<cr>", opts)
-vim.api.nvim_set_keymap("v", "<C-a>", "<cmd>CodeCompanionActions<cr>", opts)
-vim.api.nvim_set_keymap(
-  "n",
-  "<LocalLeader>a",
-  "<cmd>CodeCompanionChat Toggle<cr>",
-  opts
-)
-vim.api.nvim_set_keymap(
-  "v",
-  "<LocalLeader>a",
-  "<cmd>CodeCompanionChat Toggle<cr>",
-  opts
-)
-vim.api.nvim_set_keymap("v", "ga", "<cmd>CodeCompanionChat Add<cr>", opts)
-
--- Expand 'cc' into 'CodeCompanion' in the command line
-vim.cmd([[cab cc CodeCompanion]])
 
 -- TODO: test todo highlighting
 -- Define a highlight group for TODO comments
@@ -880,59 +845,6 @@ vim.g.rainbow_delimiters = {
   },
 }
 
--- custom plugin to display spinner for code companion in lualina
-local function CodeCompanionLualine()
-  local M = require("lualine.component"):extend()
-
-  M.processing = false
-  M.spinner_index = 1
-
-  local spinner_symbols = {
-    "⠋",
-    "⠙",
-    "⠹",
-    "⠸",
-    "⠼",
-    "⠴",
-    "⠦",
-    "⠧",
-    "⠇",
-    "⠏",
-  }
-  local spinner_symbols_len = 10
-
-  -- Initializer
-  function M:init(options)
-    M.super.init(self, options)
-
-    local group = vim.api.nvim_create_augroup("CodeCompanionHooks", {})
-
-    vim.api.nvim_create_autocmd({ "User" }, {
-      pattern = "CodeCompanionRequest*",
-      group = group,
-      callback = function(request)
-        if request.match == "CodeCompanionRequestStarted" then
-          self.processing = true
-        elseif request.match == "CodeCompanionRequestFinished" then
-          self.processing = false
-        end
-      end,
-    })
-  end
-
-  -- Function that runs every time statusline is updated
-  function M:update_status()
-    if self.processing then
-      self.spinner_index = (self.spinner_index % spinner_symbols_len) + 1
-      return spinner_symbols[self.spinner_index]
-    else
-      return nil
-    end
-  end
-
-  return M
-end
-
 -- Customize the statusline with lualine
 require("lualine").setup({
   options = {
@@ -976,7 +888,7 @@ require("lualine").setup({
         always_visible = false, -- Always show diagnostics, even if 0
       },
     },
-    lualine_x = { "encoding", "fileformat", "filetype", CodeCompanionLualine() }, -- Shows encoding, file format, and type
+    lualine_x = { "encoding", "fileformat", "filetype" }, -- Shows encoding, file format, and type
     lualine_y = { "progress" }, -- Shows file progress (percentage through file)
     lualine_z = { "location" }, -- Shows line and column number
   },
