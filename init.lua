@@ -899,10 +899,27 @@ vim.g.rainbow_delimiters = {
   },
 }
 
+-- Define a custom bright theme for lualine
+local bright_theme = {
+  normal = {
+    a = { fg = '#000000', bg = '#5fff00', gui = 'bold' },
+    b = { fg = '#ffffff', bg = '#0087ff' },
+    c = { fg = '#ffffff', bg = '#303030' },
+  },
+  insert = { a = { fg = '#000000', bg = '#ff00ff', gui = 'bold' } },
+  visual = { a = { fg = '#000000', bg = '#ffff00', gui = 'bold' } },
+  replace = { a = { fg = '#000000', bg = '#ff0000', gui = 'bold' } },
+  inactive = {
+    a = { fg = '#ffffff', bg = '#585858', gui = 'bold' },
+    b = { fg = '#ffffff', bg = '#303030' },
+    c = { fg = '#ffffff', bg = '#202020' },
+  },
+}
+
 -- Customize the statusline with lualine
 require("lualine").setup({
   options = {
-    theme = "onedark", -- You can change this to your preferred color scheme
+    theme = bright_theme, -- Use our custom bright theme
     section_separators = { "▶️", "◀️" }, -- Use arrow emojis as section separators
     component_separators = { "|", "|" }, -- Use simple vertical bars as component separators
     disabled_filetypes = {}, -- Disable for specific filetypes if needed
@@ -926,16 +943,16 @@ require("lualine").setup({
         sources = { "nvim_lsp" },
         sections = { "error", "warn", "info", "hint" },
         diagnostics_color = {
-          error = { fg = "#ff6c6b" }, -- Error color (red)
-          warn = { fg = "#ECBE7B" }, -- Warning color (yellow)
-          info = { fg = "#51afef" }, -- Info color (blue)
-          hint = { fg = "#98be65" }, -- Hint color (green)
+          error = { fg = "#ff0000" }, -- Brighter Error color (red)
+          warn = { fg = "#ffff00" }, -- Brighter Warning color (yellow)
+          info = { fg = "#00ffff" }, -- Brighter Info color (cyan)
+          hint = { fg = "#00ff00" }, -- Brighter Hint color (green)
         },
         symbols = {
-          error = " ", -- Error icon
-          warn = " ", -- Warning icon
-          info = " ", -- Info icon
-          hint = " ", -- Hint icon
+          error = " ", -- Error icon
+          warn = " ", -- Warning icon
+          info = " ", -- Info icon
+          hint = " ", -- Hint icon
         },
         colored = true, -- Color the diagnostics
         update_in_insert = false, -- Update diagnostics in insert mode
@@ -1252,31 +1269,31 @@ codewindow.setup({
 codewindow.apply_default_keybinds()
 
 -- Highlight settings for active and inactive codewindow borders
-vim.api.nvim_set_hl(0, "CodewindowBorderActive", { fg = "#81a1c1" }) -- Active border color
-vim.api.nvim_set_hl(
-  0,
-  "CodewindowBorderInactive",
-  { bg = "#2e3440", fg = "#4c566a" }
-) -- Inactive border color
+-- vim.api.nvim_set_hl(0, "CodewindowBorderActive", { fg = "#81a1c1" }) -- Active border color
+-- vim.api.nvim_set_hl(
+--   0,
+--   "CodewindowBorderInactive",
+--   { bg = "#2e3440", fg = "#4c566a" }
+-- ) -- Inactive border color
 vim.api.nvim_set_hl(0, "CodewindowBorder", { bg = "#2e3440", fg = "#4c566a" }) -- Inactive border color
 vim.api.nvim_set_hl(0, "CodewindowBackground", { bg = "#2e3440" })
 
--- Set different background for active and inactive windows
-vim.api.nvim_exec(
-  [[
-  augroup ActiveWindow
-    autocmd!
-    " Apply different highlight for the active window
-    autocmd WinEnter,BufEnter,TabEnter * setlocal winhighlight=Normal:Normal,FloatBorder:CodewindowBorderActive
-    " Apply dimmed highlight for the inactive window
-    autocmd WinLeave,BufLeave,TabLeave * setlocal winhighlight=Normal:NormalNC,FloatBorder:CodewindowBorderInactive
-  augroup END
-]],
-  false
-)
+-- -- Set different background for active and inactive windows
+-- vim.api.nvim_exec(
+--   [[
+--   augroup ActiveWindow
+--     autocmd!
+--     " Apply different highlight for the active window
+--     autocmd WinEnter,BufEnter,TabEnter * setlocal winhighlight=Normal:Normal,FloatBorder:CodewindowBorderActive
+--     " Apply dimmed highlight for the inactive window
+--     autocmd WinLeave,BufLeave,TabLeave * setlocal winhighlight=Normal:NormalNC,FloatBorder:CodewindowBorderInactive
+--   augroup END
+-- ]],
+--   false
+-- )
 
--- Set a dim background for inactive windows
-vim.api.nvim_set_hl(0, "NormalNC", { bg = "#2e3440" }) -- Replace with your preferred color
+-- -- Set a dim background for inactive windows
+-- vim.api.nvim_set_hl(0, "NormalNC", { bg = "#2e3440" }) -- Replace with your preferred color
 
 -- Set custom highlight for CursorLine (hide cursorline when leaving window)
 vim.api.nvim_exec(
