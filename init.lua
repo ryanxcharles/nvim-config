@@ -399,14 +399,6 @@ local lspconfig = require("lspconfig")
 
 -- We are going to set up TypeScript for node.js, and deno separately
 
--- Function to detect if the project is a Deno project
--- local function is_deno_project()
---   -- Check if the project has a deno.json or deno.jsonc file
---   local found =
---     lspconfig.util.root_pattern("deno.json", "deno.jsonc")(vim.fn.getcwd())
---   return found ~= nil
--- end
-
 -- Deno TypeScript LSP setup
 lspconfig.denols.setup({
   root_dir = lspconfig.util.root_pattern("deno.json", "deno.jsonc"), -- Use deno.json to detect project root
@@ -420,7 +412,7 @@ lspconfig.denols.setup({
   end,
 })
 
--- TypeScript Language Server setup
+-- TypeScript Language Server setup for node.js
 lspconfig.ts_ls.setup({
   -- This function attaches common settings when the LSP attaches to a buffer
   on_attach = function(client, bufnr)
@@ -492,13 +484,10 @@ lspconfig.ts_ls.setup({
 
   -- Ensure the server uses the right config for each project directory
   root_dir = function(fname)
-    -- Disable tsserver if this is a Deno project
-    -- if is_deno_project() then
-    --   return nil -- Don't attach tsserver
-    -- end
     return lspconfig.util.root_pattern("package.json", "tsconfig.json")(fname)
   end,
 
+  -- single-file must be disabled to not conflict with Deno
   single_file_support = false,
 
   -- Add additional configuration options if needed (e.g., filetypes)
