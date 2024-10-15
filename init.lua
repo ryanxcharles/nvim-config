@@ -872,6 +872,7 @@ require("nvim-treesitter.configs").setup({
     "typescript",
     "tsx",
     "json",
+    "jsonc",
     "jsdoc",
     "html",
     "css",
