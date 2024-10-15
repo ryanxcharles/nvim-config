@@ -160,35 +160,6 @@ require("packer").startup(function()
       -- Optional dependencies
       { "nvim-tree/nvim-web-devicons", opt = true }, -- Optional for icons
       -- { "zbirenbaum/copilot.lua", opt = true }, -- Optional for Copilot integration
-
-      -- Support for image pasting
-      -- {
-      --   "HakonHarnes/img-clip.nvim",
-      --   -- event = "VeryLazy",
-      --   config = function()
-      --     require("img-clip").setup({
-      --       default = {
-      --         embed_image_as_base64 = false,
-      --         prompt_for_file_name = false,
-      --         drag_and_drop = {
-      --           insert_mode = true,
-      --         },
-      --         use_absolute_path = true, -- Required for Windows users
-      --       },
-      --     })
-      --   end,
-      -- },
-
-      -- Markdown rendering support
-      -- {
-      --   "MeanderingProgrammer/render-markdown.nvim",
-      --   ft = { "markdown", "Avante" }, -- File types to activate on
-      --   config = function()
-      --     require("render-markdown").setup({
-      --       file_types = { "markdown", "Avante" },
-      --     })
-      --   end,
-      -- },
     },
   })
 end)
@@ -604,14 +575,6 @@ rust_tools.setup({
         "<cmd>lua vim.lsp.buf.rename()<CR>",
         opts
       )
-
-      -- Format on save
-      -- vim.api.nvim_create_autocmd("BufWritePre", {
-      --   pattern = { "*.rs" },
-      --   callback = function()
-      --     vim.lsp.buf.format({ async = true })
-      --   end,
-      -- })
     end,
     settings = {
       ["rust-analyzer"] = {
@@ -1267,33 +1230,6 @@ codewindow.setup({
   window_border = "single",
 })
 codewindow.apply_default_keybinds()
-
--- Highlight settings for active and inactive codewindow borders
--- vim.api.nvim_set_hl(0, "CodewindowBorderActive", { fg = "#81a1c1" }) -- Active border color
--- vim.api.nvim_set_hl(
---   0,
---   "CodewindowBorderInactive",
---   { bg = "#2e3440", fg = "#4c566a" }
--- ) -- Inactive border color
-vim.api.nvim_set_hl(0, "CodewindowBorder", { bg = "#2e3440", fg = "#4c566a" }) -- Inactive border color
-vim.api.nvim_set_hl(0, "CodewindowBackground", { bg = "#2e3440" })
-
--- -- Set different background for active and inactive windows
--- vim.api.nvim_exec(
---   [[
---   augroup ActiveWindow
---     autocmd!
---     " Apply different highlight for the active window
---     autocmd WinEnter,BufEnter,TabEnter * setlocal winhighlight=Normal:Normal,FloatBorder:CodewindowBorderActive
---     " Apply dimmed highlight for the inactive window
---     autocmd WinLeave,BufLeave,TabLeave * setlocal winhighlight=Normal:NormalNC,FloatBorder:CodewindowBorderInactive
---   augroup END
--- ]],
---   false
--- )
-
--- -- Set a dim background for inactive windows
--- vim.api.nvim_set_hl(0, "NormalNC", { bg = "#2e3440" }) -- Replace with your preferred color
 
 -- Set custom highlight for CursorLine (hide cursorline when leaving window)
 vim.api.nvim_exec(
