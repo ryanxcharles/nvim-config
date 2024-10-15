@@ -672,11 +672,8 @@ require("formatter").setup({
         if find_file_in_parents("deno.json") or find_file_in_parents("deno.jsonc") then
           return {
             exe = "deno",
-            args = {
-              "fmt", -- Format command
-              vim.api.nvim_buf_get_name(0) -- Pass the current file path to Deno
-            },
-            stdin = false, -- We’re passing the filename, not using stdin
+            args = { "fmt", "-" }, -- Format via stdin
+            stdin = true,
           }
         else
           -- Use Biome for non-Deno TypeScript projects
@@ -698,11 +695,8 @@ require("formatter").setup({
         if find_file_in_parents("deno.json") or find_file_in_parents("deno.jsonc") then
           return {
             exe = "deno",
-            args = {
-              "fmt", -- Format command
-              vim.api.nvim_buf_get_name(0) -- Pass the current file path to Deno
-            },
-            stdin = false, -- We’re passing the filename, not using stdin
+            args = { "fmt", "-" }, -- Format via stdin
+            stdin = true,
           }
         else
           return {
@@ -775,11 +769,8 @@ require("formatter").setup({
         if find_file_in_parents("deno.json") or find_file_in_parents("deno.jsonc") then
           return {
             exe = "deno",
-            args = {
-              "fmt", -- Format command
-              vim.api.nvim_buf_get_name(0) -- Pass the current file path to Deno
-            },
-            stdin = false, -- We’re passing the filename, not using stdin
+            args = { "fmt", "-" }, -- Format via stdin
+            stdin = true,
           }
         else
           return {
@@ -800,11 +791,8 @@ require("formatter").setup({
         if find_file_in_parents("deno.json") or find_file_in_parents("deno.jsonc") then
           return {
             exe = "deno",
-            args = {
-              "fmt", -- Format command
-              vim.api.nvim_buf_get_name(0) -- Pass the current file path to Deno
-            },
-            stdin = false, -- We’re passing the filename, not using stdin
+            args = { "fmt", "-" }, -- Format via stdin
+            stdin = true,
           }
         else
           return {
