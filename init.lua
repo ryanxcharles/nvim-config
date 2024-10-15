@@ -143,7 +143,7 @@ require("packer").startup(function()
     "yetone/avante.nvim",
     -- event = "VeryLazy", -- Load on lazy events (optional)
     config = function()
-      require('avante_lib').load()
+      require("avante_lib").load()
       require("avante").setup({
         -- add any options here if needed
       })
@@ -397,8 +397,13 @@ lspconfig.denols.setup({
     lint = true,
     unstable = true, -- Enable unstable features if needed
   },
+  -- Add additional configuration options if needed (e.g., filetypes)
+  filetypes = { "typescript", "typescriptreact", "tsx", "json", "jsonc" },
   on_attach = function(client)
     print("Deno LSP attached!")
+    -- vim.api.nvim_buf_create_user_command(bufnr, "Format", function()
+    --   vim.lsp.buf.format({ async = true })
+    -- end, { desc = "Format current buffer with Deno" })
   end,
 })
 
@@ -634,11 +639,185 @@ cmp.setup({
   },
 })
 
+local uv = vim.loop  -- Use Neovim's built-in libuv wrapper for filesystem operations
+
+-- Function to recursively search for a file in the current directory or any parent directory
+local function find_file_in_parents(filename)
+  local cwd = uv.cwd()  -- Get the current working directory
+
+  while cwd do
+    local filepath = cwd .. "/" .. filename
+    local stat = uv.fs_stat(filepath)
+    if stat then
+      return true  -- File found
+    end
+
+    -- Move to the parent directory
+    local parent = cwd:match("(.*/)[^/]+/?$")
+    if parent == cwd then
+      break  -- Reached the root directory
+    end
+    cwd = parent
+  end
+
+  return false  -- File not found in any parent directory
+end
+
 -- Formatter setup for any languages that need it
 require("formatter").setup({
   filetype = {
+    typescript = {
+      function()
+        -- Detect if this is a Deno project by looking for a 'deno.json' or 'deno.jsonc'
+        if find_file_in_parents("deno.json") or find_file_in_parents("deno.jsonc") then
+          return {
+            exe = "deno",
+            args = {
+              "fmt", -- Format command
+              vim.api.nvim_buf_get_name(0) -- Pass the current file path to Deno
+            },
+            stdin = false, -- We’re passing the filename, not using stdin
+          }
+        else
+          -- Use Biome for non-Deno TypeScript projects
+          return {
+            exe = "biome",
+            args = {
+              "format",
+              "--stdin-file-path",
+              vim.api.nvim_buf_get_name(0),
+              "--write",
+            },
+            stdin = true,
+          }
+        end
+      end,
+    },
+    typescriptreact = {
+      function()
+        if find_file_in_parents("deno.json") or find_file_in_parents("deno.jsonc") then
+          return {
+            exe = "deno",
+            args = {
+              "fmt", -- Format command
+              vim.api.nvim_buf_get_name(0) -- Pass the current file path to Deno
+            },
+            stdin = false, -- We’re passing the filename, not using stdin
+          }
+        else
+          return {
+            exe = "biome",
+            args = {
+              "format",
+              "--stdin-file-path",
+              vim.api.nvim_buf_get_name(0),
+              "--write",
+            },
+            stdin = true,
+          }
+        end
+      end,
+    },
+    json = {
+      -- Conditional formatter for JSON files
+      function()
+        if find_file_in_parents("deno.json") or find_file_in_parents("deno.jsonc") then
+          return {
+            exe = "deno",
+            args = {
+              "fmt", -- Format command
+              vim.api.nvim_buf_get_name(0) -- Pass the current file path to Deno
+            },
+            stdin = false, -- We’re passing the filename, not using stdin
+          }
+        else
+          return {
+            exe = "biome",
+            args = {
+              "format",
+              "--stdin-file-path",
+              vim.api.nvim_buf_get_name(0),
+              "--write",
+            },
+            stdin = true,
+          }
+        end
+      end,
+    },
+    jsonc = {
+      -- Conditional formatter for JSONC files
+      function()
+        if find_file_in_parents("deno.json") or find_file_in_parents("deno.jsonc") then
+          return {
+            exe = "deno",
+            args = { "fmt", "-" },
+            stdin = true,
+          }
+        else
+          return {
+            exe = "biome",
+            args = {
+              "format",
+              "--stdin-file-path",
+              vim.api.nvim_buf_get_name(0),
+              "--write",
+            },
+            stdin = true,
+          }
+        end
+      end,
+    },
+    javascript = {
+      function()
+        if find_file_in_parents("deno.json") or find_file_in_parents("deno.jsonc") then
+          return {
+            exe = "deno",
+            args = {
+              "fmt", -- Format command
+              vim.api.nvim_buf_get_name(0) -- Pass the current file path to Deno
+            },
+            stdin = false, -- We’re passing the filename, not using stdin
+          }
+        else
+          return {
+            exe = "biome",
+            args = {
+              "format",
+              "--stdin-file-path",
+              vim.api.nvim_buf_get_name(0),
+              "--write",
+            },
+            stdin = true,
+          }
+        end
+      end,
+    },
+    javascriptreact = {
+      function()
+        if find_file_in_parents("deno.json") or find_file_in_parents("deno.jsonc") then
+          return {
+            exe = "deno",
+            args = {
+              "fmt", -- Format command
+              vim.api.nvim_buf_get_name(0) -- Pass the current file path to Deno
+            },
+            stdin = false, -- We’re passing the filename, not using stdin
+          }
+        else
+          return {
+            exe = "biome",
+            args = {
+              "format",
+              "--stdin-file-path",
+              vim.api.nvim_buf_get_name(0),
+              "--write",
+            },
+            stdin = true,
+          }
+        end
+      end,
+    },
     lua = {
-      -- StyLua
       function()
         return {
           exe = "stylua",
@@ -647,69 +826,11 @@ require("formatter").setup({
         }
       end,
     },
-    typescript = {
-      function()
-        return {
-          exe = "biome", -- The Biome executable
-          args = {
-            "format",
-            "--stdin-file-path",
-            vim.api.nvim_buf_get_name(0),
-            "--write",
-          },
-          stdin = true,
-        }
-      end,
-    },
-    typescriptreact = {
-      function()
-        return {
-          exe = "biome", -- The Biome executable
-          args = {
-            "format",
-            "--stdin-file-path",
-            vim.api.nvim_buf_get_name(0),
-            "--write",
-          },
-          stdin = true,
-        }
-      end,
-    },
-    javascript = {
-      function()
-        return {
-          exe = "biome",
-          args = {
-            "format",
-            "--stdin-file-path",
-            vim.api.nvim_buf_get_name(0),
-            "--write",
-          },
-          stdin = true,
-        }
-      end,
-    },
-    javascriptreact = {
-      -- Same for JavaScript files
-      function()
-        return {
-          exe = "biome",
-          args = {
-            "format",
-            "--stdin-file-path",
-            vim.api.nvim_buf_get_name(0),
-            "--write",
-          },
-          stdin = true,
-        }
-      end,
-    },
     rust = {
-      -- rust: Rustfmt for Rust files
       function()
         return {
-          exe = "rustfmt", -- Make sure `rustfmt` is installed
-          args = { "--emit", "stdout" }, -- Emit formatted output to stdout
+          exe = "rustfmt",
+          args = { "--emit", "stdout" },
           stdin = true,
         }
       end,
@@ -865,17 +986,17 @@ vim.g.rainbow_delimiters = {
 -- Define a custom bright theme for lualine
 local bright_theme = {
   normal = {
-    a = { fg = '#000000', bg = '#5fff00', gui = 'bold' },
-    b = { fg = '#ffffff', bg = '#0087ff' },
-    c = { fg = '#ffffff', bg = '#303030' },
+    a = { fg = "#000000", bg = "#5fff00", gui = "bold" },
+    b = { fg = "#ffffff", bg = "#0087ff" },
+    c = { fg = "#ffffff", bg = "#303030" },
   },
-  insert = { a = { fg = '#000000', bg = '#ff00ff', gui = 'bold' } },
-  visual = { a = { fg = '#000000', bg = '#ffff00', gui = 'bold' } },
-  replace = { a = { fg = '#000000', bg = '#ff0000', gui = 'bold' } },
+  insert = { a = { fg = "#000000", bg = "#ff00ff", gui = "bold" } },
+  visual = { a = { fg = "#000000", bg = "#ffff00", gui = "bold" } },
+  replace = { a = { fg = "#000000", bg = "#ff0000", gui = "bold" } },
   inactive = {
-    a = { fg = '#ffffff', bg = '#585858', gui = 'bold' },
-    b = { fg = '#ffffff', bg = '#303030' },
-    c = { fg = '#ffffff', bg = '#202020' },
+    a = { fg = "#ffffff", bg = "#585858", gui = "bold" },
+    b = { fg = "#ffffff", bg = "#303030" },
+    c = { fg = "#ffffff", bg = "#202020" },
   },
 }
 
