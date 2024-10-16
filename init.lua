@@ -1283,7 +1283,13 @@ function MyTabline()
 
       -- Append the buffer name and diagnostics to the tab string
       -- if not string.find(bufname, "-MINIMAP-") then -- Exclude Minimap buffers if present
-      if not string.find(bufname, "CodeWindow") then -- Exclude Codewindow buffers if present
+      if
+        not string.find(bufname, "CodeWindow")
+        and not (
+          string.find(bufname, "neo")
+          and string.find(bufname, "tree filesystem")
+        )
+      then -- Exclude Codewindow buffers if present
         tab_str = tab_str
           .. " "
           .. path_letters
