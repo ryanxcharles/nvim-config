@@ -1397,7 +1397,7 @@ codewindow.setup({
 codewindow.apply_default_keybinds()
 
 -- moderately bright cursor column on the highlighted window only
-vim.api.nvim_set_hl(0, "CursorColumn", { bg = "#5a5a5a" }) -- Set this to your preferred color
+vim.api.nvim_set_hl(0, "CursorColumn", { bg = "#000000" }) -- Set this to your preferred color
 vim.api.nvim_create_autocmd({ "WinEnter", "BufEnter" }, {
   pattern = "*",
   callback = function()
@@ -1411,3 +1411,21 @@ vim.api.nvim_create_autocmd({ "WinLeave", "BufLeave" }, {
   end,
 })
 
+-- Set background colors for active and inactive windows
+-- Define the colors for active and inactive windows
+vim.api.nvim_set_hl(0, "ActiveWindow", { bg = "#060606" })  -- Active window background color
+vim.api.nvim_set_hl(0, "InactiveWindow", { bg = "#1c1c1c" })  -- Inactive window background color
+
+-- Autocommand for entering a window (active)
+vim.api.nvim_create_autocmd({ "WinEnter", "BufEnter" }, {
+  callback = function()
+    vim.wo.winhighlight = "Normal:ActiveWindow"  -- Set active window background
+  end,
+})
+
+-- Autocommand for leaving a window (inactive)
+vim.api.nvim_create_autocmd({ "WinLeave", "BufLeave" }, {
+  callback = function()
+    vim.wo.winhighlight = "Normal:InactiveWindow"  -- Set inactive window background
+  end,
+})
