@@ -914,6 +914,7 @@ require("colorizer").setup({
 })
 
 -- Accurate syntax highlighting for TypeScript and other languages
+---@diagnostic disable-next-line: missing-fields
 require("nvim-treesitter.configs").setup({
   -- Install parsers for various languages
   ensure_installed = {
