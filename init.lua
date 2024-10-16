@@ -1045,17 +1045,18 @@ vim.g.rainbow_delimiters = {
 -- Define a custom bright theme for lualine
 local bright_theme = {
   normal = {
-    a = { fg = "#000000", bg = "#4fff00", gui = "bold" },
-    b = { fg = "#ffffff", bg = "#00679f" },
-    c = { fg = "#ffffff", bg = "#303030" },
+    a = { fg = "#ffffff", bg = "#5f87af", gui = "bold" }, -- Blue-gray for normal mode
+    b = { fg = "#ffffff", bg = "#3a3a3a" }, -- Dark background for section b
+    c = { fg = "#ffffff", bg = "#262626" }, -- Even darker for section c
   },
-  insert = { a = { fg = "#000000", bg = "#ff00ff", gui = "bold" } },
-  visual = { a = { fg = "#000000", bg = "#ffff00", gui = "bold" } },
-  replace = { a = { fg = "#000000", bg = "#ff0000", gui = "bold" } },
+  insert = { a = { fg = "#ffffff", bg = "#87af5f", gui = "bold" } }, -- Green for insert mode
+  visual = { a = { fg = "#ffffff", bg = "#d7af5f", gui = "bold" } }, -- Yellow for visual mode
+  replace = { a = { fg = "#ffffff", bg = "#d75f5f", gui = "bold" } }, -- Red for replace mode
+  command = { a = { fg = "#ffffff", bg = "#af5fff", gui = "bold" } }, -- Purple for command mode
   inactive = {
-    a = { fg = "#ffffff", bg = "#585858", gui = "bold" },
-    b = { fg = "#ffffff", bg = "#303030" },
-    c = { fg = "#ffffff", bg = "#1c1c1c" },
+    a = { fg = "#bcbcbc", bg = "#3a3a3a", gui = "bold" }, -- Gray for inactive mode
+    b = { fg = "#bcbcbc", bg = "#262626" },
+    c = { fg = "#bcbcbc", bg = "#1c1c1c" },
   },
 }
 
@@ -1149,7 +1150,7 @@ end
 vim.api.nvim_set_hl(
   0,
   "TabLineSel",
-  { fg = "#ffffff", bg = "#00679f", bold = false }
+  { fg = "#ffffff", bg = "#5f87af", bold = false }
 ) -- Selected tab
 vim.api.nvim_set_hl(
   0,
