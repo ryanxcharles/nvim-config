@@ -1395,3 +1395,19 @@ codewindow.setup({
   window_border = "single",
 })
 codewindow.apply_default_keybinds()
+
+-- moderately bright cursor column on the highlighted window only
+vim.api.nvim_set_hl(0, "CursorColumn", { bg = "#5a5a5a" }) -- Set this to your preferred color
+vim.api.nvim_create_autocmd({ "WinEnter", "BufEnter" }, {
+  pattern = "*",
+  callback = function()
+    vim.wo.cursorcolumn = true -- Enable cursor column in the active window
+  end,
+})
+vim.api.nvim_create_autocmd({ "WinLeave", "BufLeave" }, {
+  pattern = "*",
+  callback = function()
+    vim.wo.cursorcolumn = false -- Disable cursor column in inactive windows
+  end,
+})
+
