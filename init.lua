@@ -387,6 +387,32 @@ vim.api.nvim_create_autocmd("FileType", {
 -- Import the LSP config plugin
 local lspconfig = require("lspconfig")
 
+-- lua: Set up the Lua Language Server first (because lua is used by nvim -
+-- seems logical)
+require("lspconfig").lua_ls.setup({
+  settings = {
+    Lua = {
+      runtime = {
+        -- Tell the language server which version of Lua you're using (LuaJIT for Neovim)
+        version = "LuaJIT",
+        path = vim.split(package.path, ";"),
+      },
+      diagnostics = {
+        -- Get the language server to recognize the `vim` global
+        globals = { "vim" },
+      },
+      workspace = {
+        -- Make the server aware of Neovim runtime files
+        library = vim.api.nvim_get_runtime_file("", true),
+        checkThirdParty = false, -- Set this to true if using third-party libraries
+      },
+      telemetry = {
+        enable = false,
+      },
+    },
+  },
+})
+
 -- We are going to set up TypeScript for node.js, and deno separately
 
 -- Deno TypeScript LSP setup
@@ -639,28 +665,28 @@ cmp.setup({
   },
 })
 
-local uv = vim.loop  -- Use Neovim's built-in libuv wrapper for filesystem operations
+local uv = vim.loop -- Use Neovim's built-in libuv wrapper for filesystem operations
 
 -- Function to recursively search for a file in the current directory or any parent directory
 local function find_file_in_parents(filename)
-  local cwd = uv.cwd()  -- Get the current working directory
+  local cwd = uv.cwd() -- Get the current working directory
 
   while cwd do
     local filepath = cwd .. "/" .. filename
     local stat = uv.fs_stat(filepath)
     if stat then
-      return true  -- File found
+      return true -- File found
     end
 
     -- Move to the parent directory
     local parent = cwd:match("(.*/)[^/]+/?$")
     if parent == cwd then
-      break  -- Reached the root directory
+      break -- Reached the root directory
     end
     cwd = parent
   end
 
-  return false  -- File not found in any parent directory
+  return false -- File not found in any parent directory
 end
 
 -- Formatter setup for any languages that need it
@@ -669,7 +695,10 @@ require("formatter").setup({
     typescript = {
       function()
         -- Detect if this is a Deno project by looking for a 'deno.json' or 'deno.jsonc'
-        if find_file_in_parents("deno.json") or find_file_in_parents("deno.jsonc") then
+        if
+          find_file_in_parents("deno.json")
+          or find_file_in_parents("deno.jsonc")
+        then
           return {
             exe = "deno",
             args = { "fmt", "-" }, -- Format via stdin
@@ -692,7 +721,10 @@ require("formatter").setup({
     },
     typescriptreact = {
       function()
-        if find_file_in_parents("deno.json") or find_file_in_parents("deno.jsonc") then
+        if
+          find_file_in_parents("deno.json")
+          or find_file_in_parents("deno.jsonc")
+        then
           return {
             exe = "deno",
             args = { "fmt", "-" }, -- Format via stdin
@@ -715,12 +747,15 @@ require("formatter").setup({
     json = {
       -- Conditional formatter for JSON files
       function()
-        if find_file_in_parents("deno.json") or find_file_in_parents("deno.jsonc") then
+        if
+          find_file_in_parents("deno.json")
+          or find_file_in_parents("deno.jsonc")
+        then
           return {
             exe = "deno",
             args = {
               "fmt", -- Format command
-              vim.api.nvim_buf_get_name(0) -- Pass the current file path to Deno
+              vim.api.nvim_buf_get_name(0), -- Pass the current file path to Deno
             },
             stdin = false, -- We’re passing the filename, not using stdin
           }
@@ -741,12 +776,15 @@ require("formatter").setup({
     jsonc = {
       -- Conditional formatter for JSONC files
       function()
-        if find_file_in_parents("deno.json") or find_file_in_parents("deno.jsonc") then
+        if
+          find_file_in_parents("deno.json")
+          or find_file_in_parents("deno.jsonc")
+        then
           return {
             exe = "deno",
             args = {
               "fmt", -- Format command
-              vim.api.nvim_buf_get_name(0) -- Pass the current file path to Deno
+              vim.api.nvim_buf_get_name(0), -- Pass the current file path to Deno
             },
             stdin = false, -- We’re passing the filename, not using stdin
           }
@@ -766,7 +804,10 @@ require("formatter").setup({
     },
     javascript = {
       function()
-        if find_file_in_parents("deno.json") or find_file_in_parents("deno.jsonc") then
+        if
+          find_file_in_parents("deno.json")
+          or find_file_in_parents("deno.jsonc")
+        then
           return {
             exe = "deno",
             args = { "fmt", "-" }, -- Format via stdin
@@ -788,7 +829,10 @@ require("formatter").setup({
     },
     javascriptreact = {
       function()
-        if find_file_in_parents("deno.json") or find_file_in_parents("deno.jsonc") then
+        if
+          find_file_in_parents("deno.json")
+          or find_file_in_parents("deno.jsonc")
+        then
           return {
             exe = "deno",
             args = { "fmt", "-" }, -- Format via stdin
