@@ -283,6 +283,13 @@ require("telescope").setup({
   },
 })
 
+-- Set Telescope background color to #0a0a0a
+vim.api.nvim_set_hl(0, "TelescopeNormal", { bg = "#0a0a0a" }) -- Normal background
+-- vim.api.nvim_set_hl(0, "TelescopeBorder", { bg = "#0a0a0a", fg = "#0a0a0a" })  -- Border color (make it blend)
+-- vim.api.nvim_set_hl(0, "TelescopePromptNormal", { bg = "#0a0a0a" })  -- Prompt background
+-- vim.api.nvim_set_hl(0, "TelescopeResultsNormal", { bg = "#0a0a0a" }) -- Results background
+-- vim.api.nvim_set_hl(0, "TelescopePreviewNormal", { bg = "#0a0a0a" }) -- Preview background
+
 -- Key binding to use Telescope to search files, including respecting .gitignore
 vim.api.nvim_set_keymap(
   "n",
@@ -1030,8 +1037,8 @@ vim.g.rainbow_delimiters = {
 -- Define a custom bright theme for lualine
 local bright_theme = {
   normal = {
-    a = { fg = "#000000", bg = "#5fff00", gui = "bold" },
-    b = { fg = "#ffffff", bg = "#0087ff" },
+    a = { fg = "#000000", bg = "#4fff00", gui = "bold" },
+    b = { fg = "#ffffff", bg = "#00679f" },
     c = { fg = "#ffffff", bg = "#303030" },
   },
   insert = { a = { fg = "#000000", bg = "#ff00ff", gui = "bold" } },
@@ -1128,6 +1135,19 @@ local function get_diagnostics(bufnr)
 
   return counts
 end
+
+-- b = { fg = "#ffffff", bg = "#0087ff" },
+-- Define custom highlight groups for tabs with a bright blue background
+vim.api.nvim_set_hl(
+  0,
+  "TabLineSel",
+  { fg = "#ffffff", bg = "#06375f", bold = true }
+) -- Selected tab
+vim.api.nvim_set_hl(
+  0,
+  "TabLine",
+  { fg = "#ffffff", bg = "#000000", bold = false }
+) -- Non-selected tabs
 
 -- Get the background colors for TabLine and TabLineSel
 local tabline_bg =
