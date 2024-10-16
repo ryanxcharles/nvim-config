@@ -913,7 +913,7 @@ require("colorizer").setup({
   buftypes = {},
 })
 
--- Accurate syntax highlighting for TypeScript
+-- Accurate syntax highlighting for TypeScript and other languages
 require("nvim-treesitter.configs").setup({
   -- Install parsers for various languages
   ensure_installed = {
@@ -951,19 +951,20 @@ vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
 vim.opt.foldenable = false -- Disable folding by default
 
 -- Create an autocmd to manually set TOML syntax for front matter inside Markdown
-vim.api.nvim_exec(
-  [[
-  augroup MarkdownFrontmatter
-    autocmd!
-    autocmd BufRead,BufNewFile *.md
-      \ if getline(1) =~ '^+++' && getline(3) =~ '^+++' |
-      \   call matchadd('toml', '^\.\.\.') |
-      \   set syntax=markdown |
-      \ endif
-  augroup END
-]],
-  false
-)
+vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
+  group = vim.api.nvim_create_augroup("MarkdownFrontmatter", { clear = true }),
+  pattern = "*.md",
+  callback = function()
+    local first_line = vim.fn.getline(1)
+    local third_line = vim.fn.getline(3)
+    
+    -- Check if the front matter matches '+++'
+    if first_line:match('^%+%+%+') and third_line:match('^%+%+%+') then
+      vim.fn.matchadd('toml', '^%+%+%+')
+      vim.bo.syntax = "markdown" -- Set the syntax to markdown
+    end
+  end,
+})
 
 -- GitHub Copilot
 
