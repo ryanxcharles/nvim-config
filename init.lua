@@ -1005,6 +1005,13 @@ vim.api.nvim_set_keymap(
   { silent = true, expr = true }
 )
 
+-- Custom color for search highlighting
+vim.api.nvim_set_hl(0, "Search", { bg = "#87af5f", fg = "#000000" })
+-- Custom color for visual mode
+vim.api.nvim_set_hl(0, "Visual", { bg = "#5f87af", fg = "#ffffff" })
+-- Custom color for incremental search
+vim.api.nvim_set_hl(0, "IncSearch", { bg = "#875fff", fg = "#ffffff" })
+
 -- Define subtle colors for the rainbow delimiters
 -- highlight RainbowDelimiterBlue guifg=#5F9EA0  -- Cadet Blue
 -- highlight RainbowDelimiterGreen guifg=#8FBC8F  -- Dark Sea Green
