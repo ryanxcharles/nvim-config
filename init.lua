@@ -8,6 +8,7 @@
 -- tailwindcss-language-server (for Tailwind CSS completions and colors)
 -- typescript-language-server (for TypeScript completions and diagnostics)
 -- rust/cargo (for Rust tools)
+-- lua-language-server (for Lua completions and diagnostics)
 
 -- ~/.config/nvim/init.lua
 require("packer").startup(function()
@@ -200,6 +201,12 @@ vim.api.nvim_set_keymap("n", "<Leader>l", "gt", opts)
 vim.api.nvim_set_keymap(
   "n",
   "<Leader>n",
+  ":tabnew<CR>",
+  { silent = true }
+)
+vim.api.nvim_set_keymap(
+  "n",
+  "<Leader>N",
   ":tabnew<CR><Leader>e",
   { silent = true }
 )
@@ -1141,7 +1148,7 @@ end
 vim.api.nvim_set_hl(
   0,
   "TabLineSel",
-  { fg = "#ffffff", bg = "#06375f", bold = true }
+  { fg = "#ffffff", bg = "#00679f", bold = false }
 ) -- Selected tab
 vim.api.nvim_set_hl(
   0,
@@ -1424,21 +1431,21 @@ codewindow.apply_default_keybinds()
 
 -- moderately bright cursor column on the highlighted window only
 vim.api.nvim_set_hl(0, "CursorLine", { bg = "#000000" }) -- Set this to your preferred color
-vim.api.nvim_set_hl(0, "CursorColumn", { bg = "#000000" }) -- Set this to your preferred color
+-- vim.api.nvim_set_hl(0, "CursorColumn", { bg = "#000000" }) -- Set this to your preferred color
 vim.api.nvim_create_autocmd({ "WinEnter", "BufEnter" }, {
   pattern = "*",
   callback = function()
     vim.api.nvim_set_hl(0, "CursorLine", { bg = "#000000" }) -- Set this to your preferred color
-    vim.api.nvim_set_hl(0, "CursorColumn", { bg = "#000000" }) -- Set this to your preferred color
+    -- vim.api.nvim_set_hl(0, "CursorColumn", { bg = "#000000" }) -- Set this to your preferred color
     vim.wo.cursorline = true -- Enable cursor column in the active window
-    vim.wo.cursorcolumn = true -- Enable cursor column in the active window
+    -- vim.wo.cursorcolumn = true -- Enable cursor column in the active window
   end,
 })
 vim.api.nvim_create_autocmd({ "WinLeave", "BufLeave" }, {
   pattern = "*",
   callback = function()
     vim.wo.cursorline = false -- Disable cursor column in inactive windows
-    vim.wo.cursorcolumn = false -- Disable cursor column in inactive windows
+    -- vim.wo.cursorcolumn = false -- Disable cursor column in inactive windows
   end,
 })
 
