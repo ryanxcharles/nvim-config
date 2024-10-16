@@ -1393,18 +1393,3 @@ codewindow.setup({
   window_border = "single",
 })
 codewindow.apply_default_keybinds()
-
--- Set custom highlight for CursorLine (hide cursorline when leaving window)
-vim.api.nvim_exec(
-  [[
-  augroup CursorLineControl
-    autocmd!
-    " When entering a window, set CursorLine to normal color
-    autocmd WinEnter * setlocal cursorline
-    autocmd WinEnter * highlight CursorLine ctermbg=NONE guibg=#2e3440
-    " When leaving a window, hide the CursorLine by setting it to the background color
-    autocmd WinLeave * highlight CursorLine ctermbg=NONE guibg=bg
-  augroup END
-]],
-  false
-)
