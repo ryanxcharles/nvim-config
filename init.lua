@@ -186,6 +186,7 @@ vim.opt.termguicolors = true
 
 -- Show line numbers by default
 vim.opt.number = true
+vim.opt.relativenumber = true
 
 -- Number of spaces for a tab by default
 vim.opt.tabstop = 2 -- Number of spaces for a tab
@@ -1054,7 +1055,7 @@ local bright_theme = {
   inactive = {
     a = { fg = "#ffffff", bg = "#585858", gui = "bold" },
     b = { fg = "#ffffff", bg = "#303030" },
-    c = { fg = "#ffffff", bg = "#202020" },
+    c = { fg = "#ffffff", bg = "#1c1c1c" },
   },
 }
 
@@ -1153,7 +1154,7 @@ vim.api.nvim_set_hl(
 vim.api.nvim_set_hl(
   0,
   "TabLine",
-  { fg = "#ffffff", bg = "#000000", bold = false }
+  { fg = "#ffffff", bg = "#1c1c1c", bold = false }
 ) -- Non-selected tabs
 
 -- Get the background colors for TabLine and TabLineSel
