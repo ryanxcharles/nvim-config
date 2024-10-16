@@ -259,6 +259,9 @@ vim.api.nvim_set_keymap(
 -- Redraw screen
 vim.api.nvim_set_keymap("n", "<Leader>.", "<C-l>", opts)
 
+-- Custom cursor color
+vim.api.nvim_set_hl(0, "Cursor", { bg = "#FA8603", fg = "#000000" })
+
 -- TODO: test todo highlighting
 -- Define a highlight group for TODO comments
 vim.api.nvim_command("highlight TodoComment guifg=#FA8603 gui=bold") -- Orange color with bold
@@ -1087,10 +1090,10 @@ require("lualine").setup({
         sources = { "nvim_lsp" },
         sections = { "error", "warn", "info", "hint" },
         diagnostics_color = {
-          error = { fg = "#ff0000" }, -- Brighter Error color (red)
-          warn = { fg = "#ffff00" }, -- Brighter Warning color (yellow)
-          info = { fg = "#00ffff" }, -- Brighter Info color (cyan)
-          hint = { fg = "#00ff00" }, -- Brighter Hint color (green)
+          error = { fg = "#ff6c6b" }, -- Brighter Error color (red)
+          warn = { fg = "#ECBE7B" }, -- Brighter Warning color (yellow)
+          info = { fg = "#51afef" }, -- Brighter Info color (cyan)
+          hint = { fg = "#98be65" }, -- Brighter Hint color (green)
         },
         symbols = {
           error = " ", -- Error icon
