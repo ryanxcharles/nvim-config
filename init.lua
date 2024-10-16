@@ -399,7 +399,7 @@ require("lspconfig").lua_ls.setup({
       },
       diagnostics = {
         -- Get the language server to recognize the `vim` global
-        globals = { "vim" },
+        globals = { "vim", "use" },
       },
       workspace = {
         -- Make the server aware of Neovim runtime files
@@ -641,6 +641,7 @@ end, {})
 local cmp = require("cmp")
 
 -- Set up nvim-cmp (auto-complete)
+---@diagnostic disable-next-line: redundant-parameter
 cmp.setup({
   snippet = {
     expand = function(args)
@@ -648,9 +649,13 @@ cmp.setup({
     end,
   },
   mapping = {
+    ---@diagnostic disable-next-line: undefined-field
     ["<C-Space>"] = cmp.mapping.complete(), -- Trigger completion manually
+    ---@diagnostic disable-next-line: undefined-field
     ["<CR>"] = cmp.mapping.confirm({ select = true }), -- Confirm selection
+    ---@diagnostic disable-next-line: undefined-field
     ["<C-.>"] = cmp.mapping.select_next_item(), -- Navigate completion next
+    ---@diagnostic disable-next-line: undefined-field
     ["<C-,>"] = cmp.mapping.select_prev_item(), -- Navigate completion previous
   },
   sources = {
@@ -669,10 +674,12 @@ local uv = vim.loop -- Use Neovim's built-in libuv wrapper for filesystem operat
 
 -- Function to recursively search for a file in the current directory or any parent directory
 local function find_file_in_parents(filename)
+  ---@diagnostic disable-next-line: undefined-field
   local cwd = uv.cwd() -- Get the current working directory
 
   while cwd do
     local filepath = cwd .. "/" .. filename
+    ---@diagnostic disable-next-line: undefined-field
     local stat = uv.fs_stat(filepath)
     if stat then
       return true -- File found
