@@ -163,6 +163,28 @@ require("packer").startup(function()
       -- { "zbirenbaum/copilot.lua", opt = true }, -- Optional for Copilot integration
     },
   })
+
+  -- Lazy.nvim (for LazyDev)
+  use("folke/lazy.nvim")
+
+  -- LazyDev: Lua development environment for Neovim
+  use({
+    "folke/lazydev.nvim",
+    config = function()
+      require("lazydev").setup({
+        -- Optional configuration for LazyDev
+        -- You can customize the settings here if needed
+      })
+    end,
+  })
+
+  -- Luvit-meta: LuaJIT/luvit typing definitions for Neovim
+  use({
+    "Bilal2453/luvit-meta",
+    config = function()
+      -- Optional: You can configure or load additional typing support here
+    end,
+  })
 end)
 
 local opts = { noremap = true, silent = true }
@@ -199,12 +221,7 @@ vim.opt.smartindent = true -- Smart indenting for C-like languages
 vim.api.nvim_set_keymap("n", "<Leader>w", ":w<CR>", opts)
 vim.api.nvim_set_keymap("n", "<Leader>h", "gT", opts)
 vim.api.nvim_set_keymap("n", "<Leader>l", "gt", opts)
-vim.api.nvim_set_keymap(
-  "n",
-  "<Leader>n",
-  ":tabnew<CR>",
-  { silent = true }
-)
+vim.api.nvim_set_keymap("n", "<Leader>n", ":tabnew<CR>", { silent = true })
 vim.api.nvim_set_keymap(
   "n",
   "<Leader>N",
@@ -1419,9 +1436,19 @@ vim.api.nvim_set_keymap("n", "<Leader>tb", ":Neotree buffers<CR>", opts)
 -- Neo-tree git status
 vim.api.nvim_set_keymap("n", "<Leader>tg", ":Neotree git_status<CR>", opts)
 -- Keybinding to open Neo-tree buffer list in a floating window (on-demand)
-vim.api.nvim_set_keymap('n', '<Leader>fb', ':Neotree buffers position=float<CR>', opts)
+vim.api.nvim_set_keymap(
+  "n",
+  "<Leader>fb",
+  ":Neotree buffers position=float<CR>",
+  opts
+)
 -- Keybinding to open Neo-tree buffer list in a floating window (on-demand)
-vim.api.nvim_set_keymap('n', '<Leader>ff', ':Neotree filesystem position=float<CR>', opts)
+vim.api.nvim_set_keymap(
+  "n",
+  "<Leader>ff",
+  ":Neotree filesystem position=float<CR>",
+  opts
+)
 
 -- Redefine the :only command to include :e
 -- This is useful specifically for:
@@ -1486,11 +1513,10 @@ vim.api.nvim_create_autocmd({ "WinLeave", "BufLeave" }, {
 
 -- lua-specific setup. reload current lua file.
 function ReloadCurrentFile()
-  local file = vim.fn.expand('%:r') -- Get the file path without extension
+  local file = vim.fn.expand("%:r") -- Get the file path without extension
   package.loaded[file] = nil
   require(file)
 end
 
 -- Keybinding to reload the current Lua file
-vim.api.nvim_set_keymap('n', '<Leader>rf', ':lua ReloadCurrentFile()<CR>', { noremap = true, silent = true })
-
+vim.api.nvim_set_keymap("n", "<Leader>rf", ":lua ReloadCurrentFile()<CR>", opts)
