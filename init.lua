@@ -1483,3 +1483,10 @@ vim.api.nvim_create_autocmd({ "WinLeave", "BufLeave" }, {
     vim.wo.winhighlight = "Normal:InactiveWindow" -- Set inactive window background
   end,
 })
+
+-- lua-specific setup. reload current lua file.
+function ReloadCurrentFile()
+  local file = vim.fn.expand('%:r') -- Get the file path without extension
+  package.loaded[file] = nil
+  require(file)
+end
