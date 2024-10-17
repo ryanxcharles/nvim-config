@@ -1096,7 +1096,7 @@ local bright_theme = {
   normal = {
     a = { fg = "#ffffff", bg = "#5f87af", gui = "bold" }, -- Blue-gray for normal mode
     b = { fg = "#ffffff", bg = "#3a3a3a" }, -- Dark background for section b
-    c = { fg = "#ffffff", bg = "#262626" }, -- Even darker for section c
+    c = { fg = "#ffffff", bg = "#14161b" }, -- Even darker for section c
   },
   insert = { a = { fg = "#ffffff", bg = "#87af5f", gui = "bold" } }, -- Green for insert mode
   visual = { a = { fg = "#ffffff", bg = "#d7af5f", gui = "bold" } }, -- Yellow for visual mode
@@ -1104,8 +1104,8 @@ local bright_theme = {
   command = { a = { fg = "#ffffff", bg = "#af5fff", gui = "bold" } }, -- Purple for command mode
   inactive = {
     a = { fg = "#bcbcbc", bg = "#3a3a3a", gui = "bold" }, -- Gray for inactive mode
-    b = { fg = "#bcbcbc", bg = "#262626" },
-    c = { fg = "#bcbcbc", bg = "#1c1c1c" },
+    b = { fg = "#bcbcbc", bg = "#14161b" },
+    c = { fg = "#bcbcbc", bg = "#14161b" },
   },
 }
 
@@ -1204,7 +1204,7 @@ vim.api.nvim_set_hl(
 vim.api.nvim_set_hl(
   0,
   "TabLine",
-  { fg = "#ffffff", bg = "#1c1c1c", bold = false }
+  { fg = "#ffffff", bg = "#14161b", bold = false }
 ) -- Non-selected tabs
 
 -- Get the background colors for TabLine and TabLineSel
@@ -1516,8 +1516,8 @@ vim.api.nvim_create_autocmd({ "WinLeave", "BufLeave" }, {
 
 -- Set background colors for active and inactive windows
 -- Define the colors for active and inactive windows
-vim.api.nvim_set_hl(0, "ActiveWindow", { bg = "#0a0a0a" }) -- Active window background color
-vim.api.nvim_set_hl(0, "InactiveWindow", { bg = "#1c1c1c" }) -- Inactive window background color
+vim.api.nvim_set_hl(0, "ActiveWindow", { bg = "#08090c" }) -- Active window background color
+vim.api.nvim_set_hl(0, "InactiveWindow", { bg = "#14161b" }) -- Inactive window background color
 
 -- Autocommand for entering a window (active)
 vim.api.nvim_create_autocmd({ "WinEnter", "BufEnter" }, {
@@ -1565,12 +1565,16 @@ end
 -- Create a command to call the function
 vim.api.nvim_create_user_command('CloseHiddenBuffers', CloseHiddenBuffers, {})
 
--- open a terminal in a new vertical split
+-- open a terminal in a new vertical split to the right
 vim.api.nvim_create_user_command('Term', function()
   vim.cmd('vnew')
   vim.cmd('term')
-  vim.cmd('wincmd R')
+  vim.cmd('wincmd L')
 end, {})
 
--- shortcut for Term
-vim.api.nvim_set_keymap('n', '<Leader>te', ':Term<CR>', opts)
+-- open a terminal in a new horizontal split below
+vim.api.nvim_create_user_command('TermBelow', function()
+  vim.cmd('new')
+  vim.cmd('term')
+  vim.cmd('wincmd J')
+end, {})
