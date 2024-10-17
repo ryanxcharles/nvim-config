@@ -207,7 +207,7 @@ vim.opt.breakindent = true
 -- vim.opt.cursorcolumn = true
 
 -- ctrl+escape exits terminal mode
-vim.api.nvim_set_keymap('t', '<C-Space>', [[<C-\><C-n>]], opts)
+vim.api.nvim_set_keymap('t', '<C-;>', [[<C-\><C-n>]], opts)
 
 -- Enable 24-bit RGB color in the terminal
 vim.opt.termguicolors = true
