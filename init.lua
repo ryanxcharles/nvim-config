@@ -1419,7 +1419,9 @@ vim.api.nvim_set_keymap("n", "<Leader>tb", ":Neotree buffers<CR>", opts)
 -- Neo-tree git status
 vim.api.nvim_set_keymap("n", "<Leader>tg", ":Neotree git_status<CR>", opts)
 -- Keybinding to open Neo-tree buffer list in a floating window (on-demand)
-vim.api.nvim_set_keymap('n', '<leader>bf', ':Neotree buffers position=float<CR>', opts)
+vim.api.nvim_set_keymap('n', '<leader>fb', ':Neotree buffers position=float<CR>', opts)
+-- Keybinding to open Neo-tree buffer list in a floating window (on-demand)
+vim.api.nvim_set_keymap('n', '<leader>ff', ':Neotree filesystem position=float<CR>', opts)
 
 -- Redefine the :only command to include :e
 -- This is useful specifically for:
