@@ -1,14 +1,17 @@
 -- The following tools must be installed to use this configuration:
 -- nvim v0.10.1+ (Neovim)
+-- git v2.33.0+ (for git integration)
 -- ripgrip v14.1.1 (for Telescope)
 -- stylua v0.20.0 (for Lua formatting)
 -- biome v1.9.2 (for TypeScript formatting)
+-- deno v2.0.0 (for Deno TypeScript LSP)
 -- Nerdfonts (for icons)
 -- git (for git integration)
 -- tailwindcss-language-server (for Tailwind CSS completions and colors)
 -- typescript-language-server (for TypeScript completions and diagnostics)
 -- rust/cargo (for Rust tools)
 -- lua-language-server (for Lua completions and diagnostics)
+-- prettier (for Markdown formatting)
 
 -- ~/.config/nvim/init.lua
 require("packer").startup(function()
@@ -732,6 +735,22 @@ end
 -- Formatter setup for any languages that need it
 require("formatter").setup({
   filetype = {
+    markdown = {
+      -- Prettier for formatting Markdown
+      function()
+        return {
+          exe = "prettier", -- Make sure Prettier is installed globally
+          args = {
+            "--stdin-filepath",
+            vim.api.nvim_buf_get_name(0), -- Prettier needs the file path to infer formatting rules
+            "--prose-wrap",
+            "always", -- Ensures text in markdown files is always wrapped
+          },
+          stdin = true,
+        }
+      end,
+    },
+    -- other filetypes here...
     typescript = {
       function()
         -- Detect if this is a Deno project by looking for a 'deno.json' or 'deno.jsonc'
