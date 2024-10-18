@@ -1,19 +1,10 @@
 -- ~/.config/nvim/init.lua
 require("packer").startup(function()
-  -- alpha-nvim greeter (splash screen)
-  -- use({
-  --   "goolord/alpha-nvim",
-  --   requires = { "echasnovski/mini.icons" },
-  --   config = function()
-  --     require("alpha").setup(require("alpha.themes.startify").config)
-  --   end,
-  -- })
-
   -- null-ls.nvim for code actions, formatting, and more. used with rust.
-  use({
-    "jose-elias-alvarez/null-ls.nvim",
-    requires = { "nvim-lua/plenary.nvim" },
-  })
+  -- use({
+  --   "jose-elias-alvarez/null-ls.nvim",
+  --   requires = { "nvim-lua/plenary.nvim" },
+  -- })
 
   -- rust: Rust tools for enhanced features
   use({

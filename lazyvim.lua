@@ -152,4 +152,11 @@ return {
       require("alpha").setup(require("alpha.themes.startify").opts)
     end,
   },
+
+  {
+    "jose-elias-alvarez/null-ls.nvim",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+    },
+  },
 }
