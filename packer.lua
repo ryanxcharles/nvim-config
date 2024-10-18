@@ -282,20 +282,20 @@ local opts = { noremap = true, silent = true }
 -- -- Redraw screen
 -- vim.api.nvim_set_keymap("n", "<Leader>.", "<C-l>", opts)
 
--- Custom cursor color
-vim.api.nvim_set_hl(0, "Cursor", { bg = "#FA8603", fg = "#000000" })
-
--- TODO: test todo highlighting
--- Define a highlight group for TODO comments
-vim.api.nvim_command("highlight TodoComment guifg=#FA8603 gui=bold") -- Orange color with bold
--- Automatically highlight TODO comments when entering a buffer
-vim.api.nvim_create_autocmd({ "BufEnter", "BufReadPost" }, {
-  group = vim.api.nvim_create_augroup("TodoHighlight", { clear = true }),
-  pattern = "*",
-  callback = function()
-    vim.fn.matchadd("TodoComment", "TODO:")
-  end,
-})
+-- -- Custom cursor color
+-- vim.api.nvim_set_hl(0, "Cursor", { bg = "#FA8603", fg = "#000000" })
+--
+-- -- TODO: test todo highlighting
+-- -- Define a highlight group for TODO comments
+-- vim.api.nvim_command("highlight TodoComment guifg=#FA8603 gui=bold") -- Orange color with bold
+-- -- Automatically highlight TODO comments when entering a buffer
+-- vim.api.nvim_create_autocmd({ "BufEnter", "BufReadPost" }, {
+--   group = vim.api.nvim_create_augroup("TodoHighlight", { clear = true }),
+--   pattern = "*",
+--   callback = function()
+--     vim.fn.matchadd("TodoComment", "TODO:")
+--   end,
+-- })
 
 -- -- Telescope setup - use ripgrep for searching files
 -- require("telescope").setup({

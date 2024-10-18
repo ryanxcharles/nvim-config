@@ -17,17 +17,6 @@ vim.opt.breakindent = true
 -- ctrl+escape exits terminal mode
 vim.api.nvim_set_keymap('t', '<C-;>', [[<C-\><C-n>]], opts)
 
--- Show line numbers by default
-vim.opt.number = true
-vim.opt.relativenumber = true
-
--- Number of spaces for a tab by default
-vim.opt.tabstop = 2 -- Number of spaces for a tab
-vim.opt.shiftwidth = 2 -- Number of spaces for auto-indent
-vim.opt.expandtab = true -- Use spaces instead of tabs
-vim.opt.autoindent = true -- Auto-indent new lines
-vim.opt.smartindent = true -- Smart indenting for C-like languages
-
 -- Key mappings using leader key
 vim.api.nvim_set_keymap("n", "<Leader>w", ":w<CR>", opts)
 vim.api.nvim_set_keymap("n", "<Leader>h", "gT", opts)
@@ -150,5 +139,13 @@ vim.api.nvim_set_keymap(
   "n",
   "<Leader>dp",
   ":lua vim.diagnostic.goto_prev()<CR>",
+  opts
+)
+
+-- Key binding to reload init.lua file
+vim.api.nvim_set_keymap(
+  "n",
+  "<Leader>rl",
+  ":luafile ~/.config/nvim/init.lua<CR>",
   opts
 )
