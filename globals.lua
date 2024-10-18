@@ -40,6 +40,22 @@ vim.api.nvim_create_autocmd("FileType", {
   end,
 })
 
+-- Create an autocmd to manually set TOML syntax for front matter inside Markdown
+vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
+  group = vim.api.nvim_create_augroup("MarkdownFrontmatter", { clear = true }),
+  pattern = "*.md",
+  callback = function()
+    local first_line = vim.fn.getline(1)
+    local third_line = vim.fn.getline(3)
+
+    -- Check if the front matter matches '+++'
+    if first_line:match("^%+%+%+") and third_line:match("^%+%+%+") then
+      vim.fn.matchadd("toml", "^%+%+%+")
+      vim.bo.syntax = "markdown" -- Set the syntax to markdown
+    end
+  end,
+})
+
 -- Create a custom command :Lint to run biome lint with --fix and --unsafe options
 -- This is useful for sorting tailwind classes
 vim.api.nvim_create_user_command("Fix", function()
