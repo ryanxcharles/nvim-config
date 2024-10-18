@@ -33,4 +33,5 @@ require("lazy").setup(require("lazyvim"))
 require("globals")
 require("keybindings")
 require("colors")
+require("custom-tabline")
 
