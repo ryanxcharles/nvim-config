@@ -19,8 +19,8 @@ require("packer").startup(function()
   -- use("wbthomason/packer.nvim") -- Packer manages itself
 
   -- Telescope for fuzzy finding
-  use("nvim-telescope/telescope.nvim") -- Telescope
-  use("nvim-lua/plenary.nvim") -- Required by telescope
+  -- use("nvim-telescope/telescope.nvim") -- Telescope
+  -- use("nvim-lua/plenary.nvim") -- Required by telescope
 
   -- LSP for TypeScript, etc.
   use("neovim/nvim-lspconfig")

@@ -13,6 +13,6 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup(require("plugins"))
-require("keybindings")
 require("plugins-telescope")
+require("keybindings")
 
