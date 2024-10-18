@@ -141,4 +141,15 @@ return {
       require("plugins-tailwindcss-colorizer")
     end,
   },
+
+  -- alpha-nvim greeter (splash screen)
+  {
+    "goolord/alpha-nvim",
+    dependencies = {
+      "echasnovski/mini.icons"
+    },
+    config = function()
+      require("alpha").setup(require("alpha.themes.startify").opts)
+    end,
+  },
 }

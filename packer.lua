@@ -1,24 +1,13 @@
 -- ~/.config/nvim/init.lua
 require("packer").startup(function()
-  -- Tailwind CSS colorizer
+  -- alpha-nvim greeter (splash screen)
   -- use({
-  --   "roobert/tailwindcss-colorizer-cmp.nvim",
-  --   -- optionally, override the default options:
+  --   "goolord/alpha-nvim",
+  --   requires = { "echasnovski/mini.icons" },
   --   config = function()
-  --     require("tailwindcss-colorizer-cmp").setup({
-  --       color_square_width = 2,
-  --     })
+  --     require("alpha").setup(require("alpha.themes.startify").config)
   --   end,
   -- })
-
-  -- alpha-nvim greeter (splash screen)
-  use({
-    "goolord/alpha-nvim",
-    requires = { "echasnovski/mini.icons" },
-    config = function()
-      require("alpha").setup(require("alpha.themes.startify").config)
-    end,
-  })
 
   -- null-ls.nvim for code actions, formatting, and more. used with rust.
   use({
