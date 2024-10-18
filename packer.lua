@@ -60,7 +60,7 @@ require("packer").startup(function()
   -- use("David-Kunz/cmp-npm")
 
   -- Status bar at the bottom - add diagnostics (errors, warnings, etc.)
-  use("nvim-lualine/lualine.nvim")
+  -- use("nvim-lualine/lualine.nvim")
 
   -- git integration
   use("tpope/vim-fugitive")

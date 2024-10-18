@@ -88,4 +88,8 @@ return {
       require("plugins-lualine")
     end,
   },
+
+  {
+    "tpope/vim-fugitive",
+  },
 }
