@@ -179,3 +179,9 @@ lspconfig.biome.setup({
   },
 })
 
+lspconfig.tailwindcss.setup({
+  on_attach = function(client, bufnr)
+    -- Add any additional LSP settings or keybindings for Tailwind here
+  end,
+  filetypes = { "html", "javascriptreact", "typescriptreact", "css" }, -- Add other file types where you use Tailwind
+})
