@@ -126,5 +126,11 @@ return {
   -- Better comment/uncomment
   {
     "tpope/vim-commentary",
-  }
+  },
+
+  -- surround.vim - Surround text objects
+  {
+    "tpope/vim-surround",
+  },
+
 }
