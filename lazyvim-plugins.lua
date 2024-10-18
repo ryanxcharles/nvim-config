@@ -145,6 +145,7 @@ return {
     "tpope/vim-surround",
   },
 
+  -- tailwind colors and other features like classNames
   {
     "luckasRanarison/tailwind-tools.nvim",
     name = "tailwind-tools",

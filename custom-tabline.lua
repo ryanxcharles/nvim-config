@@ -152,13 +152,13 @@ function MyTabline()
           .. tab_highlight_color
       end
 
-      -- Only append the filename if the total number of tabs is <= 5
+      -- Append tab number and diagnostics if more than 5 tabs
       if show_filenames then
         local modified = vim.bo[bufnr].modified and " [+]" or ""
         tab_str = tab_str .. " " .. bufname .. diagnostic_str .. modified .. " |"
       else
-        -- Only display diagnostics if there are more than 5 tabs
-        tab_str = tab_str .. " " .. diagnostic_str .. " |"
+        -- Display tab number instead of filename when there are more than 5 tabs
+        tab_str = tab_str .. " Tab " .. i .. diagnostic_str .. " |"
       end
     end
 
@@ -171,9 +171,6 @@ function MyTabline()
 
   return s
 end
-
--- Set the custom tabline
-vim.o.tabline = "%!v:lua.MyTabline()"
 
 -- Set the custom tabline
 vim.o.tabline = "%!v:lua.MyTabline()"
