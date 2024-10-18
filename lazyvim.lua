@@ -43,8 +43,7 @@ return {
   {
     "github/copilot.vim", -- GitHub Copilot
     config = function()
-      -- Optional Copilot setup if needed
-      -- vim.cmd("Copilot setup")
+      -- require("plugins-copilot")
     end,
   },
   {

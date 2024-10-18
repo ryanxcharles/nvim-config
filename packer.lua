@@ -1,40 +1,11 @@
 local opts = { noremap = true, silent = true }
 
--- Create an autocmd to manually set TOML syntax for front matter inside Markdown
-vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
-  group = vim.api.nvim_create_augroup("MarkdownFrontmatter", { clear = true }),
-  pattern = "*.md",
-  callback = function()
-    local first_line = vim.fn.getline(1)
-    local third_line = vim.fn.getline(3)
-
-    -- Check if the front matter matches '+++'
-    if first_line:match("^%+%+%+") and third_line:match("^%+%+%+") then
-      vim.fn.matchadd("toml", "^%+%+%+")
-      vim.bo.syntax = "markdown" -- Set the syntax to markdown
-    end
-  end,
-})
-
 -- GitHub Copilot
 
 -- Copilot uses tab to accept suggestions by default. If you want to use tab for
 -- something else, you can disable this behavior.
 -- vim.g.copilot_no_tab_map = true
 
--- Set custom keybindings for cycling through Copilot suggestions
-vim.api.nvim_set_keymap(
-  "i",
-  "<C-n>",
-  "copilot#Next()",
-  { silent = true, expr = true }
-)
-vim.api.nvim_set_keymap(
-  "i",
-  "<C-p>",
-  "copilot#Previous()",
-  { silent = true, expr = true }
-)
 
 -- Custom color for search highlighting
 vim.api.nvim_set_hl(0, "Search", { bg = "#87af5f", fg = "#000000" })

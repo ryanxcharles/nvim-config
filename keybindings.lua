@@ -162,3 +162,17 @@ vim.api.nvim_set_keymap(
   ":lua require('crates').update_crate()<CR>",
   opts
 )
+
+-- Set custom keybindings for cycling through Copilot suggestions
+vim.api.nvim_set_keymap(
+  "i",
+  "<C-n>",
+  "copilot#Next()",
+  { silent = true, expr = true }
+)
+vim.api.nvim_set_keymap(
+  "i",
+  "<C-p>",
+  "copilot#Previous()",
+  { silent = true, expr = true }
+)
