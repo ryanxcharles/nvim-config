@@ -155,7 +155,7 @@ return {
       "neovim/nvim-lspconfig",
     },
     run = ":UpdateRemotePlugins",
-    opts = {}
+    opts = {},
   },
 
   -- alpha-nvim greeter (splash screen)
@@ -204,7 +204,17 @@ return {
     end,
   },
 
+  -- metadata & type support for luvit (uv), an IO library for Lua
   {
     "Bilal2453/luvit-meta",
+  },
+
+  -- save and re-load session
+  {
+    "stevearc/resession.nvim",
+    opts = {},
+    config = function()
+      require("resession").setup({})
+    end,
   },
 }
