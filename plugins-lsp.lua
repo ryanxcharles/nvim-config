@@ -26,3 +26,23 @@ require("lspconfig").lua_ls.setup({
     },
   },
 })
+
+-- We are going to set up TypeScript for node.js, and deno separately
+
+-- Deno TypeScript LSP setup
+lspconfig.denols.setup({
+  root_dir = lspconfig.util.root_pattern("deno.json", "deno.jsonc"), -- Use deno.json to detect project root
+  init_options = {
+    enable = true,
+    lint = true,
+    unstable = true, -- Enable unstable features if needed
+  },
+  -- Add additional configuration options if needed (e.g., filetypes)
+  filetypes = { "typescript", "typescriptreact", "tsx", "json", "jsonc" },
+  on_attach = function(client)
+    print("Deno LSP attached!")
+    -- vim.api.nvim_buf_create_user_command(bufnr, "Format", function()
+    --   vim.lsp.buf.format({ async = true })
+    -- end, { desc = "Format current buffer with Deno" })
+  end,
+})
