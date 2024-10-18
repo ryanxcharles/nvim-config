@@ -64,4 +64,12 @@ return {
       require("plugins-colorizer")
     end,
   },
+
+  -- Rainbow delimiters
+  {
+    "HiPhish/rainbow-delimiters.nvim",
+    config = function()
+      require("plugins-rainbow")
+    end,
+  },
 }
