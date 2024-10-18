@@ -77,15 +77,7 @@ vim.api.nvim_set_keymap(
 vim.api.nvim_set_keymap("n", "<Leader>.", "<C-l>", opts)
 
 -- Custom keybindings for Telescope
-vim.api.nvim_set_keymap('n', '<Leader>ff', ":Telescope find_files<CR>", opts)
-vim.api.nvim_set_keymap('n', '<Leader>fg', ":Telescope live_grep<CR>", opts)
-
--- Set Telescope background color to #0a0a0a
-vim.api.nvim_set_hl(0, "TelescopeNormal", { bg = "#0a0a0a" }) -- Normal background
--- vim.api.nvim_set_hl(0, "TelescopeBorder", { bg = "#0a0a0a", fg = "#0a0a0a" })  -- Border color (make it blend)
--- vim.api.nvim_set_hl(0, "TelescopePromptNormal", { bg = "#0a0a0a" })  -- Prompt background
--- vim.api.nvim_set_hl(0, "TelescopeResultsNormal", { bg = "#0a0a0a" }) -- Results background
--- vim.api.nvim_set_hl(0, "TelescopePreviewNormal", { bg = "#0a0a0a" }) -- Preview background
+-- vim.api.nvim_set_keymap('n', '<Leader>ff', ":Telescope find_files<CR>", opts)
 
 -- Key binding to use Telescope to search files, including respecting .gitignore
 vim.api.nvim_set_keymap(
@@ -182,7 +174,7 @@ vim.api.nvim_set_keymap("n", "<Leader>tt", ":Neotree toggle<CR>", opts)
 -- Neo-tree files
 vim.api.nvim_set_keymap("n", "<Leader>tf", ":Neotree filesystem<CR>", opts)
 -- Neo-tree buffers
-vim.api.nvim_set_keymap("n", "<Leader>tb", ":Neotree buffers<CR>", opts)
+vim.api.nvim_set_keymap("n", "<Leader>tb", ":Neotree buffers<CR> position=tree", opts)
 -- Neo-tree git status
 vim.api.nvim_set_keymap("n", "<Leader>tg", ":Neotree git_status<CR>", opts)
 -- Keybinding to open Neo-tree buffer list in a floating window (on-demand)
@@ -190,13 +182,6 @@ vim.api.nvim_set_keymap(
   "n",
   "<Leader>fb",
   ":Neotree buffers position=float<CR>",
-  opts
-)
--- Keybinding to open Neo-tree buffer list in a floating window (on-demand)
-vim.api.nvim_set_keymap(
-  "n",
-  "<Leader>ff",
-  ":Neotree filesystem position=float<CR>",
   opts
 )
 
