@@ -7,7 +7,7 @@ require("packer").startup(function()
   -- use("tpope/vim-commentary")
 
   -- Surround: add, change, and delete surroundings
-  use("tpope/vim-surround")
+  -- use("tpope/vim-surround")
 
   -- Tailwind CSS tools
   use({

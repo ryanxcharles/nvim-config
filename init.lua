@@ -29,7 +29,7 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
-require("lazy").setup(require("plugins"))
+require("lazy").setup(require("lazyvim"))
 require("globals")
 require("keybindings")
 require("colors")
