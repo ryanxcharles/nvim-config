@@ -100,7 +100,7 @@ function MyTabline()
   local total_tabs = #tabpages or 0
 
   -- Define the threshold for showing filenames
-  local show_filenames = total_tabs <= 5
+  local show_filenames = total_tabs <= 10
 
   -- Loop through each visible tab
   for i = 1, total_tabs do
