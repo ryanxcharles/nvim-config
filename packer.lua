@@ -1,44 +1,32 @@
 -- ~/.config/nvim/init.lua
 require("packer").startup(function()
-  -- null-ls.nvim for code actions, formatting, and more. used with rust.
-  -- use({
-  --   "jose-elias-alvarez/null-ls.nvim",
-  --   requires = { "nvim-lua/plenary.nvim" },
-  -- })
-
-  -- rust: Rust tools for enhanced features
-  -- use({
-  --   "simrat39/rust-tools.nvim",
-  --   requires = { "neovim/nvim-lspconfig" },
-  -- })
-
   -- rust: Manage dependencies from Cargo.toml
-  use("saecki/crates.nvim")
+  -- use("saecki/crates.nvim")
 
   -- avante: cursor-like AI for Neovim
-  use({
-    "yetone/avante.nvim",
-    -- event = "VeryLazy", -- Load on lazy events (optional)
-    config = function()
-      require("avante_lib").load()
-      require("avante").setup({
-        -- add any options here if needed
-      })
-    end,
-    run = "make BUILD_FROM_SOURCE=true", -- Build command (use this if you build from source)
-    -- run = "powershell -ExecutionPolicy Bypass -File Build.ps1 -BuildFromSource false", -- For Windows
-    requires = {
-      -- Required dependencies
-      "nvim-treesitter/nvim-treesitter",
-      "stevearc/dressing.nvim",
-      "nvim-lua/plenary.nvim",
-      "MunifTanjim/nui.nvim",
+  -- use({
+  --   "yetone/avante.nvim",
+  --   -- event = "VeryLazy", -- Load on lazy events (optional)
+  --   config = function()
+  --     require("avante_lib").load()
+  --     require("avante").setup({
+  --       -- add any options here if needed
+  --     })
+  --   end,
+  --   run = "make BUILD_FROM_SOURCE=true", -- Build command (use this if you build from source)
+  --   -- run = "powershell -ExecutionPolicy Bypass -File Build.ps1 -BuildFromSource false", -- For Windows
+  --   requires = {
+  --     -- Required dependencies
+  --     "nvim-treesitter/nvim-treesitter",
+  --     "stevearc/dressing.nvim",
+  --     "nvim-lua/plenary.nvim",
+  --     "MunifTanjim/nui.nvim",
 
-      -- Optional dependencies
-      { "nvim-tree/nvim-web-devicons", opt = true }, -- Optional for icons
-      -- { "zbirenbaum/copilot.lua", opt = true }, -- Optional for Copilot integration
-    },
-  })
+  --     -- Optional dependencies
+  --     { "nvim-tree/nvim-web-devicons", opt = true }, -- Optional for icons
+  --     -- { "zbirenbaum/copilot.lua", opt = true }, -- Optional for Copilot integration
+  --   },
+  -- })
 
   -- Lazy.nvim (for LazyDev)
   use("folke/lazy.nvim")

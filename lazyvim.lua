@@ -177,4 +177,14 @@ return {
       require("plugin-crates")
     end,
   },
+
+  {
+    "folke/lazydev.nvim",
+    dependencies = {
+      "folke/lazy.nvim",
+    },
+    config = function()
+      require("lazydev").setup()
+    end,
+  },
 }
