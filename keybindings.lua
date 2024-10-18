@@ -174,14 +174,21 @@ vim.api.nvim_set_keymap("n", "<Leader>tt", ":Neotree toggle<CR>", opts)
 -- Neo-tree files
 vim.api.nvim_set_keymap("n", "<Leader>tf", ":Neotree filesystem<CR>", opts)
 -- Neo-tree buffers
-vim.api.nvim_set_keymap("n", "<Leader>tb", ":Neotree buffers<CR> position=tree", opts)
+vim.api.nvim_set_keymap("n", "<Leader>tb", ":Neotree buffers<CR>", opts)
 -- Neo-tree git status
 vim.api.nvim_set_keymap("n", "<Leader>tg", ":Neotree git_status<CR>", opts)
 -- Keybinding to open Neo-tree buffer list in a floating window (on-demand)
 vim.api.nvim_set_keymap(
   "n",
-  "<Leader>fb",
+  "<Leader>tB",
   ":Neotree buffers position=float<CR>",
+  opts
+)
+-- Keybinding to open Neo-tree file list in a floating window (on-demand)
+vim.api.nvim_set_keymap(
+  "n",
+  "<Leader>tF",
+  ":Neotree filesystem position=float<CR>",
   opts
 )
 
