@@ -13,7 +13,6 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup(require("plugins"))
-require("plugins-telescope")
 require("globals")
 require("keybindings")
 require("colors")
