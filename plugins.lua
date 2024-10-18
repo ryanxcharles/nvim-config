@@ -48,4 +48,12 @@ return {
       require("plugins-treesitter")
     end,
   },
+
+  -- Code formatting
+  {
+    "mhartington/formatter.nvim",
+    config = function()
+      require("plugins-formatter")
+    end,
+  }
 }
