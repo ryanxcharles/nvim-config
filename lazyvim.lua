@@ -13,6 +13,7 @@ return {
     "neovim/nvim-lspconfig",
     config = function()
       -- LSP configuration goes here
+      require("plugins-lsp")
     end,
   },
 
