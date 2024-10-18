@@ -392,25 +392,25 @@ local opts = { noremap = true, silent = true }
 -- vim.api.nvim_set_keymap("n", "<Leader>rt", ":!cargo test<CR>", opts)
 -- vim.api.nvim_set_keymap("n", "<Leader>rb", ":!cargo build<CR>", opts)
 
--- Two spaces for TypeScript/JavaScript/lua
-vim.api.nvim_create_autocmd("FileType", {
-  pattern = {
-    "javascript",
-    "typescript",
-    "javascriptreact",
-    "typescriptreact",
-    "lua",
-    "markdown",
-    "css",
-  },
-  callback = function()
-    vim.bo.tabstop = 2 -- Number of spaces for a tab
-    vim.bo.shiftwidth = 2 -- Number of spaces for auto-indent
-    vim.bo.expandtab = true -- Use spaces instead of tabs
-    vim.opt_local.autoindent = true -- Auto-indent new lines
-    vim.opt_local.smartindent = true -- Smart indenting for C-like languages
-  end,
-})
+-- -- Two spaces for TypeScript/JavaScript/lua
+-- vim.api.nvim_create_autocmd("FileType", {
+--   pattern = {
+--     "javascript",
+--     "typescript",
+--     "javascriptreact",
+--     "typescriptreact",
+--     "lua",
+--     "markdown",
+--     "css",
+--   },
+--   callback = function()
+--     vim.bo.tabstop = 2 -- Number of spaces for a tab
+--     vim.bo.shiftwidth = 2 -- Number of spaces for auto-indent
+--     vim.bo.expandtab = true -- Use spaces instead of tabs
+--     vim.opt_local.autoindent = true -- Auto-indent new lines
+--     vim.opt_local.smartindent = true -- Smart indenting for C-like languages
+--   end,
+-- })
 
 -- Special rules for markdown - fix indenting and disable auto-indenting for lists
 vim.api.nvim_create_autocmd("FileType", {
