@@ -15,6 +15,12 @@
 -- - rust/cargo (for Rust tools)
 -- - lua-language-server (for Lua completions and diagnostics)
 
+-- TODO:
+-- [ ] replace formatter with null-ls
+-- [ ] Add Gitsigns (lewis6991/gitsigns.nvim)
+-- [ ] Add markdown-preview.nvim (iamcco/markdown-preview.nvim)
+-- [ ] replace rainbow-delimiters with nvim-ts-rainbow (p00f/nvim-ts-rainbow)
+
 -- ~/.config/nvim/init.lua
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
