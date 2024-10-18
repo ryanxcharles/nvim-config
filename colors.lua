@@ -23,3 +23,36 @@ vim.api.nvim_set_hl(0, "Search", { bg = "#87af5f", fg = "#000000" })
 vim.api.nvim_set_hl(0, "Visual", { bg = "#5f87af", fg = "#ffffff" })
 -- Custom color for incremental search
 vim.api.nvim_set_hl(0, "IncSearch", { bg = "#875fff", fg = "#ffffff" })
+
+-- moderately bright cursor column on the highlighted window only
+vim.api.nvim_set_hl(0, "CursorLine", { bg = "#000000" }) -- Set this to your preferred color
+-- vim.api.nvim_set_hl(0, "CursorColumn", { bg = "#000000" }) -- Set this to your preferred color
+vim.api.nvim_create_autocmd({ "WinEnter", "BufEnter" }, {
+  pattern = "*",
+  callback = function()
+    vim.api.nvim_set_hl(0, "CursorLine", { bg = "#000000" }) -- Set this to your preferred color
+    -- vim.api.nvim_set_hl(0, "CursorColumn", { bg = "#000000" }) -- Set this to your preferred color
+    vim.wo.cursorline = true -- Enable cursor column in the active window
+    -- vim.wo.cursorcolumn = true -- Enable cursor column in the active window
+  end,
+})
+vim.api.nvim_create_autocmd({ "WinLeave", "BufLeave" }, {
+  pattern = "*",
+  callback = function()
+    vim.wo.cursorline = false -- Disable cursor column in inactive windows
+    -- vim.wo.cursorcolumn = false -- Disable cursor column in inactive windows
+  end,
+})
+
+-- Set background colors for active and inactive windows
+-- Define the colors for active and inactive windows
+vim.api.nvim_set_hl(0, "ActiveWindow", { bg = "#08090c" }) -- Active window background color
+vim.api.nvim_set_hl(0, "InactiveWindow", { bg = "#14161b" }) -- Inactive window background color
+
+-- Autocommand for entering a window (active)
+vim.api.nvim_create_autocmd({ "WinEnter", "BufEnter" }, {
+  callback = function()
+    vim.wo.winhighlight = "Normal:ActiveWindow" -- Set active window background
+  end,
+})
+
