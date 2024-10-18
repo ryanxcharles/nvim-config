@@ -149,3 +149,8 @@ vim.api.nvim_set_keymap(
   ":luafile ~/.config/nvim/init.lua<CR>",
   opts
 )
+
+-- rust: Rust-specific keybindings
+vim.api.nvim_set_keymap("n", "<Leader>rr", ":!cargo run<CR>", opts)
+vim.api.nvim_set_keymap("n", "<Leader>rt", ":!cargo test<CR>", opts)
+vim.api.nvim_set_keymap("n", "<Leader>rb", ":!cargo build<CR>", opts)

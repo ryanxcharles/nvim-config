@@ -379,18 +379,18 @@ local opts = { noremap = true, silent = true }
 --   opts
 -- )
 
--- Key binding to reload init.lua file
-vim.api.nvim_set_keymap(
-  "n",
-  "<Leader>rl",
-  ":luafile ~/.config/nvim/init.lua<CR>",
-  opts
-)
+-- -- Key binding to reload init.lua file
+-- vim.api.nvim_set_keymap(
+--   "n",
+--   "<Leader>rl",
+--   ":luafile ~/.config/nvim/init.lua<CR>",
+--   opts
+-- )
 
--- rust: Rust-specific keybindings
-vim.api.nvim_set_keymap("n", "<Leader>rr", ":!cargo run<CR>", opts)
-vim.api.nvim_set_keymap("n", "<Leader>rt", ":!cargo test<CR>", opts)
-vim.api.nvim_set_keymap("n", "<Leader>rb", ":!cargo build<CR>", opts)
+-- -- rust: Rust-specific keybindings
+-- vim.api.nvim_set_keymap("n", "<Leader>rr", ":!cargo run<CR>", opts)
+-- vim.api.nvim_set_keymap("n", "<Leader>rt", ":!cargo test<CR>", opts)
+-- vim.api.nvim_set_keymap("n", "<Leader>rb", ":!cargo build<CR>", opts)
 
 -- Two spaces for TypeScript/JavaScript/lua
 vim.api.nvim_create_autocmd("FileType", {
