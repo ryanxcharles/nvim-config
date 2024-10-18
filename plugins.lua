@@ -55,5 +55,13 @@ return {
     config = function()
       require("plugins-formatter")
     end,
-  }
+  },
+
+  -- Colorizer for HTML/CSS
+  {
+    "NvChad/nvim-colorizer.lua",
+    config = function()
+      require("plugins-colorizer")
+    end,
+  },
 }

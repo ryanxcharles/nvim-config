@@ -35,7 +35,7 @@ require("packer").startup(function()
   -- use("L3MON4D3/LuaSnip") -- Snippet engine
 
   -- Code formatting (e.g., using biome)
-  use("mhartington/formatter.nvim")
+  -- use("mhartington/formatter.nvim")
 
   -- Colorizer for HTML/CSS
   use("NvChad/nvim-colorizer.lua")
@@ -44,14 +44,14 @@ require("packer").startup(function()
   -- use("nvim-treesitter/nvim-treesitter")
 
   -- Github Copilot
-  use({ "github/copilot.vim" })
-  use({
-    "zbirenbaum/copilot-cmp",
-    after = { "copilot.vim" },
-    config = function()
-      require("copilot_cmp").setup()
-    end,
-  })
+  -- use({ "github/copilot.vim" })
+  -- use({
+  --   "zbirenbaum/copilot-cmp",
+  --   after = { "copilot.vim" },
+  --   config = function()
+  --     require("copilot_cmp").setup()
+  --   end,
+  -- })
 
   -- Rainbow delimiters
   use("hiphish/rainbow-delimiters.nvim")
@@ -948,39 +948,39 @@ require("formatter").setup({
 })
 
 -- Enable colorizer for CSS, HTML, JavaScript, and more, but not Tailwind
-require("colorizer").setup({
-  filetypes = {
-    "html",
-    "css",
-    "javascript",
-    "typescript",
-    "javascriptreact",
-    "typescriptreact",
-  },
-  user_default_options = {
-    RGB = true, -- #RGB hex codes
-    RRGGBB = true, -- #RRGGBB hex codes
-    names = true, -- "Name" codes like Blue or blue
-    RRGGBBAA = false, -- #RRGGBBAA hex codes
-    AARRGGBB = false, -- 0xAARRGGBB hex codes
-    rgb_fn = false, -- CSS rgb() and rgba() functions
-    hsl_fn = false, -- CSS hsl() and hsla() functions
-    css = false, -- Enable all CSS features: rgb_fn, hsl_fn, names, RGB, RRGGBB
-    css_fn = false, -- Enable all CSS *functions*: rgb_fn, hsl_fn
-    -- Available modes for `mode`: foreground, background,  virtualtext
-    mode = "background", -- Set the display mode.
-    -- True is same as normal
-    tailwind = false, -- Disable tailwind colors (using tailwind-tools instead)
-    -- parsers can contain values used in |user_default_options|
-    sass = { enable = false, parsers = { "css" } }, -- Enable sass colors
-    virtualtext = "■",
-    -- update color values even if buffer is not focused
-    -- example use: cmp_menu, cmp_docs
-    always_update = false,
-  },
-  -- all the sub-options of filetypes apply to buftypes
-  buftypes = {},
-})
+-- require("colorizer").setup({
+--   filetypes = {
+--     "html",
+--     "css",
+--     "javascript",
+--     "typescript",
+--     "javascriptreact",
+--     "typescriptreact",
+--   },
+--   user_default_options = {
+--     RGB = true, -- #RGB hex codes
+--     RRGGBB = true, -- #RRGGBB hex codes
+--     names = true, -- "Name" codes like Blue or blue
+--     RRGGBBAA = false, -- #RRGGBBAA hex codes
+--     AARRGGBB = false, -- 0xAARRGGBB hex codes
+--     rgb_fn = false, -- CSS rgb() and rgba() functions
+--     hsl_fn = false, -- CSS hsl() and hsla() functions
+--     css = false, -- Enable all CSS features: rgb_fn, hsl_fn, names, RGB, RRGGBB
+--     css_fn = false, -- Enable all CSS *functions*: rgb_fn, hsl_fn
+--     -- Available modes for `mode`: foreground, background,  virtualtext
+--     mode = "background", -- Set the display mode.
+--     -- True is same as normal
+--     tailwind = false, -- Disable tailwind colors (using tailwind-tools instead)
+--     -- parsers can contain values used in |user_default_options|
+--     sass = { enable = false, parsers = { "css" } }, -- Enable sass colors
+--     virtualtext = "■",
+--     -- update color values even if buffer is not focused
+--     -- example use: cmp_menu, cmp_docs
+--     always_update = false,
+--   },
+--   -- all the sub-options of filetypes apply to buftypes
+--   buftypes = {},
+-- })
 
 -- Accurate syntax highlighting for TypeScript and other languages
 ---@diagnostic disable-next-line: missing-fields
