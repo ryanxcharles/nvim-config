@@ -38,7 +38,7 @@ vim.opt.rtp:prepend(lazypath)
 local original_path = package.path
 package.path = package.path .. ";" .. vim.fn.stdpath("config") .. "/?.lua"
 
-require("lazy").setup(require("lazyvim"))
+require("lazy").setup(require("lazyvim-plugins"))
 -- local config_path = vim.fn.stdpath("config") .. "/lua/"
 require("globals")
 require("keybindings")
