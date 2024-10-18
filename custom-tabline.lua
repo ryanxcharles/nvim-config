@@ -97,19 +97,13 @@ function MyTabline()
   local s = ""
   local tabpages = vim.api.nvim_list_tabpages()
   local current_tabpage = vim.api.nvim_get_current_tabpage()
-
   local total_tabs = #tabpages or 0
 
-  -- Ensure that subtract_last_tabs_N does not exceed the total number of tabs
-  if _G.subtract_last_tabs_N >= total_tabs then
-    _G.subtract_last_tabs_N = total_tabs - 1
-  end
-
-  -- Calculate how many tabs to show
-  local max_visible_tabs = total_tabs - _G.subtract_last_tabs_N
+  -- Define the threshold for showing filenames
+  local show_filenames = total_tabs <= 5
 
   -- Loop through each visible tab
-  for i = 1, max_visible_tabs do
+  for i = 1, total_tabs do
     local tabpage = tabpages[i]
     local windows = vim.api.nvim_tabpage_list_wins(tabpage) -- Get all windows in the tab
     local tab_str = ""
@@ -124,20 +118,8 @@ function MyTabline()
     -- Loop through each window in the tab
     for _, win in ipairs(windows) do
       local bufnr = vim.api.nvim_win_get_buf(win)
-      local bufname = vim.fn.fnamemodify(vim.fn.bufname(bufnr), ":t")
-        or "[No Name]"
-      local modified = vim.bo[bufnr].modified and " [+]" or ""
+      local bufname = vim.fn.fnamemodify(vim.fn.bufname(bufnr), ":t") or "[No Name]"
       local diagnostic = get_diagnostics(bufnr)
-
-      -- Extract the first letter of each folder in the path
-      local path_letters = ""
-      local full_path = vim.fn.fnamemodify(vim.fn.bufname(bufnr), ":.")
-      local folders = vim.split(vim.fn.fnamemodify(full_path, ":h"), "/")
-      for _, folder in ipairs(folders) do
-        if folder ~= "" then
-          path_letters = path_letters .. folder:sub(1, 1) .. "/"
-        end
-      end
 
       -- Build the diagnostic string (only show non-zero counts)
       local diagnostic_str = ""
@@ -170,22 +152,13 @@ function MyTabline()
           .. tab_highlight_color
       end
 
-      -- Append the buffer name and diagnostics to the tab string
-      -- if not string.find(bufname, "-MINIMAP-") then -- Exclude Minimap buffers if present
-      if
-        not string.find(bufname, "CodeWindow")
-        and not (
-          string.find(bufname, "neo")
-          and string.find(bufname, "tree filesystem")
-        )
-      then -- Exclude Codewindow buffers if present
-        tab_str = tab_str
-          .. " "
-          .. path_letters
-          .. bufname
-          .. diagnostic_str
-          .. modified
-          .. " |"
+      -- Only append the filename if the total number of tabs is <= 5
+      if show_filenames then
+        local modified = vim.bo[bufnr].modified and " [+]" or ""
+        tab_str = tab_str .. " " .. bufname .. diagnostic_str .. modified .. " |"
+      else
+        -- Only display diagnostics if there are more than 5 tabs
+        tab_str = tab_str .. " " .. diagnostic_str .. " |"
       end
     end
 
@@ -196,13 +169,11 @@ function MyTabline()
     s = s .. tab_highlight_color .. tab_str .. " %#TabLine#"
   end
 
-  -- Add the right scroll indicator if there are hidden tabs
-  if _G.subtract_last_tabs_N > 0 then
-    s = s .. "%#TabLineSel# > %#TabLine#"
-  end
-
   return s
 end
+
+-- Set the custom tabline
+vim.o.tabline = "%!v:lua.MyTabline()"
 
 -- Set the custom tabline
 vim.o.tabline = "%!v:lua.MyTabline()"
