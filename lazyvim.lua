@@ -187,4 +187,8 @@ return {
       require("lazydev").setup()
     end,
   },
+
+  {
+    "Bilal2453/luvit-meta",
+  },
 }

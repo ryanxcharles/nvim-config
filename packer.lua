@@ -1,54 +1,26 @@
 -- ~/.config/nvim/init.lua
 require("packer").startup(function()
-  -- rust: Manage dependencies from Cargo.toml
-  -- use("saecki/crates.nvim")
+  -- -- Lazy.nvim (for LazyDev)
+  -- use("folke/lazy.nvim")
 
-  -- avante: cursor-like AI for Neovim
+  -- -- LazyDev: Lua development environment for Neovim
   -- use({
-  --   "yetone/avante.nvim",
-  --   -- event = "VeryLazy", -- Load on lazy events (optional)
+  --   "folke/lazydev.nvim",
   --   config = function()
-  --     require("avante_lib").load()
-  --     require("avante").setup({
-  --       -- add any options here if needed
+  --     require("lazydev").setup({
+  --       -- Optional configuration for LazyDev
+  --       -- You can customize the settings here if needed
   --     })
   --   end,
-  --   run = "make BUILD_FROM_SOURCE=true", -- Build command (use this if you build from source)
-  --   -- run = "powershell -ExecutionPolicy Bypass -File Build.ps1 -BuildFromSource false", -- For Windows
-  --   requires = {
-  --     -- Required dependencies
-  --     "nvim-treesitter/nvim-treesitter",
-  --     "stevearc/dressing.nvim",
-  --     "nvim-lua/plenary.nvim",
-  --     "MunifTanjim/nui.nvim",
-
-  --     -- Optional dependencies
-  --     { "nvim-tree/nvim-web-devicons", opt = true }, -- Optional for icons
-  --     -- { "zbirenbaum/copilot.lua", opt = true }, -- Optional for Copilot integration
-  --   },
   -- })
 
-  -- Lazy.nvim (for LazyDev)
-  use("folke/lazy.nvim")
-
-  -- LazyDev: Lua development environment for Neovim
-  use({
-    "folke/lazydev.nvim",
-    config = function()
-      require("lazydev").setup({
-        -- Optional configuration for LazyDev
-        -- You can customize the settings here if needed
-      })
-    end,
-  })
-
   -- Luvit-meta: LuaJIT/luvit typing definitions for Neovim
-  use({
-    "Bilal2453/luvit-meta",
-    config = function()
-      -- Optional: You can configure or load additional typing support here
-    end,
-  })
+  -- use({
+  --   "Bilal2453/luvit-meta",
+  --   config = function()
+  --     -- Optional: You can configure or load additional typing support here
+  --   end,
+  -- })
 end)
 
 local opts = { noremap = true, silent = true }
