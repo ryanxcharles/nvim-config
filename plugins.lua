@@ -1,4 +1,5 @@
 return {
+  -- Telescope for finding files and grepping
   {
     'nvim-telescope/telescope.nvim',
     requires = { {'nvim-lua/plenary.nvim'} },
@@ -6,6 +7,8 @@ return {
       require("plugins-telescope")
     end,
   },
+
+  -- LSP: For all language servers
   {
     'neovim/nvim-lspconfig',
     config = function()
@@ -13,10 +16,19 @@ return {
     end,
   },
 
-  -- LSP for TypeScript, etc.
-  -- use("neovim/nvim-lspconfig")
+  -- GitHub Copilot
   {
-    'neovim/nvim-lspconfig'
-  }
-  -- Add more plugins as needed
+    "github/copilot.vim", -- GitHub Copilot
+    config = function()
+      -- Optional Copilot setup if needed
+      vim.cmd("Copilot setup")
+    end,
+  },
+  {
+    "zbirenbaum/copilot-cmp", -- Copilot completion source for cmp
+    dependencies = { "github/copilot.vim" }, -- Ensure it loads after copilot.vim
+    config = function()
+      require("copilot_cmp").setup()
+    end,
+  },
 }

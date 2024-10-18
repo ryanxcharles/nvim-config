@@ -23,7 +23,7 @@ require("packer").startup(function()
   -- use("nvim-lua/plenary.nvim") -- Required by telescope
 
   -- LSP for TypeScript, etc.
-  use("neovim/nvim-lspconfig")
+  -- use("neovim/nvim-lspconfig")
 
   -- A series of auto-complete related plugins
   use("hrsh7th/nvim-cmp") -- Autocompletion plugin
