@@ -15,5 +15,8 @@ return {
 
   -- LSP for TypeScript, etc.
   -- use("neovim/nvim-lspconfig")
+  {
+    'neovim/nvim-lspconfig'
+  }
   -- Add more plugins as needed
 }
