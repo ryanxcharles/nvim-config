@@ -1,28 +1,28 @@
 return {
   -- Telescope for finding files and grepping
   {
-    'nvim-telescope/telescope.nvim',
-    requires = { {'nvim-lua/plenary.nvim'} },
-    config = function () 
+    "nvim-telescope/telescope.nvim",
+    requires = { { "nvim-lua/plenary.nvim" } },
+    config = function()
       require("plugins-telescope")
     end,
   },
 
   -- LSP: For all language servers
   {
-    'neovim/nvim-lspconfig',
+    "neovim/nvim-lspconfig",
     config = function()
       -- LSP configuration goes here
     end,
   },
-  
-  {"hrsh7th/nvim-cmp"}, -- Autocompletion plugin
-  {"hrsh7th/cmp-nvim-lsp"}, -- LSP source for nvim-cmp
-  {"hrsh7th/cmp-buffer"}, -- Buffer source for nvim-cmp
-  {"hrsh7th/cmp-path"}, -- Path source for nvim-cmp
-  {"hrsh7th/cmp-cmdline"}, -- Command line completion
-  {"saadparwaiz1/cmp_luasnip"}, -- Snippet completion
-  {"L3MON4D3/LuaSnip"}, -- Snippet engine
+
+  { "hrsh7th/nvim-cmp" }, -- Autocompletion plugin
+  { "hrsh7th/cmp-nvim-lsp" }, -- LSP source for nvim-cmp
+  { "hrsh7th/cmp-buffer" }, -- Buffer source for nvim-cmp
+  { "hrsh7th/cmp-path" }, -- Path source for nvim-cmp
+  { "hrsh7th/cmp-cmdline" }, -- Command line completion
+  { "saadparwaiz1/cmp_luasnip" }, -- Snippet completion
+  { "L3MON4D3/LuaSnip" }, -- Snippet engine
 
   -- GitHub Copilot
   {
@@ -42,8 +42,8 @@ return {
 
   -- Treesitter for syntax highlighting
   {
-    'nvim-treesitter/nvim-treesitter',
-    run = ':TSUpdate',
+    "nvim-treesitter/nvim-treesitter",
+    run = ":TSUpdate",
     config = function()
       require("plugins-treesitter")
     end,
@@ -65,7 +65,7 @@ return {
     end,
   },
 
-  -- Rainbow delimiters
+  -- Rainbow delimiters <{[(
   {
     "HiPhish/rainbow-delimiters.nvim",
     config = function()
@@ -73,15 +73,7 @@ return {
     end,
   },
 
-  -- NPM Package Completion
-  -- {
-  --   "David-Kunz/cmp-npm",
-  --   dependencies = { "nvim-lua/plenary.nvim" },
-  --   config = function()
-  --     require("plugins-cmp-npm")
-  --   end,
-  -- },
-
+  -- Lualine for status line
   {
     "nvim-lualine/lualine.nvim",
     config = function()
@@ -120,7 +112,7 @@ return {
 
   -- Dressing - better input boxes
   {
-    "stevearc/dressing.nvim"
+    "stevearc/dressing.nvim",
   },
 
   -- Better comment/uncomment
@@ -133,4 +125,20 @@ return {
     "tpope/vim-surround",
   },
 
+  {
+    "luckasRanarison/tailwind-tools.nvim",
+    dependencies = {
+      "nvim-treesitter/nvim-treesitter",
+      "nvim-telescope/telescope.nvim",
+      "neovim/nvim-lspconfig",
+    },
+    run = ":UpdateRemotePlugins",
+  },
+
+  {
+    "roobert/tailwindcss-colorizer-cmp.nvim",
+    config = function ()
+      require("plugins-tailwindcss-colorizer")
+    end,
+  },
 }

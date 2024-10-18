@@ -1,40 +1,15 @@
 -- ~/.config/nvim/init.lua
 require("packer").startup(function()
-  -- Dressing - better input boxes and other UI elements
-  -- use("stevearc/dressing.nvim")
-
-  -- Better comment/uncomment blocks or selection
-  -- use("tpope/vim-commentary")
-
-  -- Surround: add, change, and delete surroundings
-  -- use("tpope/vim-surround")
-
-  -- Tailwind CSS tools
-  use({
-    "luckasRanarison/tailwind-tools.nvim",
-    requires = {
-      { "nvim-treesitter/nvim-treesitter" },
-      { "nvim-telescope/telescope.nvim", optional = true },
-      { "neovim/nvim-lspconfig", optional = true },
-    },
-    run = ":UpdateRemotePlugins",
-    config = function()
-      require("tailwind-tools").setup({
-        -- Your configuration for tailwind-tools goes here
-      })
-    end,
-  })
-
   -- Tailwind CSS colorizer
-  use({
-    "roobert/tailwindcss-colorizer-cmp.nvim",
-    -- optionally, override the default options:
-    config = function()
-      require("tailwindcss-colorizer-cmp").setup({
-        color_square_width = 2,
-      })
-    end,
-  })
+  -- use({
+  --   "roobert/tailwindcss-colorizer-cmp.nvim",
+  --   -- optionally, override the default options:
+  --   config = function()
+  --     require("tailwindcss-colorizer-cmp").setup({
+  --       color_square_width = 2,
+  --     })
+  --   end,
+  -- })
 
   -- alpha-nvim greeter (splash screen)
   use({
