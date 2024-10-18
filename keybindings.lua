@@ -142,6 +142,14 @@ vim.api.nvim_set_keymap(
   opts
 )
 
+-- Key binding to reload LSP
+vim.api.nvim_set_keymap(
+  "n",
+  "<Leader>rL",
+  ":lua vim.lsp.stop_client(vim.lsp.get_active_clients())<CR>:lua vim.defer_fn(function() vim.cmd('edit') end, 0)<CR>",
+  opts
+)
+
 -- rust: Rust-specific keybindings
 vim.api.nvim_set_keymap("n", "<Leader>rr", ":!cargo run<CR>", opts)
 vim.api.nvim_set_keymap("n", "<Leader>rt", ":!cargo test<CR>", opts)
