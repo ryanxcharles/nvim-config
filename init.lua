@@ -35,11 +35,15 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
+local original_path = package.path
 package.path = package.path .. ";" .. vim.fn.stdpath("config") .. "/?.lua"
+
 require("lazy").setup(require("lazyvim"))
 -- local config_path = vim.fn.stdpath("config") .. "/lua/"
 require("globals")
 require("keybindings")
 require("colors")
 require("custom-tabline")
+
+package.path = original_path
 
