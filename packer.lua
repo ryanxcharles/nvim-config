@@ -412,16 +412,16 @@ local opts = { noremap = true, silent = true }
 --   end,
 -- })
 
--- Special rules for markdown - fix indenting and disable auto-indenting for lists
-vim.api.nvim_create_autocmd("FileType", {
-  pattern = {
-    "markdown",
-  },
-  callback = function()
-    vim.opt_local.indentexpr = ""
-    vim.opt_local.formatoptions:remove("o") -- Prevent auto-indenting for lists
-  end,
-})
+-- -- Special rules for markdown - fix indenting and disable auto-indenting for lists
+-- vim.api.nvim_create_autocmd("FileType", {
+--   pattern = {
+--     "markdown",
+--   },
+--   callback = function()
+--     vim.opt_local.indentexpr = ""
+--     vim.opt_local.formatoptions:remove("o") -- Prevent auto-indenting for lists
+--   end,
+-- })
 
 -- Import the LSP config plugin
 local lspconfig = require("lspconfig")

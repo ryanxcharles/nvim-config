@@ -28,3 +28,14 @@ vim.api.nvim_create_autocmd("FileType", {
     vim.opt_local.smartindent = true -- Smart indenting for C-like languages
   end,
 })
+
+-- Special rules for markdown - fix indenting and disable auto-indenting for lists
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = {
+    "markdown",
+  },
+  callback = function()
+    vim.opt_local.indentexpr = ""
+    vim.opt_local.formatoptions:remove("o") -- Prevent auto-indenting for lists
+  end,
+})
