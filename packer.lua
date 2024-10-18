@@ -1,28 +1,10 @@
 -- ~/.config/nvim/init.lua
 require("packer").startup(function()
-
-  -- markdown + toml
-  -- use("plasticboy/vim-markdown")
-
-  -- Neo-tree for file browsing
-  -- use({
-  --   "nvim-neo-tree/neo-tree.nvim",
-  --   branch = "v2.x",
-  --   requires = {
-  --     "nvim-lua/plenary.nvim", -- Required dependency
-  --     "nvim-tree/nvim-web-devicons", -- Optional dependency for file icons
-  --     "MunifTanjim/nui.nvim", -- Required dependency for UI components
-  --   },
-  -- })
-
-  -- Codewindow ("minimap" alternative)
-  use("gorbit99/codewindow.nvim")
-
   -- Dressing - better input boxes and other UI elements
-  use("stevearc/dressing.nvim")
+  -- use("stevearc/dressing.nvim")
 
   -- Better comment/uncomment blocks or selection
-  use("tpope/vim-commentary")
+  -- use("tpope/vim-commentary")
 
   -- Surround: add, change, and delete surroundings
   use("tpope/vim-surround")

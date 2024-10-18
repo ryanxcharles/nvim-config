@@ -118,4 +118,13 @@ return {
     end,
   },
 
+  -- Dressing - better input boxes
+  {
+    "stevearc/dressing.nvim"
+  },
+
+  -- Better comment/uncomment
+  {
+    "tpope/vim-commentary",
+  }
 }
