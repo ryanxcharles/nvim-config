@@ -7,14 +7,7 @@ vim.g.mapleader = " "
 -- Lines that wrap will indent to the same level as the start of the line
 vim.opt.breakindent = true
 
--- Disable folding by default
--- vim.opt.foldenable = false
-
--- Show cursor line
--- vim.opt.cursorline = true
--- vim.opt.cursorcolumn = true
-
--- ctrl+escape exits terminal mode
+-- ctrl+; exits terminal mode
 vim.api.nvim_set_keymap("t", "<C-;>", [[<C-\><C-n>]], opts)
 
 -- Key mappings using leader key
