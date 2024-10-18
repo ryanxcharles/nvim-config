@@ -17,3 +17,9 @@ vim.api.nvim_create_autocmd({ "BufEnter", "BufReadPost" }, {
 -- Custom cursor color
 vim.api.nvim_set_hl(0, "Cursor", { bg = "#FA8603", fg = "#000000" })
 
+-- Custom color for search highlighting
+vim.api.nvim_set_hl(0, "Search", { bg = "#87af5f", fg = "#000000" })
+-- Custom color for visual mode
+vim.api.nvim_set_hl(0, "Visual", { bg = "#5f87af", fg = "#ffffff" })
+-- Custom color for incremental search
+vim.api.nvim_set_hl(0, "IncSearch", { bg = "#875fff", fg = "#ffffff" })
