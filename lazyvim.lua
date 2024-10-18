@@ -17,7 +17,21 @@ return {
     end,
   },
 
-  { "hrsh7th/nvim-cmp" }, -- Autocompletion plugin
+  {
+    "roobert/tailwindcss-colorizer-cmp.nvim",
+    config = function ()
+      require("plugins-tailwindcss-colorizer")
+    end,
+  },
+
+  { "hrsh7th/nvim-cmp",
+    dependencies = {
+      "roobert/tailwindcss-colorizer-cmp.nvim",
+    },
+    config = function()
+      require("plugins-cmp")
+    end,
+  }, -- Autocompletion plugin
   { "hrsh7th/cmp-nvim-lsp" }, -- LSP source for nvim-cmp
   { "hrsh7th/cmp-buffer" }, -- Buffer source for nvim-cmp
   { "hrsh7th/cmp-path" }, -- Path source for nvim-cmp
@@ -134,13 +148,6 @@ return {
       "neovim/nvim-lspconfig",
     },
     run = ":UpdateRemotePlugins",
-  },
-
-  {
-    "roobert/tailwindcss-colorizer-cmp.nvim",
-    config = function ()
-      require("plugins-tailwindcss-colorizer")
-    end,
   },
 
   -- alpha-nvim greeter (splash screen)
