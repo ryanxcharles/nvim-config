@@ -92,4 +92,8 @@ return {
   {
     "tpope/vim-fugitive",
   },
+
+  {
+    "plasticboy/vim-markdown",
+  }
 }
