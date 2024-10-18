@@ -15,7 +15,7 @@ vim.opt.breakindent = true
 -- vim.opt.cursorcolumn = true
 
 -- ctrl+escape exits terminal mode
-vim.api.nvim_set_keymap('t', '<C-;>', [[<C-\><C-n>]], opts)
+vim.api.nvim_set_keymap("t", "<C-;>", [[<C-\><C-n>]], opts)
 
 -- Key mappings using leader key
 vim.api.nvim_set_keymap("n", "<Leader>w", ":w<CR>", opts)
@@ -191,4 +191,17 @@ vim.api.nvim_set_keymap(
   ":Neotree filesystem position=float<CR>",
   opts
 )
-
+-- Keybinding to open Neo-tree buffer list in current window (on-demand)
+vim.api.nvim_set_keymap(
+  "n",
+  "<Leader>tcb",
+  ":Neotree buffers position=current<CR>",
+  opts
+)
+-- Keybinding to open Neo-tree file list in current window (on-demand)
+vim.api.nvim_set_keymap(
+  "n",
+  "<Leader>tcf",
+  ":Neotree filesystem position=current<CR>",
+  opts
+)
