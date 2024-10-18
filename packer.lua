@@ -7,10 +7,10 @@ require("packer").startup(function()
   -- })
 
   -- rust: Rust tools for enhanced features
-  use({
-    "simrat39/rust-tools.nvim",
-    requires = { "neovim/nvim-lspconfig" },
-  })
+  -- use({
+  --   "simrat39/rust-tools.nvim",
+  --   requires = { "neovim/nvim-lspconfig" },
+  -- })
 
   -- rust: Manage dependencies from Cargo.toml
   use("saecki/crates.nvim")
@@ -483,50 +483,50 @@ lspconfig.tailwindcss.setup({
   filetypes = { "html", "javascriptreact", "typescriptreact", "css" }, -- Add other file types where you use Tailwind
 })
 
-local rust_tools = require("rust-tools")
+-- local rust_tools = require("rust-tools")
 
--- rust: Rust tools setup with rust-analyzer
-rust_tools.setup({
-  server = {
-    on_attach = function(client, bufnr)
-      -- Keybindings for LSP features in Rust files
-      vim.api.nvim_buf_set_keymap(
-        bufnr,
-        "n",
-        "gd",
-        "<cmd>lua vim.lsp.buf.definition()<CR>",
-        opts
-      )
-      vim.api.nvim_buf_set_keymap(
-        bufnr,
-        "n",
-        "K",
-        "<cmd>lua vim.lsp.buf.hover()<CR>",
-        opts
-      )
-      vim.api.nvim_buf_set_keymap(
-        bufnr,
-        "n",
-        "<Leader>ca",
-        "<cmd>lua vim.lsp.buf.code_action()<CR>",
-        opts
-      )
-      vim.api.nvim_buf_set_keymap(
-        bufnr,
-        "n",
-        "<Leader>rn",
-        "<cmd>lua vim.lsp.buf.rename()<CR>",
-        opts
-      )
-    end,
-    settings = {
-      ["rust-analyzer"] = {
-        cargo = { allFeatures = true },
-        checkOnSave = { command = "clippy" }, -- Run clippy on save
-      },
-    },
-  },
-})
+-- -- rust: Rust tools setup with rust-analyzer
+-- rust_tools.setup({
+--   server = {
+--     on_attach = function(client, bufnr)
+--       -- Keybindings for LSP features in Rust files
+--       vim.api.nvim_buf_set_keymap(
+--         bufnr,
+--         "n",
+--         "gd",
+--         "<cmd>lua vim.lsp.buf.definition()<CR>",
+--         opts
+--       )
+--       vim.api.nvim_buf_set_keymap(
+--         bufnr,
+--         "n",
+--         "K",
+--         "<cmd>lua vim.lsp.buf.hover()<CR>",
+--         opts
+--       )
+--       vim.api.nvim_buf_set_keymap(
+--         bufnr,
+--         "n",
+--         "<Leader>ca",
+--         "<cmd>lua vim.lsp.buf.code_action()<CR>",
+--         opts
+--       )
+--       vim.api.nvim_buf_set_keymap(
+--         bufnr,
+--         "n",
+--         "<Leader>rn",
+--         "<cmd>lua vim.lsp.buf.rename()<CR>",
+--         opts
+--       )
+--     end,
+--     settings = {
+--       ["rust-analyzer"] = {
+--         cargo = { allFeatures = true },
+--         checkOnSave = { command = "clippy" }, -- Run clippy on save
+--       },
+--     },
+--   },
+-- })
 
 -- rust: integration with crates.nvim for managing dependencies
 require("crates").setup({

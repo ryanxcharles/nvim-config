@@ -159,4 +159,22 @@ return {
       "nvim-lua/plenary.nvim",
     },
   },
+
+  {
+    "simrat39/rust-tools.nvim",
+    dependencies = { "neovim/nvim-lspconfig" },
+    config = function()
+      require("plugin-rust-tools")
+    end,
+  },
+
+  {
+    "saecki/crates.nvim",
+    dependencies = {
+      "jose-elias-alvarez/null-ls.nvim",
+    },
+    config = function()
+      require("plugin-crates")
+    end,
+  },
 }
