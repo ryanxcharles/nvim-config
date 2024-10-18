@@ -89,11 +89,33 @@ return {
     end,
   },
 
+  -- Git integration
   {
     "tpope/vim-fugitive",
   },
 
+  -- Markdown preview
   {
-    "plasticboy/vim-markdown",
-  }
+    "preservim/vim-markdown",
+    dependencies = { "godlygeek/tabular" },
+  },
+
+  {
+    "nvim-neo-tree/neo-tree.nvim",
+    branch = "v2.x",
+    dependencies = {
+      "nvim-lua/plenary.nvim", -- Required dependency
+      "nvim-tree/nvim-web-devicons", -- Optional dependency for file icons
+      "MunifTanjim/nui.nvim", -- Required dependency for UI components
+    },
+  },
+
+  -- Codewindow setup (minimap)
+  {
+    "gorbit99/codewindow.nvim",
+    config = function()
+      require("plugins-codewindow")
+    end,
+  },
+
 }

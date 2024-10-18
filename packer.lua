@@ -2,18 +2,18 @@
 require("packer").startup(function()
 
   -- markdown + toml
-  use("plasticboy/vim-markdown")
+  -- use("plasticboy/vim-markdown")
 
   -- Neo-tree for file browsing
-  use({
-    "nvim-neo-tree/neo-tree.nvim",
-    branch = "v2.x",
-    requires = {
-      "nvim-lua/plenary.nvim", -- Required dependency
-      "nvim-tree/nvim-web-devicons", -- Optional dependency for file icons
-      "MunifTanjim/nui.nvim", -- Required dependency for UI components
-    },
-  })
+  -- use({
+  --   "nvim-neo-tree/neo-tree.nvim",
+  --   branch = "v2.x",
+  --   requires = {
+  --     "nvim-lua/plenary.nvim", -- Required dependency
+  --     "nvim-tree/nvim-web-devicons", -- Optional dependency for file icons
+  --     "MunifTanjim/nui.nvim", -- Required dependency for UI components
+  --   },
+  -- })
 
   -- Codewindow ("minimap" alternative)
   use("gorbit99/codewindow.nvim")
@@ -1428,19 +1428,19 @@ vim.cmd([[
 ]])
 
 -- Codewindow setup
-local codewindow = require("codewindow")
-codewindow.setup({
-  -- <Leader>mo - open the minimap
-  -- <Leader>mc - close the minimap
-  -- <Leader>mf - focus/unfocus the minimap
-  -- <Leader>mm - toggle the minimap
-  minimap_width = 10,
-  auto_enable = false,
-  -- no window border
-  -- border options: 'none', 'single', 'double'
-  window_border = "single",
-})
-codewindow.apply_default_keybinds()
+-- local codewindow = require("codewindow")
+-- codewindow.setup({
+--   -- <Leader>mo - open the minimap
+--   -- <Leader>mc - close the minimap
+--   -- <Leader>mf - focus/unfocus the minimap
+--   -- <Leader>mm - toggle the minimap
+--   minimap_width = 10,
+--   auto_enable = false,
+--   -- no window border
+--   -- border options: 'none', 'single', 'double'
+--   window_border = "single",
+-- })
+-- codewindow.apply_default_keybinds()
 
 -- moderately bright cursor column on the highlighted window only
 vim.api.nvim_set_hl(0, "CursorLine", { bg = "#000000" }) -- Set this to your preferred color
