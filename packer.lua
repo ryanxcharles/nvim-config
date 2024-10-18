@@ -1,72 +1,11 @@
 local opts = { noremap = true, silent = true }
 
--- Neo-tree setup (neotree)
-require("neo-tree").setup({
-  close_if_last_window = true, -- Closes Neo-tree if it's the last open window
-  popup_border_style = "rounded", -- Rounded border for popups
-  enable_git_status = true, -- Show git status icons
-  enable_diagnostics = true, -- Show LSP diagnostics in the file tree
-  filesystem = {
-    follow_current_file = true, -- Automatically focus on the current file
-    use_libuv_file_watcher = true, -- Automatically refresh the tree when files change
-    filtered_items = {
-      hide_dotfiles = false,
-    },
-  },
-  buffers = {
-    follow_current_file = true, -- Automatically focus on the current buffer
-  },
-  git_status = {
-    window = {
-      position = "float", -- Open a floating window for git status
-    },
-  },
-})
-
--- Keybinding to toggle Neo-tree
-vim.api.nvim_set_keymap("n", "<Leader>tt", ":Neotree toggle<CR>", opts)
--- Neo-tree files
-vim.api.nvim_set_keymap("n", "<Leader>tf", ":Neotree filesystem<CR>", opts)
--- Neo-tree buffers
-vim.api.nvim_set_keymap("n", "<Leader>tb", ":Neotree buffers<CR>", opts)
--- Neo-tree git status
-vim.api.nvim_set_keymap("n", "<Leader>tg", ":Neotree git_status<CR>", opts)
--- Keybinding to open Neo-tree buffer list in a floating window (on-demand)
-vim.api.nvim_set_keymap(
-  "n",
-  "<Leader>fb",
-  ":Neotree buffers position=float<CR>",
-  opts
-)
--- Keybinding to open Neo-tree buffer list in a floating window (on-demand)
-vim.api.nvim_set_keymap(
-  "n",
-  "<Leader>ff",
-  ":Neotree filesystem position=float<CR>",
-  opts
-)
-
 -- Redefine the :only command to include :e
 -- This is useful specifically for:
 -- :Git diff | Only
 vim.cmd([[
   command! -bar Only execute 'only' | execute 'edit' | redraw!
 ]])
-
--- Codewindow setup
--- local codewindow = require("codewindow")
--- codewindow.setup({
---   -- <Leader>mo - open the minimap
---   -- <Leader>mc - close the minimap
---   -- <Leader>mf - focus/unfocus the minimap
---   -- <Leader>mm - toggle the minimap
---   minimap_width = 10,
---   auto_enable = false,
---   -- no window border
---   -- border options: 'none', 'single', 'double'
---   window_border = "single",
--- })
--- codewindow.apply_default_keybinds()
 
 -- Autocommand for leaving a window (inactive)
 vim.api.nvim_create_autocmd({ "WinLeave", "BufLeave" }, {

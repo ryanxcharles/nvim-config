@@ -114,6 +114,9 @@ return {
       "nvim-tree/nvim-web-devicons", -- Optional dependency for file icons
       "MunifTanjim/nui.nvim", -- Required dependency for UI components
     },
+    config = function () 
+      require("plugins-neo-tree")
+    end,
   },
 
   -- Codewindow setup (minimap)
