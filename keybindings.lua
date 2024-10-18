@@ -154,3 +154,11 @@ vim.api.nvim_set_keymap(
 vim.api.nvim_set_keymap("n", "<Leader>rr", ":!cargo run<CR>", opts)
 vim.api.nvim_set_keymap("n", "<Leader>rt", ":!cargo test<CR>", opts)
 vim.api.nvim_set_keymap("n", "<Leader>rb", ":!cargo build<CR>", opts)
+
+-- Optional keybinding to update dependencies with `crates.nvim`
+vim.api.nvim_set_keymap(
+  "n",
+  "<Leader>cu",
+  ":lua require('crates').update_crate()<CR>",
+  opts
+)

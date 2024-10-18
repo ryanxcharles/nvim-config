@@ -8,10 +8,3 @@ require("crates").setup({
   },
 })
 
--- Optional keybinding to update dependencies with `crates.nvim`
-vim.api.nvim_set_keymap(
-  "n",
-  "<Leader>cu",
-  ":lua require('crates').update_crate()<CR>",
-  opts
-)
