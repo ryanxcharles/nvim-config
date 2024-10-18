@@ -24,7 +24,6 @@ return {
   {"saadparwaiz1/cmp_luasnip"}, -- Snippet completion
   {"L3MON4D3/LuaSnip"}, -- Snippet engine
 
-
   -- GitHub Copilot
   {
     "github/copilot.vim", -- GitHub Copilot
@@ -38,6 +37,15 @@ return {
     dependencies = { "github/copilot.vim" }, -- Ensure it loads after copilot.vim
     config = function()
       require("copilot_cmp").setup()
+    end,
+  },
+
+  -- Treesitter for syntax highlighting
+  {
+    'nvim-treesitter/nvim-treesitter',
+    run = ':TSUpdate',
+    config = function()
+      require("plugins-treesitter")
     end,
   },
 }

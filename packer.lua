@@ -26,13 +26,13 @@ require("packer").startup(function()
   -- use("neovim/nvim-lspconfig")
 
   -- A series of auto-complete related plugins
-  use("hrsh7th/nvim-cmp") -- Autocompletion plugin
-  use("hrsh7th/cmp-nvim-lsp") -- LSP source for nvim-cmp
-  use("hrsh7th/cmp-buffer") -- Buffer source for nvim-cmp
-  use("hrsh7th/cmp-path") -- Path source for nvim-cmp
-  use("hrsh7th/cmp-cmdline") -- Command line completion
-  use("saadparwaiz1/cmp_luasnip") -- Snippet completion
-  use("L3MON4D3/LuaSnip") -- Snippet engine
+  -- use("hrsh7th/nvim-cmp") -- Autocompletion plugin
+  -- use("hrsh7th/cmp-nvim-lsp") -- LSP source for nvim-cmp
+  -- use("hrsh7th/cmp-buffer") -- Buffer source for nvim-cmp
+  -- use("hrsh7th/cmp-path") -- Path source for nvim-cmp
+  -- use("hrsh7th/cmp-cmdline") -- Command line completion
+  -- use("saadparwaiz1/cmp_luasnip") -- Snippet completion
+  -- use("L3MON4D3/LuaSnip") -- Snippet engine
 
   -- Code formatting (e.g., using biome)
   use("mhartington/formatter.nvim")
@@ -41,7 +41,7 @@ require("packer").startup(function()
   use("NvChad/nvim-colorizer.lua")
 
   -- Accurate syntax highlighting for typescript
-  use("nvim-treesitter/nvim-treesitter")
+  -- use("nvim-treesitter/nvim-treesitter")
 
   -- Github Copilot
   use({ "github/copilot.vim" })
