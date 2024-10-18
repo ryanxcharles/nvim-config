@@ -4,7 +4,7 @@ return {
     "nvim-telescope/telescope.nvim",
     requires = { { "nvim-lua/plenary.nvim" } },
     config = function()
-      require("plugins-telescope")
+      require("plugin-telescope")
     end,
   },
 
@@ -13,14 +13,14 @@ return {
     "neovim/nvim-lspconfig",
     config = function()
       -- LSP configuration goes here
-      require("plugins-lsp")
+      require("plugin-lsp")
     end,
   },
 
   {
     "roobert/tailwindcss-colorizer-cmp.nvim",
     config = function()
-      require("plugins-tailwindcss-colorizer")
+      require("plugin-tailwindcss-colorizer")
     end,
   },
 
@@ -30,7 +30,7 @@ return {
       "roobert/tailwindcss-colorizer-cmp.nvim",
     },
     config = function()
-      require("plugins-cmp")
+      require("plugin-cmp")
     end,
   },
 
@@ -46,7 +46,7 @@ return {
   {
     "github/copilot.vim", -- GitHub Copilot
     config = function()
-      -- require("plugins-copilot")
+      -- require("plugin-copilot")
     end,
   },
   {
@@ -62,7 +62,7 @@ return {
     "nvim-treesitter/nvim-treesitter",
     run = ":TSUpdate",
     config = function()
-      require("plugins-treesitter")
+      require("plugin-treesitter")
     end,
   },
 
@@ -70,7 +70,7 @@ return {
   {
     "mhartington/formatter.nvim",
     config = function()
-      require("plugins-formatter")
+      require("plugin-formatter")
     end,
   },
 
@@ -78,7 +78,7 @@ return {
   {
     "NvChad/nvim-colorizer.lua",
     config = function()
-      require("plugins-colorizer")
+      require("plugin-colorizer")
     end,
   },
 
@@ -86,7 +86,7 @@ return {
   {
     "HiPhish/rainbow-delimiters.nvim",
     config = function()
-      require("plugins-rainbow")
+      require("plugin-rainbow")
     end,
   },
 
@@ -94,7 +94,7 @@ return {
   {
     "nvim-lualine/lualine.nvim",
     config = function()
-      require("plugins-lualine")
+      require("plugin-lualine")
     end,
   },
 
@@ -118,7 +118,7 @@ return {
       "MunifTanjim/nui.nvim", -- Required dependency for UI components
     },
     config = function()
-      require("plugins-neo-tree")
+      require("plugin-neo-tree")
     end,
   },
 
@@ -126,7 +126,7 @@ return {
   {
     "gorbit99/codewindow.nvim",
     config = function()
-      require("plugins-codewindow")
+      require("plugin-codewindow")
     end,
   },
 
