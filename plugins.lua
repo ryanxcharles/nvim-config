@@ -11,4 +11,3 @@ return {
   },
   -- Add more plugins as needed
 }
-
