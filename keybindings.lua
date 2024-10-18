@@ -17,9 +17,6 @@ vim.opt.breakindent = true
 -- ctrl+escape exits terminal mode
 vim.api.nvim_set_keymap('t', '<C-;>', [[<C-\><C-n>]], opts)
 
--- Enable 24-bit RGB color in the terminal
-vim.opt.termguicolors = true
-
 -- Show line numbers by default
 vim.opt.number = true
 vim.opt.relativenumber = true
@@ -89,9 +86,6 @@ vim.api.nvim_set_keymap(
 
 -- Redraw screen
 vim.api.nvim_set_keymap("n", "<Leader>.", "<C-l>", opts)
-
--- Custom cursor color
-vim.api.nvim_set_hl(0, "Cursor", { bg = "#FA8603", fg = "#000000" })
 
 -- Custom keybindings for Telescope
 vim.api.nvim_set_keymap('n', '<Leader>ff', ":Telescope find_files<CR>", opts)

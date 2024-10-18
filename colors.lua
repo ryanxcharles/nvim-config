@@ -1,3 +1,6 @@
+-- Enable 24-bit RGB color in the terminal
+vim.opt.termguicolors = true
+
 -- TODO: test todo highlighting
 -- Define a highlight group for TODO comments
 vim.api.nvim_command("highlight TodoComment guifg=#FA8603 gui=bold") -- Orange color with bold
@@ -9,4 +12,8 @@ vim.api.nvim_create_autocmd({ "BufEnter", "BufReadPost" }, {
     vim.fn.matchadd("TodoComment", "TODO:")
   end,
 })
+
+-- TODO: This doesn't work - is this fixable?
+-- Custom cursor color
+vim.api.nvim_set_hl(0, "Cursor", { bg = "#FA8603", fg = "#000000" })
 
