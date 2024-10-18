@@ -1,3 +1,29 @@
+local uv = vim.loop -- Use Neovim's built-in libuv wrapper for filesystem operations
+
+-- Function to recursively search for a file in the current directory or any parent directory
+local function find_file_in_parents(filename)
+  ---@diagnostic disable-next-line: undefined-field
+  local cwd = uv.cwd() -- Get the current working directory
+
+  while cwd do
+    local filepath = cwd .. "/" .. filename
+    ---@diagnostic disable-next-line: undefined-field
+    local stat = uv.fs_stat(filepath)
+    if stat then
+      return true -- File found
+    end
+
+    -- Move to the parent directory
+    local parent = cwd:match("(.*/)[^/]+/?$")
+    if parent == cwd then
+      break -- Reached the root directory
+    end
+    cwd = parent
+  end
+
+  return false -- File not found in any parent directory
+end
+
 require("formatter").setup({
   filetype = {
     markdown = {
