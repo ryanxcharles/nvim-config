@@ -1,31 +1,5 @@
 local opts = { noremap = true, silent = true }
 
--- rust: integration with crates.nvim for managing dependencies
--- require("crates").setup({
---   null_ls = {
---     enabled = true, -- Enable null-ls integration (optional)
---     name = "crates.nvim",
---   },
--- })
-
--- Optional keybinding to update dependencies with `crates.nvim`
-vim.api.nvim_set_keymap(
-  "n",
-  "<Leader>cu",
-  ":lua require('crates').update_crate()<CR>",
-  { noremap = true, silent = true }
-)
-
--- Create a custom command :Lint to run biome lint with --fix and --unsafe options
--- This is useful for sorting tailwind classes
-vim.api.nvim_create_user_command("Fix", function()
-  -- Get the current file path
-  local current_file = vim.api.nvim_buf_get_name(0)
-
-  -- Run Biome lint with --fix and --unsafe on the current file
-  vim.cmd("!biome lint --fix --unsafe " .. current_file)
-end, {})
-
 
 local uv = vim.loop -- Use Neovim's built-in libuv wrapper for filesystem operations
 
