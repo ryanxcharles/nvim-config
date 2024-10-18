@@ -54,10 +54,10 @@ require("packer").startup(function()
   -- })
 
   -- Rainbow delimiters
-  use("hiphish/rainbow-delimiters.nvim")
+  -- use("hiphish/rainbow-delimiters.nvim")
 
   -- NPM package completion
-  use("David-Kunz/cmp-npm")
+  -- use("David-Kunz/cmp-npm")
 
   -- Status bar at the bottom - add diagnostics (errors, warnings, etc.)
   use("nvim-lualine/lualine.nvim")

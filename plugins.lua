@@ -72,4 +72,20 @@ return {
       require("plugins-rainbow")
     end,
   },
+
+  -- NPM Package Completion
+  -- {
+  --   "David-Kunz/cmp-npm",
+  --   dependencies = { "nvim-lua/plenary.nvim" },
+  --   config = function()
+  --     require("plugins-cmp-npm")
+  --   end,
+  -- },
+
+  {
+    "nvim-lualine/lualine.nvim",
+    config = function()
+      require("plugins-lualine")
+    end,
+  },
 }
