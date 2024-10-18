@@ -19,19 +19,22 @@ return {
 
   {
     "roobert/tailwindcss-colorizer-cmp.nvim",
-    config = function ()
+    config = function()
       require("plugins-tailwindcss-colorizer")
     end,
   },
 
-  { "hrsh7th/nvim-cmp",
+  {
+    "hrsh7th/nvim-cmp",
     dependencies = {
       "roobert/tailwindcss-colorizer-cmp.nvim",
     },
     config = function()
       require("plugins-cmp")
     end,
-  }, -- Autocompletion plugin
+  },
+
+  -- Autocompletion plugin
   { "hrsh7th/cmp-nvim-lsp" }, -- LSP source for nvim-cmp
   { "hrsh7th/cmp-buffer" }, -- Buffer source for nvim-cmp
   { "hrsh7th/cmp-path" }, -- Path source for nvim-cmp
@@ -114,7 +117,7 @@ return {
       "nvim-tree/nvim-web-devicons", -- Optional dependency for file icons
       "MunifTanjim/nui.nvim", -- Required dependency for UI components
     },
-    config = function () 
+    config = function()
       require("plugins-neo-tree")
     end,
   },
@@ -156,7 +159,7 @@ return {
   {
     "goolord/alpha-nvim",
     dependencies = {
-      "echasnovski/mini.icons"
+      "echasnovski/mini.icons",
     },
     config = function()
       require("alpha").setup(require("alpha.themes.startify").opts)

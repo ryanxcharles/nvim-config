@@ -45,5 +45,5 @@ require("keybindings")
 require("colors")
 require("custom-tabline")
 
-package.path = original_path
+-- package.path = original_path
 
