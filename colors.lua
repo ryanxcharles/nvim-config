@@ -47,7 +47,12 @@ vim.api.nvim_create_autocmd({ "WinLeave", "BufLeave" }, {
 -- Set background colors for active and inactive windows
 -- Define the colors for active and inactive windows
 vim.api.nvim_set_hl(0, "ActiveWindow", { bg = "#08090c" }) -- Active window background color
-vim.api.nvim_set_hl(0, "InactiveWindow", { bg = "#14161b" }) -- Inactive window background color
+-- vim.api.nvim_set_hl(0, "InactiveWindow", { bg = "#14161b" }) -- Inactive window background color
+-- vim.api.nvim_set_hl(0, "InactiveWindow", { bg = "NONE" }) -- Inactive window background color
+
+-- Set Neovim background to transparent
+vim.api.nvim_set_hl(0, "Normal", { bg = "NONE" })
+vim.api.nvim_set_hl(0, "NormalNC", { bg = "NONE" })
 
 -- Autocommand for entering a window (active)
 vim.api.nvim_create_autocmd({ "WinEnter", "BufEnter" }, {
