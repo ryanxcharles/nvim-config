@@ -61,10 +61,9 @@ vim.api.nvim_create_autocmd({ "WinEnter", "BufEnter" }, {
   end,
 })
 
--- Set Telescope background color to #0a0a0a
+-- Set Telescope background color
 vim.api.nvim_set_hl(0, "TelescopeNormal", { bg = "#08090c" }) -- Normal background
 -- vim.api.nvim_set_hl(0, "TelescopeBorder", { bg = "#0a0a0a", fg = "#0a0a0a" })  -- Border color (make it blend)
 -- vim.api.nvim_set_hl(0, "TelescopePromptNormal", { bg = "#0a0a0a" })  -- Prompt background
 -- vim.api.nvim_set_hl(0, "TelescopeResultsNormal", { bg = "#0a0a0a" }) -- Results background
 -- vim.api.nvim_set_hl(0, "TelescopePreviewNormal", { bg = "#0a0a0a" }) -- Preview background
-
