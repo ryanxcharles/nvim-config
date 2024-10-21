@@ -1,7 +1,7 @@
 local uv = vim.loop -- Use Neovim's built-in libuv wrapper for filesystem operations
 
 -- Function to recursively search for a file in the current directory or any parent directory
-local function find_file_in_parents(filename)
+local function find_file_in_cwd_parents(filename)
   ---@diagnostic disable-next-line: undefined-field
   local cwd = uv.cwd() -- Get the current working directory
 
@@ -26,7 +26,7 @@ end
 
 -- Function to search for a file (filename) in the directory of another file (full_path)
 -- and recursively in its parent directories.
-local function find_file_in_parents_of_file(filename, full_path)
+local function find_file_in_file_parents(filename, full_path)
   -- Get the directory of the file passed in as full_path
   local dir = vim.fn.fnamemodify(full_path, ":h") -- ":h" extracts the directory from full_path
   --print("Starting search in directory: " .. dir)
@@ -78,8 +78,8 @@ require("formatter").setup({
       function()
         -- Detect if this is a Deno project by looking for a 'deno.json' or 'deno.jsonc'
         if
-          find_file_in_parents("deno.json")
-          or find_file_in_parents("deno.jsonc")
+          find_file_in_cwd_parents("deno.json")
+          or find_file_in_cwd_parents("deno.jsonc")
         then
           return {
             exe = "deno",
@@ -88,7 +88,7 @@ require("formatter").setup({
           }
         else
           -- Use Biome for non-Deno TypeScript projects
-          local config_path = find_file_in_parents_of_file(
+          local config_path = find_file_in_file_parents(
             "biome.json",
             vim.api.nvim_buf_get_name(0)
           )
@@ -110,8 +110,8 @@ require("formatter").setup({
     typescriptreact = {
       function()
         if
-          find_file_in_parents("deno.json")
-          or find_file_in_parents("deno.jsonc")
+          find_file_in_cwd_parents("deno.json")
+          or find_file_in_cwd_parents("deno.jsonc")
         then
           return {
             exe = "deno",
@@ -119,7 +119,7 @@ require("formatter").setup({
             stdin = true,
           }
         else
-          local config_path = find_file_in_parents_of_file(
+          local config_path = find_file_in_file_parents(
             "biome.json",
             vim.api.nvim_buf_get_name(0)
           )
@@ -142,8 +142,8 @@ require("formatter").setup({
       -- Conditional formatter for JSON files
       function()
         if
-          find_file_in_parents("deno.json")
-          or find_file_in_parents("deno.jsonc")
+          find_file_in_cwd_parents("deno.json")
+          or find_file_in_cwd_parents("deno.jsonc")
         then
           return {
             exe = "deno",
@@ -154,7 +154,7 @@ require("formatter").setup({
             stdin = false, -- We’re passing the filename, not using stdin
           }
         else
-          local config_path = find_file_in_parents_of_file(
+          local config_path = find_file_in_file_parents(
             "biome.json",
             vim.api.nvim_buf_get_name(0)
           )
@@ -177,8 +177,8 @@ require("formatter").setup({
       -- Conditional formatter for JSONC files
       function()
         if
-          find_file_in_parents("deno.json")
-          or find_file_in_parents("deno.jsonc")
+          find_file_in_cwd_parents("deno.json")
+          or find_file_in_cwd_parents("deno.jsonc")
         then
           return {
             exe = "deno",
@@ -189,7 +189,7 @@ require("formatter").setup({
             stdin = false, -- We’re passing the filename, not using stdin
           }
         else
-          local config_path = find_file_in_parents_of_file(
+          local config_path = find_file_in_file_parents(
             "biome.json",
             vim.api.nvim_buf_get_name(0)
           )
@@ -211,8 +211,8 @@ require("formatter").setup({
     javascript = {
       function()
         if
-          find_file_in_parents("deno.json")
-          or find_file_in_parents("deno.jsonc")
+          find_file_in_cwd_parents("deno.json")
+          or find_file_in_cwd_parents("deno.jsonc")
         then
           return {
             exe = "deno",
@@ -220,7 +220,7 @@ require("formatter").setup({
             stdin = true,
           }
         else
-          local config_path = find_file_in_parents_of_file(
+          local config_path = find_file_in_file_parents(
             "biome.json",
             vim.api.nvim_buf_get_name(0)
           )
@@ -242,8 +242,8 @@ require("formatter").setup({
     javascriptreact = {
       function()
         if
-          find_file_in_parents("deno.json")
-          or find_file_in_parents("deno.jsonc")
+          find_file_in_cwd_parents("deno.json")
+          or find_file_in_cwd_parents("deno.jsonc")
         then
           return {
             exe = "deno",
@@ -251,7 +251,7 @@ require("formatter").setup({
             stdin = true,
           }
         else
-          local config_path = find_file_in_parents_of_file(
+          local config_path = find_file_in_file_parents(
             "biome.json",
             vim.api.nvim_buf_get_name(0)
           )
