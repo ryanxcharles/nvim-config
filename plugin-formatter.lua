@@ -24,6 +24,38 @@ local function find_file_in_parents(filename)
   return false -- File not found in any parent directory
 end
 
+-- Function to search for a file (filename) in the directory of another file (full_path)
+-- and recursively in its parent directories.
+local function find_file_in_parents_of_file(filename, full_path)
+  -- Get the directory of the file passed in as full_path
+  local dir = vim.fn.fnamemodify(full_path, ":h") -- ":h" extracts the directory from full_path
+  --print("Starting search in directory: " .. dir)
+
+  while dir do
+    local filepath = dir .. "/" .. filename
+    --print("Checking for file at: " .. filepath) -- Debug print
+
+    local stat = vim.loop.fs_stat(filepath)
+    if stat then
+      print("File found: " .. filepath) -- Debug print when file is found
+      return filepath -- Return the absolute file path if found
+    end
+
+    -- Move to the parent directory
+    local parent = dir:match("(.*/)[^/]+/?$")
+    if not parent or parent == dir then
+      --print("Reached root directory, stopping search.") -- Debug print
+      break -- Reached the root directory
+    end
+
+    --print("Moving to parent directory: " .. parent) -- Debug print for parent
+    dir = parent
+  end
+
+  print("File not found.") -- Debug print when file is not found
+  return nil -- File not found
+end
+
 require("formatter").setup({
   filetype = {
     markdown = {
@@ -56,10 +88,16 @@ require("formatter").setup({
           }
         else
           -- Use Biome for non-Deno TypeScript projects
+          local config_path = find_file_in_parents_of_file(
+            "biome.json",
+            vim.api.nvim_buf_get_name(0)
+          )
           return {
             exe = "biome",
             args = {
               "format",
+              "--config-path",
+              config_path,
               "--stdin-file-path",
               vim.api.nvim_buf_get_name(0),
               "--write",
@@ -81,10 +119,16 @@ require("formatter").setup({
             stdin = true,
           }
         else
+          local config_path = find_file_in_parents_of_file(
+            "biome.json",
+            vim.api.nvim_buf_get_name(0)
+          )
           return {
             exe = "biome",
             args = {
               "format",
+              "--config-path",
+              config_path,
               "--stdin-file-path",
               vim.api.nvim_buf_get_name(0),
               "--write",
@@ -110,10 +154,16 @@ require("formatter").setup({
             stdin = false, -- We’re passing the filename, not using stdin
           }
         else
+          local config_path = find_file_in_parents_of_file(
+            "biome.json",
+            vim.api.nvim_buf_get_name(0)
+          )
           return {
             exe = "biome",
             args = {
               "format",
+              "--config-path",
+              config_path,
               "--stdin-file-path",
               vim.api.nvim_buf_get_name(0),
               "--write",
@@ -139,10 +189,16 @@ require("formatter").setup({
             stdin = false, -- We’re passing the filename, not using stdin
           }
         else
+          local config_path = find_file_in_parents_of_file(
+            "biome.json",
+            vim.api.nvim_buf_get_name(0)
+          )
           return {
             exe = "biome",
             args = {
               "format",
+              "--config-path",
+              config_path,
               "--stdin-file-path",
               vim.api.nvim_buf_get_name(0),
               "--write",
@@ -164,10 +220,16 @@ require("formatter").setup({
             stdin = true,
           }
         else
+          local config_path = find_file_in_parents_of_file(
+            "biome.json",
+            vim.api.nvim_buf_get_name(0)
+          )
           return {
             exe = "biome",
             args = {
               "format",
+              "--config-path",
+              config_path,
               "--stdin-file-path",
               vim.api.nvim_buf_get_name(0),
               "--write",
@@ -189,10 +251,16 @@ require("formatter").setup({
             stdin = true,
           }
         else
+          local config_path = find_file_in_parents_of_file(
+            "biome.json",
+            vim.api.nvim_buf_get_name(0)
+          )
           return {
             exe = "biome",
             args = {
               "format",
+              "--config-path",
+              config_path,
               "--stdin-file-path",
               vim.api.nvim_buf_get_name(0),
               "--write",

@@ -58,6 +58,18 @@ vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
   end,
 })
 
+-- Special rules for markdown - fix indenting and disable auto-indenting for lists
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = {
+    "markdown",
+  },
+  callback = function()
+    vim.opt_local.indentexpr = ""
+    vim.opt_local.formatoptions:remove("o") -- Prevent auto-indenting for lists
+    vim.opt_local.foldenable = false -- Disable folding by default
+  end,
+})
+
 -- Create a custom command :Fix to run biome lint with --fix and --unsafe options
 -- This is useful for sorting tailwind classes
 vim.api.nvim_create_user_command("Fix", function()
