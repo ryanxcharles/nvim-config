@@ -243,3 +243,56 @@ vim.api.nvim_set_keymap(
   ":lua require('resession').autosave_toggle()<CR>",
   opts
 )
+
+-- Go to definition
+vim.api.nvim_set_keymap(
+  "n",
+  "gd",
+  "<cmd>lua vim.lsp.buf.definition()<CR>",
+  opts
+)
+
+-- LSP-related keybindings
+
+-- Hover documentation
+vim.api.nvim_set_keymap("n", "K", "<cmd>lua vim.lsp.buf.hover()<CR>", opts)
+
+-- Find references
+vim.api.nvim_set_keymap(
+  "n",
+  "gr",
+  "<cmd>lua vim.lsp.buf.references()<CR>",
+  opts
+)
+
+-- Go to implementation
+vim.api.nvim_set_keymap(
+  "n",
+  "gi",
+  "<cmd>lua vim.lsp.buf.implementation()<CR>",
+  opts
+)
+
+-- Rename symbol
+vim.api.nvim_set_keymap(
+  "n",
+  "<Leader>rn",
+  "<cmd>lua vim.lsp.buf.rename()<CR>",
+  opts
+)
+
+-- Code actions
+vim.api.nvim_set_keymap(
+  "n",
+  "<Leader>ca",
+  "<cmd>lua vim.lsp.buf.code_action()<CR>",
+  opts
+)
+
+-- Shortcut to organize imports
+vim.api.nvim_set_keymap(
+  "n",
+  "<Leader>oi",
+  '<cmd>lua vim.lsp.buf.code_action({ context = { only = { "source.organizeImports" } }, apply = true })<CR>',
+  opts
+)

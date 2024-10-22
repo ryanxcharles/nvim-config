@@ -17,6 +17,7 @@ return {
     end,
   },
 
+  -- Tailwind CSS colorizer
   {
     "roobert/tailwindcss-colorizer-cmp.nvim",
     config = function()
