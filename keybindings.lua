@@ -136,11 +136,21 @@ vim.api.nvim_set_keymap(
   opts
 )
 
--- Key binding to reload LSP
+-- Key binding to stop LSP
 vim.api.nvim_set_keymap(
   "n",
-  "<Leader>rL",
-  ":lua vim.lsp.stop_client(vim.lsp.get_active_clients())<CR>:lua vim.defer_fn(function() vim.cmd('edit') end, 1000)<CR>",
+  "<Leader>Ls",
+  --":lua vim.lsp.stop_client(vim.lsp.get_active_clients())<CR>:lua vim.defer_fn(function() vim.cmd('edit') end, 1000)<CR>",
+  ":lua vim.lsp.stop_client(vim.lsp.get_active_clients())<CR>",
+  opts
+)
+
+-- Key binding to restart LSP
+vim.api.nvim_set_keymap(
+  "n",
+  "<Leader>Lr",
+  "lua vim.lsp.stop_client(vim.lsp.get_active_clients())<CR>:lua vim.defer_fn(function() vim.cmd('edit') end, 1000)<CR>",
+  --":lua vim.lsp.stop_client(vim.lsp.get_active_clients())<CR>",
   opts
 )
 
