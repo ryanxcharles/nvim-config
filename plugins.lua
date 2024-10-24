@@ -86,19 +86,19 @@ return {
   { "L3MON4D3/LuaSnip" }, -- Snippet engine
 
   -- GitHub Copilot
-  -- {
-  --   "github/copilot.vim", -- GitHub Copilot
-  --   config = function()
-  --     require("plugin-copilot")
-  --   end,
-  -- },
-  -- {
-  --   "zbirenbaum/copilot-cmp", -- Copilot completion source for cmp
-  --   dependencies = { "github/copilot.vim" }, -- Ensure it loads after copilot.vim
-  --   config = function()
-  --     require("copilot_cmp").setup()
-  --   end,
-  -- },
+  {
+    "github/copilot.vim", -- GitHub Copilot
+    config = function()
+      -- require("plugin-copilot")
+    end,
+  },
+  {
+    "zbirenbaum/copilot-cmp", -- Copilot completion source for cmp
+    dependencies = { "github/copilot.vim" }, -- Ensure it loads after copilot.vim
+    config = function()
+      require("copilot_cmp").setup()
+    end,
+  },
 
   -- Treesitter for syntax highlighting
   {
