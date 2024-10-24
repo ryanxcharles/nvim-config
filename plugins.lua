@@ -42,8 +42,8 @@ return {
         mapping = {
           ["<C-Space>"] = cmp.mapping.complete(), -- Manually trigger completion
           ["<CR>"] = cmp.mapping.confirm({ select = true }), -- Confirm the first suggestion
-          ["<Tab>"] = cmp.mapping.select_next_item(), -- Navigate to next item
-          ["<S-Tab>"] = cmp.mapping.select_prev_item(), -- Navigate to previous item
+          ["<Down>"] = cmp.mapping.select_next_item(), -- Navigate to next item
+          ["<Up>"] = cmp.mapping.select_prev_item(), -- Navigate to previous item
           ["<C-e>"] = cmp.mapping.abort(), -- Close the completion window
         },
         sources = cmp.config.sources({
