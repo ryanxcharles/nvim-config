@@ -135,3 +135,31 @@ vim.api.nvim_create_user_command("TermBelow", function()
   vim.cmd("term")
   vim.cmd("wincmd J")
 end, {})
+
+vim.api.nvim_create_user_command('LspRenameFile', function(opts)
+  local old_file_name = vim.fn.expand('%:p')
+  local new_file_name = vim.fn.input('New file name: ', old_file_name, 'file')
+
+  if new_file_name ~= old_file_name then
+    -- Rename the file in the file system
+    vim.fn.rename(old_file_name, new_file_name)
+
+    -- Run the LSP rename command to update imports
+    vim.lsp.buf.execute_command({
+      command = '_typescript.applyRenameFile',
+      arguments = {
+        {
+          sourceUri = vim.uri_from_fname(old_file_name),
+          targetUri = vim.uri_from_fname(new_file_name),
+        }
+      }
+    })
+
+    -- Open the new file in the buffer
+    vim.cmd('edit ' .. new_file_name)
+  end
+end, {
+  nargs = 0,
+  desc = 'Rename the current file and update imports using the TypeScript LSP'
+})
+
