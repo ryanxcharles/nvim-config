@@ -12,19 +12,19 @@ cmp.setup({
     ---@diagnostic disable-next-line: undefined-field
     ["<C-Space>"] = cmp.mapping.complete(), -- Trigger completion manually
     ---@diagnostic disable-next-line: undefined-field
-   ["<CR>"] = cmp.mapping(function(fallback)
-    ---@diagnostic disable-next-line: undefined-field
+    ["<CR>"] = cmp.mapping(function(fallback)
+      ---@diagnostic disable-next-line: undefined-field
       if cmp.visible() and cmp.get_selected_entry() then
-    ---@diagnostic disable-next-line: undefined-field
+        ---@diagnostic disable-next-line: undefined-field
         cmp.confirm({ select = false }) -- Only confirm if an item is explicitly selected
       else
         fallback() -- Otherwise, fallback to the default Enter behavior
       end
     end, { "i", "s" }), -- Supports insert and select mode
     ---@diagnostic disable-next-line: undefined-field
-    ["<C-.>"] = cmp.mapping.select_next_item(), -- Navigate completion next
+    ["<C-.>"] = cmp.mapping(cmp.mapping.select_next_item(), { "i", "c" }), -- Next item (i: insert, c: command)
     ---@diagnostic disable-next-line: undefined-field
-    ["<C-,>"] = cmp.mapping.select_prev_item(), -- Navigate completion previous
+    ["<C-,>"] = cmp.mapping(cmp.mapping.select_prev_item(), { "i", "c" }), -- Previous item
   },
   sources = {
     { name = "nvim_lsp" }, -- LSP completions (TypeScript, etc.)
