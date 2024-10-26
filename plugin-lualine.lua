@@ -1,25 +1,47 @@
 -- Define a custom theme for lualine
-local bright_theme = {
+-- local lualine_theme = {
+--   normal = {
+--     a = { fg = "#ffffff", bg = "#5f87af", gui = "bold" }, -- Blue-gray for normal mode
+--     b = { fg = "#ffffff", bg = "#3a3a3a" }, -- Dark background for section b
+--     c = { fg = "#ffffff", bg = "#14161b" }, -- Even darker for section c
+--   },
+--   insert = { a = { fg = "#ffffff", bg = "#87af5f", gui = "bold" } }, -- Green for insert mode
+--   visual = { a = { fg = "#ffffff", bg = "#d7af5f", gui = "bold" } }, -- Yellow for visual mode
+--   replace = { a = { fg = "#ffffff", bg = "#d75f5f", gui = "bold" } }, -- Red for replace mode
+--   command = { a = { fg = "#ffffff", bg = "#af5fff", gui = "bold" } }, -- Purple for command mode
+--   inactive = {
+--     a = { fg = "#bcbcbc", bg = "#3a3a3a", gui = "bold" }, -- Gray for inactive mode
+--     b = { fg = "#bcbcbc", bg = "#14161b" },
+--     c = { fg = "#bcbcbc", bg = "#14161b" },
+--   },
+-- }
+local catppuccin = require("catppuccin.palettes").get_palette() -- Get Catppuccin palette
+
+local lualine_theme = {
   normal = {
-    a = { fg = "#ffffff", bg = "#5f87af", gui = "bold" }, -- Blue-gray for normal mode
-    b = { fg = "#ffffff", bg = "#3a3a3a" }, -- Dark background for section b
-    c = { fg = "#ffffff", bg = "#14161b" }, -- Even darker for section c
+    a = { fg = catppuccin.base, bg = catppuccin.blue, gui = "bold" },
+    b = { fg = catppuccin.text, bg = catppuccin.surface0 },
+    c = { fg = catppuccin.text, bg = catppuccin.mantle },
   },
-  insert = { a = { fg = "#ffffff", bg = "#87af5f", gui = "bold" } }, -- Green for insert mode
-  visual = { a = { fg = "#ffffff", bg = "#d7af5f", gui = "bold" } }, -- Yellow for visual mode
-  replace = { a = { fg = "#ffffff", bg = "#d75f5f", gui = "bold" } }, -- Red for replace mode
-  command = { a = { fg = "#ffffff", bg = "#af5fff", gui = "bold" } }, -- Purple for command mode
+  insert = { a = { fg = catppuccin.base, bg = catppuccin.green, gui = "bold" } },
+  visual = {
+    a = { fg = catppuccin.base, bg = catppuccin.yellow, gui = "bold" },
+  },
+  replace = { a = { fg = catppuccin.base, bg = catppuccin.red, gui = "bold" } },
+  command = {
+    a = { fg = catppuccin.base, bg = catppuccin.purple, gui = "bold" },
+  },
   inactive = {
-    a = { fg = "#bcbcbc", bg = "#3a3a3a", gui = "bold" }, -- Gray for inactive mode
-    b = { fg = "#bcbcbc", bg = "#14161b" },
-    c = { fg = "#bcbcbc", bg = "#14161b" },
+    a = { fg = catppuccin.overlay0, bg = catppuccin.surface0, gui = "bold" },
+    b = { fg = catppuccin.overlay0, bg = catppuccin.mantle },
+    c = { fg = catppuccin.overlay0, bg = catppuccin.mantle },
   },
 }
 
 -- Customize the statusline with lualine
 require("lualine").setup({
   options = {
-    theme = bright_theme, -- Use our custom bright theme
+    theme = lualine_theme, -- Use our custom bright theme
     section_separators = { "▶️", "◀️" }, -- Use arrow emojis as section separators
     component_separators = { "|", "|" }, -- Use simple vertical bars as component separators
     disabled_filetypes = {}, -- Disable for specific filetypes if needed

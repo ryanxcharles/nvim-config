@@ -35,7 +35,8 @@ vim.api.nvim_set_hl(
 vim.api.nvim_set_hl(
   0,
   "TabLine",
-  { fg = "#ffffff", bg = "#14161b", bold = false }
+  -- { fg = "#ffffff", bg = "#14161b", bold = false }
+  { fg = "#ffffff", bg = "NONE", bold = false }
 ) -- Non-selected tabs
 
 -- Get the background colors for TabLine and TabLineSel
