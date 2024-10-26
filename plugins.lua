@@ -54,6 +54,7 @@ return {
         }),
         formatting = {
           fields = { "abbr", "kind", "menu" },
+          expandable_indicator = true,
           format = function(entry, item)
             item.menu = ({
               nvim_lsp = "[LSP]",
@@ -260,4 +261,17 @@ return {
       require("resession").setup({})
     end,
   },
+
+  -- colors: catppuccin
+  {
+  "catppuccin/nvim",
+  name = "catppuccin",
+  config = function()
+    require("catppuccin").setup({
+      flavour = "mocha", -- options: latte, frappe, macchiato, mocha
+      -- other configurations if needed
+    })
+    vim.cmd("colorscheme catppuccin")
+  end,
+}
 }
