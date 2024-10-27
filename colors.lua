@@ -44,22 +44,22 @@ vim.api.nvim_create_autocmd({ "BufEnter", "BufReadPost" }, {
 --   end,
 -- })
 
--- -- Set background colors for active and inactive windows
--- -- Define the colors for active and inactive windows
--- vim.api.nvim_set_hl(0, "ActiveWindow", { bg = "#08090c" }) -- Active window background color
--- -- vim.api.nvim_set_hl(0, "InactiveWindow", { bg = "#14161b" }) -- Inactive window background color
--- -- vim.api.nvim_set_hl(0, "InactiveWindow", { bg = "NONE" }) -- Inactive window background color
+-- Set background colors for active and inactive windows
+-- Define the colors for active and inactive windows
+vim.api.nvim_set_hl(0, "ActiveWindow", { bg = "#0f0f16" }) -- Active window background color
+-- vim.api.nvim_set_hl(0, "InactiveWindow", { bg = "#14161b" }) -- Inactive window background color
+-- vim.api.nvim_set_hl(0, "InactiveWindow", { bg = "NONE" }) -- Inactive window background color
 
--- -- Set Neovim background to transparent
--- vim.api.nvim_set_hl(0, "Normal", { bg = "NONE" })
--- vim.api.nvim_set_hl(0, "NormalNC", { bg = "NONE" })
+-- Set Neovim background to transparent
+vim.api.nvim_set_hl(0, "Normal", { bg = "NONE" })
+vim.api.nvim_set_hl(0, "NormalNC", { bg = "NONE" })
 
--- -- Autocommand for entering a window (active)
--- vim.api.nvim_create_autocmd({ "WinEnter", "BufEnter" }, {
---   callback = function()
---     vim.wo.winhighlight = "Normal:ActiveWindow" -- Set active window background
---   end,
--- })
+-- Autocommand for entering a window (active)
+vim.api.nvim_create_autocmd({ "WinEnter", "BufEnter" }, {
+  callback = function()
+    vim.wo.winhighlight = "Normal:ActiveWindow" -- Set active window background
+  end,
+})
 
 -- -- Set Telescope background color
 -- vim.api.nvim_set_hl(0, "TelescopeNormal", { bg = "#08090c" }) -- Normal background
