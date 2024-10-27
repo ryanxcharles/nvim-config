@@ -13,9 +13,9 @@ vim.api.nvim_create_autocmd({ "BufEnter", "BufReadPost" }, {
   end,
 })
 
--- -- TODO: This doesn't work - is this fixable?
--- -- Custom cursor color
--- vim.api.nvim_set_hl(0, "Cursor", { bg = "#FA8603", fg = "#000000" })
+-- TODO: This doesn't work - is this fixable?
+-- Custom cursor color
+vim.api.nvim_set_hl(0, "Cursor", { bg = "#FA8603", fg = "#000000" })
 
 -- -- Custom color for search highlighting
 -- vim.api.nvim_set_hl(0, "Search", { bg = "#87af5f", fg = "#000000" })
