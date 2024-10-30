@@ -264,14 +264,14 @@ return {
 
   -- colors: catppuccin
   {
-  "catppuccin/nvim",
-  name = "catppuccin",
-  config = function()
-    require("catppuccin").setup({
-      flavour = "mocha", -- options: latte, frappe, macchiato, mocha
-      -- other configurations if needed
-    })
-    vim.cmd("colorscheme catppuccin")
-  end,
-}
+    "catppuccin/nvim",
+    name = "catppuccin",
+    config = function()
+      require("catppuccin").setup({
+        flavour = "mocha", -- options: latte, frappe, macchiato, mocha
+        -- other configurations if needed
+      })
+      vim.cmd("colorscheme catppuccin")
+    end,
+  },
 }
