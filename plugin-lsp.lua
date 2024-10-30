@@ -41,7 +41,7 @@ lspconfig.denols.setup({
   -- Add additional configuration options if needed (e.g., filetypes)
   filetypes = { "typescript", "typescriptreact", "tsx", "json", "jsonc" },
   on_attach = function(client)
-    print("Deno LSP attached!")
+    -- print("Deno LSP attached!")
     -- vim.api.nvim_buf_create_user_command(bufnr, "Format", function()
     --   vim.lsp.buf.format({ async = true })
     -- end, { desc = "Format current buffer with Deno" })
@@ -52,7 +52,7 @@ lspconfig.denols.setup({
 lspconfig.ts_ls.setup({
   -- This function attaches common settings when the LSP attaches to a buffer
   on_attach = function(client, bufnr)
-    print("Typescript LSP attached!")
+    -- print("Typescript LSP attached!")
     -- Optionally, disable tsserver's formatting in favor of something like prettier
     client.server_capabilities.documentFormattingProvider = false
   end,
