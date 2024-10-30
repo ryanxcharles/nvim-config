@@ -29,7 +29,7 @@ local lualine_theme = {
   },
   replace = { a = { fg = catppuccin.base, bg = catppuccin.red, gui = "bold" } },
   command = {
-    a = { fg = catppuccin.base, bg = catppuccin.purple, gui = "bold" },
+    a = { fg = catppuccin.text, bg = catppuccin.purple, gui = "bold" },
   },
   inactive = {
     a = { fg = catppuccin.overlay0, bg = catppuccin.surface0, gui = "bold" },
