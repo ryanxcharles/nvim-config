@@ -193,19 +193,6 @@ return {
     "tpope/vim-surround",
   },
 
-  -- tailwind colors and other features like classNames
-  -- {
-  --   "luckasRanarison/tailwind-tools.nvim",
-  --   name = "tailwind-tools",
-  --   dependencies = {
-  --     "nvim-treesitter/nvim-treesitter",
-  --     "nvim-telescope/telescope.nvim",
-  --     "neovim/nvim-lspconfig",
-  --   },
-  --   run = ":UpdateRemotePlugins",
-  --   opts = {},
-  -- },
-
   -- alpha-nvim greeter (splash screen)
   {
     "goolord/alpha-nvim",
