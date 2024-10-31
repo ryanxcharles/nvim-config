@@ -8,6 +8,7 @@ require("colorizer").setup({
     "javascriptreact",
     "typescriptreact",
     "lua",
+    "tsx",
   },
   user_default_options = {
     RGB = true, -- #RGB hex codes
@@ -20,9 +21,10 @@ require("colorizer").setup({
     css = false, -- Enable all CSS features: rgb_fn, hsl_fn, names, RGB, RRGGBB
     css_fn = false, -- Enable all CSS *functions*: rgb_fn, hsl_fn
     -- Available modes for `mode`: foreground, background,  virtualtext
-    mode = "virtualtext", -- Set the display mode.
+    mode = "background", -- Set the display mode.
     -- True is same as normal
-    tailwind = false, -- Disable tailwind colors (using tailwind-tools instead)
+    -- tailwind = false, -- Disable tailwind colors (using tailwind-tools instead)
+    tailwind = true,
     -- parsers can contain values used in |user_default_options|
     sass = { enable = false, parsers = { "css" } }, -- Enable sass colors
     virtualtext = "■",

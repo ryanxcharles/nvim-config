@@ -21,7 +21,9 @@ return {
   {
     "roobert/tailwindcss-colorizer-cmp.nvim",
     config = function()
-      require("plugin-tailwindcss-colorizer")
+      require("tailwindcss-colorizer-cmp").setup({
+        color_square_width = 2,
+      })
     end,
   },
 
@@ -32,6 +34,7 @@ return {
     -- },
     config = function()
       local cmp = require("cmp")
+      local tailwind_colorizer = require("tailwindcss-colorizer-cmp").formatter
 
       cmp.setup({
         snippet = {
@@ -56,6 +59,7 @@ return {
           fields = { "abbr", "kind", "menu" },
           expandable_indicator = true,
           format = function(entry, item)
+            item = tailwind_colorizer(entry, item)
             item.menu = ({
               nvim_lsp = "[LSP]",
               buffer = "[Buffer]",
@@ -264,14 +268,14 @@ return {
 
   -- colors: catppuccin
   {
-  "catppuccin/nvim",
-  name = "catppuccin",
-  config = function()
-    require("catppuccin").setup({
-      flavour = "mocha", -- options: latte, frappe, macchiato, mocha
-      -- other configurations if needed
-    })
-    vim.cmd("colorscheme catppuccin")
-  end,
-}
+    "catppuccin/nvim",
+    name = "catppuccin",
+    config = function()
+      require("catppuccin").setup({
+        flavour = "mocha", -- options: latte, frappe, macchiato, mocha
+        -- other configurations if needed
+      })
+      vim.cmd("colorscheme catppuccin")
+    end,
+  },
 }
