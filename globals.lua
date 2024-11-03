@@ -163,3 +163,10 @@ end, {
   desc = 'Rename the current file and update imports using the TypeScript LSP'
 })
 
+-- Automatically resize windows when the terminal is resized
+-- autocmd VimResized * wincmd =
+vim.api.nvim_create_autocmd("VimResized", {
+  pattern = "*",
+  command = "wincmd ="
+})
+
