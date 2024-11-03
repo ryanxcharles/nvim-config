@@ -105,9 +105,20 @@ return {
     end,
   },
 
+  -- nushell
+  {
+    "LhKipp/nvim-nu",
+    config = function()
+      require("nu").setup()
+    end,
+  },
+
   -- Treesitter for syntax highlighting
   {
     "nvim-treesitter/nvim-treesitter",
+    dependencies = {
+      "LhKipp/nvim-nu",
+    },
     run = ":TSUpdate",
     config = function()
       require("plugin-treesitter")

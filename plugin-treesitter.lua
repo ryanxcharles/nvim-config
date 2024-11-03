@@ -16,6 +16,7 @@ require("nvim-treesitter.configs").setup({
     "markdown_inline",
     "toml",
     "wgsl",
+    "nu",
   }, -- Add more languages as needed
 
   -- Enable Treesitter-based syntax highlighting
