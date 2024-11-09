@@ -9,6 +9,7 @@ require("colorizer").setup({
     "typescriptreact",
     "lua",
     "tsx",
+    "nu",
   },
   user_default_options = {
     RGB = true, -- #RGB hex codes
