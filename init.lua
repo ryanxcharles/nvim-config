@@ -43,7 +43,6 @@ require("lazy").setup(require("plugins"))
 require("globals")
 require("keybindings")
 require("colors")
--- require("custom-tabline")
 
 package.path = original_path
 
