@@ -45,3 +45,33 @@ vim.api.nvim_set_hl(
   -- { fg = "#ffffff", bg = "#14161b", bold = false }
   { fg = "#ffffff", bg = "NONE", bold = false }
 ) -- Non-selected tabs
+
+vim.opt.fillchars = {
+  horiz = '━',
+  horizup = '┻',
+  horizdown = '┳',
+  vert = '┃',
+  vertleft = '┫',
+  vertright = '┣',
+  verthoriz = '╋',
+}
+vim.opt.winhl = 'WinSeparator:WinSeparator'
+
+-- Make active window separator more visible
+vim.api.nvim_set_hl(0, 'WinSeparator', { fg = '#1E1E2E' })  -- inactive window separator
+vim.api.nvim_set_hl(0, 'WinSeparatorNC', { fg = '#0087ff' }) -- active window separator
+
+-- In your init.lua
+vim.api.nvim_create_autocmd('WinEnter', {
+  callback = function()
+    local win = vim.api.nvim_get_current_win()
+    vim.wo[win].winhighlight = 'WinSeparator:WinSeparator'
+  end
+})
+
+vim.api.nvim_create_autocmd('WinLeave', {
+  callback = function()
+    local win = vim.api.nvim_get_current_win()
+    vim.wo[win].winhighlight = 'WinSeparator:WinSeparatorNC'
+  end
+})
