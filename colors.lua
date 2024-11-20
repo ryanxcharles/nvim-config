@@ -60,6 +60,8 @@ vim.opt.fillchars = {
 vim.api.nvim_set_hl(0, 'WinSeparatorNC', { fg = '#1E1E2E' })  -- inactive window separator
 vim.api.nvim_set_hl(0, 'WinSeparator', { fg = '#0087ff' }) -- active window separator
 vim.opt.winhl = 'WinSeparator:WinSeparator'
+vim.api.nvim_set_hl(0, 'NormalNC', { bg = '#1E1E2E' })          -- active window background
+vim.api.nvim_set_hl(0, 'Normal', { bg = '#161626' })        -- inactive window background
 
 -- Enable window borders globally
 vim.opt.number = true  -- This helps with left border visibility
@@ -73,11 +75,11 @@ vim.api.nvim_create_autocmd({ "WinEnter", "BufEnter", "WinLeave", "BufLeave" }, 
     local wins = vim.api.nvim_list_wins()
     for _, w in ipairs(wins) do
       if w == vim.api.nvim_get_current_win() then
-        -- Current window gets highlighted border
-        vim.wo[w].winhighlight = 'WinSeparator:WinSeparator'
+        -- Current window gets highlighted border and background
+        vim.wo[w].winhighlight = 'WinSeparator:WinSeparator,Normal:Normal'
       else
-        -- Other windows get dim border
-        vim.wo[w].winhighlight = 'WinSeparator:WinSeparatorNC'
+        -- Other windows get dim border and background
+        vim.wo[w].winhighlight = 'WinSeparator:WinSeparatorNC,Normal:NormalNC'
       end
     end
   end,
