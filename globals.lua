@@ -73,29 +73,14 @@ vim.api.nvim_create_autocmd("FileType", {
 -- Create a custom command :Fix to run biome lint with --fix and --unsafe options
 -- This is useful for sorting tailwind classes
 vim.api.nvim_create_user_command("Fix", function()
+  -- Get the current file path and directory
   local current_file = vim.api.nvim_buf_get_name(0)
   local file_dir = vim.fn.fnamemodify(current_file, ":h")
 
-  -- Change directory
-  local original_dir = vim.fn.getcwd()
-  vim.cmd("lcd " .. vim.fn.fnameescape(file_dir))
-
-  -- Run biome using vim.system
-  local result = vim.system({
-    "biome",
-    "lint",
-    "--fix",
-    "--unsafe",
-    current_file
-  }):wait()
-
-  -- Change back to original directory
-  vim.cmd("lcd " .. vim.fn.fnameescape(original_dir))
-
-  -- Optional: Show output if there's an error
-  if result.code ~= 0 then
-    vim.notify(result.stderr, vim.log.levels.ERROR)
-  end
+  -- Change to the file's directory, run biome, then change back
+  vim.cmd("lcd " .. vim.fn.fnameescape(file_dir)) -- Temporarily change directory
+  vim.cmd("!biome lint --fix --unsafe " .. vim.fn.fnameescape(current_file)) -- Run biome command
+  vim.cmd("lcd -") -- Return to the original directory
 end, {})
 
 -- Autocommand for leaving a window (inactive)
