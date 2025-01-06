@@ -9,7 +9,6 @@
 -- - deno v2.0.0 (for Deno TypeScript LSP)
 -- - prettier (for Markdown formatting)
 -- - Nerdfonts (for icons)
--- - git (for git integration)
 -- - tailwindcss-language-server (for Tailwind CSS completions and colors)
 -- - typescript-language-server (for TypeScript completions and diagnostics)
 -- - rust/cargo (for Rust tools)
