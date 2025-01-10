@@ -10,6 +10,7 @@ vim.opt.shiftwidth = 2 -- Number of spaces for auto-indent
 vim.opt.expandtab = true -- Use spaces instead of tabs
 vim.opt.autoindent = true -- Auto-indent new lines
 vim.opt.smartindent = true -- Smart indenting for C-like languages
+vim.filetype.add({extension = {wgsl = "wgsl"}})
 
 -- Two spaces for TypeScript/JavaScript/lua
 vim.api.nvim_create_autocmd("FileType", {
@@ -167,3 +168,10 @@ vim.api.nvim_create_autocmd("VimResized", {
   pattern = "*",
   command = "wincmd =",
 })
+
+-- Formatting for wgsl and anything else that can use the LSP
+local function format_buffer()
+  vim.lsp.buf.format()
+end
+
+vim.api.nvim_create_user_command('Fmt', format_buffer, {})

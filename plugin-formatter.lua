@@ -288,5 +288,14 @@ require("formatter").setup({
         }
       end,
     },
+    wgsl = {
+      function()
+        return {
+          exe = "wgsl_analyzer",
+          args = { "format" },
+          stdin = true,
+        }
+      end,
+    },
   },
 })
