@@ -124,3 +124,7 @@ lspconfig.tailwindcss.setup({
   end,
   filetypes = { "html", "javascriptreact", "typescriptreact", "css" }, -- Add other file types where you use Tailwind
 })
+
+-- first install wgsl-analyzer
+-- cargo install --git https://github.com/wgsl-analyzer/wgsl-analyzer.git wgsl_analyzer
+lspconfig.wgsl_analyzer.setup({})

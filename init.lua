@@ -13,6 +13,7 @@
 -- - typescript-language-server (for TypeScript completions and diagnostics)
 -- - rust/cargo (for Rust tools)
 -- - lua-language-server (for Lua completions and diagnostics)
+-- - wgsl-analyzer (for WebGPU Shading Language diagnostics)
 
 -- TODO:
 -- [ ] replace formatter with null-ls
