@@ -297,5 +297,14 @@ require("formatter").setup({
         }
       end,
     },
+    python = {
+      function()
+        return {
+          exe = "black",
+          args = { "-" },
+          stdin = true,
+        }
+      end,
+    },
   },
 })
