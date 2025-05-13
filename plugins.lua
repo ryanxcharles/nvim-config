@@ -247,7 +247,7 @@ return {
   },
 
   {
-    "jose-elias-alvarez/null-ls.nvim",
+    "nvimtools/none-ls.nvim",
     dependencies = {
       "nvim-lua/plenary.nvim",
     },
@@ -264,7 +264,7 @@ return {
   {
     "saecki/crates.nvim",
     dependencies = {
-      "jose-elias-alvarez/null-ls.nvim",
+      "nvimtools/none-ls.nvim",
     },
     config = function()
       require("plugin-crates")
