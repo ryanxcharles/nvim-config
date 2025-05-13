@@ -130,7 +130,7 @@ lspconfig.wgsl_analyzer.setup({})
 
 -- Python: Ruff LSP setup
 lspconfig.ruff.setup({
-  cmd = { "/opt/homebrew/bin/ruff", "server" }, -- Path to Ruff in ml_env
+  cmd = { "ruff", "server" }, -- Path to Ruff in ml_env
   on_attach = function(client, bufnr)
     -- Disable Ruff's formatting to avoid conflicts with Black/isort (handled by Fmt)
     -- client.server_capabilities.documentFormattingProvider = false
