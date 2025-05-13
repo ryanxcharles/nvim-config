@@ -14,6 +14,7 @@
 -- - rust/cargo (for Rust tools)
 -- - lua-language-server (for Lua completions and diagnostics)
 -- - wgsl-analyzer (for WebGPU Shading Language diagnostics)
+-- - ruff (for Python diagnostics)
 
 -- TODO:
 -- [ ] replace formatter with null-ls

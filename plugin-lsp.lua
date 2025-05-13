@@ -127,3 +127,21 @@ lspconfig.tailwindcss.setup({
 -- first install wgsl-analyzer
 -- cargo install --git https://github.com/wgsl-analyzer/wgsl-analyzer.git wgsl_analyzer
 lspconfig.wgsl_analyzer.setup({})
+
+-- Python: Ruff LSP setup
+lspconfig.ruff.setup({
+  cmd = { "/opt/homebrew/bin/ruff", "server" }, -- Path to Ruff in ml_env
+  on_attach = function(client, bufnr)
+    -- Disable Ruff's formatting to avoid conflicts with Black/isort (handled by Fmt)
+    -- client.server_capabilities.documentFormattingProvider = false
+    -- Ensure Fmt command (via conform.nvim) works
+    -- vim.api.nvim_buf_set_option(bufnr, "formatexpr", "v:lua.vim.lsp.formatexpr()")
+    -- Optional: Keymap for diagnostics
+    -- vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float, { buffer = bufnr, desc = "Show diagnostics" })
+  end,
+  settings = {
+    args = { "--line-length=88" }, -- Match Black's line length
+  },
+  filetypes = { "python" },
+  root_dir = lspconfig.util.root_pattern("pyproject.toml", "setup.py", ".git"),
+})
