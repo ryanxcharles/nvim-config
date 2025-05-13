@@ -1,6 +1,5 @@
 -- Import the LSP config plugin
 local lspconfig = require("lspconfig")
-local opts = { noremap = true, silent = true }
 
 -- lua: Set up the Lua Language Server first (because lua is used by nvim -
 -- seems logical)
