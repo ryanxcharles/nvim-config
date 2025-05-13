@@ -4,7 +4,7 @@ local opts = { noremap = true, silent = true }
 
 -- lua: Set up the Lua Language Server first (because lua is used by nvim -
 -- seems logical)
-require("lspconfig").lua_ls.setup({
+lspconfig.lua_ls.setup({
   settings = {
     Lua = {
       runtime = {
