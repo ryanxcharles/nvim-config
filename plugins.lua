@@ -139,6 +139,7 @@ return {
           "toml",
           "wgsl",
           "nu",
+          "python",
         }, -- Add more languages as needed
 
         -- Enable Treesitter-based syntax highlighting
