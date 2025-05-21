@@ -77,9 +77,16 @@ vim.api.nvim_set_keymap("n", "<Leader>.", "<C-l>", opts)
 vim.api.nvim_set_keymap(
   "n",
   "<Leader>e",
-  ":lua require('telescope.builtin').git_files({ show_untracked = true })<CR>",
+  ":lua require('telescope.builtin').find_files({ hidden = true })<CR>",
   opts
 )
+-- alternate to search git files, e.g. current git repo, instead of cwd/pwd
+-- vim.api.nvim_set_keymap(
+--   "n",
+--   "<Leader>e",
+--   ":lua require('telescope.builtin').git_files({ show_untracked = true })<CR>",
+--   opts
+-- )
 
 -- Telscope search inside files with ripgrep (rg)
 vim.api.nvim_set_keymap("n", "<Leader>fg", ":Telescope live_grep<CR>", opts)
