@@ -179,8 +179,8 @@ vim.api.nvim_create_user_command("Fmt", format_buffer, {})
 -- Function to replace LaTeX math delimiters with Markdown math delimiters
 local function replace_math()
   vim.api.nvim_command([[
-    %s/\\\[\s*/$$\r/g
-    %s/\s*\\\]/\r$$/g
+    %s/\\\[\s*/$$/g
+    %s/\s*\\\]/$$/g
     %s/\\(\s*/$/g
     %s/\s*\\)/$/g
   ]])
