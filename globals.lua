@@ -10,7 +10,7 @@ vim.opt.shiftwidth = 2 -- Number of spaces for auto-indent
 vim.opt.expandtab = true -- Use spaces instead of tabs
 vim.opt.autoindent = true -- Auto-indent new lines
 vim.opt.smartindent = true -- Smart indenting for C-like languages
-vim.filetype.add({extension = {wgsl = "wgsl"}})
+vim.filetype.add({ extension = { wgsl = "wgsl" } })
 
 -- Two spaces for TypeScript/JavaScript/lua
 vim.api.nvim_create_autocmd("FileType", {
@@ -174,4 +174,26 @@ local function format_buffer()
   vim.lsp.buf.format()
 end
 
-vim.api.nvim_create_user_command('Fmt', format_buffer, {})
+vim.api.nvim_create_user_command("Fmt", format_buffer, {})
+
+-- Function to replace LaTeX math delimiters with Markdown math delimiters
+local function replace_math()
+  -- vim.api.nvim_command("%s/\\\\\\[ /$$\\r/g")
+  -- vim.api.nvim_command("%s/ \\\\\\]/\\r$$/g")
+  -- vim.api.nvim_command("%s/\\\\( /$/g")
+  -- vim.api.nvim_command("%s/ \\\\)/$/g")
+  -- -- Run the four replacement commands
+  -- vim.api.nvim_command("%s/\\\\\\[/$$\\r/g")
+  -- vim.api.nvim_command("%s/\\\\\\]/\\r$$/g")
+  -- vim.api.nvim_command("%s/\\\\(/$/g")
+  -- vim.api.nvim_command("%s/\\\\)/$/g")
+  vim.api.nvim_command([[
+    %s/\\\[\s*/$$\r/g
+    %s/\s*\\\]/\r$$/g
+    %s/\\(\s*/$/g
+    %s/\s*\\)/$/g
+  ]])
+end
+
+-- Create a user command to trigger the replacements
+vim.api.nvim_create_user_command("ReplaceMath", replace_math, {})
