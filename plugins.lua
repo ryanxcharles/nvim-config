@@ -324,4 +324,12 @@ return {
       vim.cmd("colorscheme catppuccin")
     end,
   },
+
+  {
+    dir = "~/dev/chatvim.nvim",
+    name = "chatvim.nvim",
+    config = function()
+      require("chatvim")
+    end,
+  },
 }
