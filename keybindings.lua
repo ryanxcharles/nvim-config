@@ -191,11 +191,26 @@ vim.api.nvim_set_keymap(
 -- Keybinding to toggle Neo-tree
 vim.api.nvim_set_keymap("n", "<Leader>tt", ":Neotree toggle<CR>", opts)
 -- Neo-tree files
-vim.api.nvim_set_keymap("n", "<Leader>tf", ":Neotree filesystem position=left<CR>", opts)
+vim.api.nvim_set_keymap(
+  "n",
+  "<Leader>tf",
+  ":Neotree filesystem position=left<CR>",
+  opts
+)
 -- Neo-tree reveal current file
-vim.api.nvim_set_keymap("n", "<Leader>tr", ":Neotree reveal position=left<CR>", opts)
+vim.api.nvim_set_keymap(
+  "n",
+  "<Leader>tr",
+  ":Neotree reveal position=left<CR>",
+  opts
+)
 -- Neo-tree buffers
-vim.api.nvim_set_keymap("n", "<Leader>tb", ":Neotree buffers position=left<CR>", opts)
+vim.api.nvim_set_keymap(
+  "n",
+  "<Leader>tb",
+  ":Neotree buffers position=left<CR>",
+  opts
+)
 -- Neo-tree git status
 vim.api.nvim_set_keymap("n", "<Leader>tg", ":Neotree git_status<CR>", opts)
 -- Keybinding to open Neo-tree buffer list in a floating window (on-demand)
@@ -319,3 +334,6 @@ vim.api.nvim_set_keymap(
   '<cmd>lua vim.lsp.buf.code_action({ context = { only = { "source.organizeImports" } }, apply = true })<CR>',
   opts
 )
+
+-- ChatVim (chatvim.nvim) keybindings
+vim.api.nvim_set_keymap("n", "<Leader>cvc", ":ChatVimComplete<CR>", opts)
