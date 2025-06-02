@@ -274,7 +274,7 @@ require("formatter").setup({
       function()
         return {
           exe = "stylua",
-          args = { "--search-parent-directories", "-" },
+          args = { "--indent-type", "Spaces", "--indent-width", "2", "--search-parent-directories", "-" },
           stdin = true,
         }
       end,
