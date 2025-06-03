@@ -169,8 +169,25 @@ return {
 
         -- Folding
         fold = { enable = true }, -- Enable Treesitter-based folding (optional)
+
+        -- Required for nvim-treesitter-textobjects
+        textobjects = {
+          select = {
+            enable = true,
+            lookahead = true, -- Automatically jump forward to textobj if cursor is outside
+            keymaps = {
+              -- You can define custom keymaps here for other textobjects if needed
+              -- We'll configure markdown code blocks below
+            },
+          },
+        },
       })
     end,
+  },
+
+  {
+    "nvim-treesitter/nvim-treesitter-textobjects",
+    dependencies = { "nvim-treesitter/nvim-treesitter" },
   },
 
   -- Code formatting
