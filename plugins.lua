@@ -130,11 +130,18 @@ return {
   },
 
   -- Treesitter for syntax highlighting
+  -- {
+  --   "nvim-treesitter/nvim-treesitter",
+  --   dependencies = {
+  --     "LhKipp/nvim-nu",
+  --   },
+  --   run = ":TSUpdate",
+  -- },
+
+  -- Treesitter for syntax highlighting and text-objects for selecting markdown code blocks
   {
-    "nvim-treesitter/nvim-treesitter",
-    dependencies = {
-      "LhKipp/nvim-nu",
-    },
+    "nvim-treesitter/nvim-treesitter-textobjects",
+    dependencies = { "nvim-treesitter/nvim-treesitter", "LhKipp/nvim-nu" },
     run = ":TSUpdate",
     config = function()
       ---@diagnostic disable-next-line: missing-fields
@@ -176,18 +183,38 @@ return {
             enable = true,
             lookahead = true, -- Automatically jump forward to textobj if cursor is outside
             keymaps = {
-              -- You can define custom keymaps here for other textobjects if needed
-              -- We'll configure markdown code blocks below
+              -- Define a custom text object for markdown fenced code blocks
+              ["ic"] = {
+                query = "@codeblock.inner",
+                desc = "Select inside markdown code block",
+              },
+              ["ac"] = {
+                query = "@codeblock.outer",
+                desc = "Select around markdown code block",
+              },
+            },
+            -- Optionally, configure selection modes or other settings
+            selection_modes = {
+              ["@codeblock.inner"] = "V", -- Use linewise visual mode for inner selection
+              ["@codeblock.outer"] = "V", -- Use linewise visual mode for outer selection
             },
           },
         },
       })
-    end,
-  },
 
-  {
-    "nvim-treesitter/nvim-treesitter-textobjects",
-    dependencies = { "nvim-treesitter/nvim-treesitter" },
+      -- Define the custom Tree-sitter queries for markdown code blocks
+      -- local ts_repeatable_move =
+      --   require("nvim-treesitter.textobjects.repeatable_move")
+      vim.treesitter.query.set(
+        "markdown",
+        "textobjects",
+        [[
+      (fenced_code_block
+        (code_fence_content) @codeblock.inner
+      ) @codeblock.outer
+    ]]
+      )
+    end,
   },
 
   -- Code formatting
