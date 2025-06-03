@@ -163,6 +163,7 @@ return {
           "wgsl",
           "nu",
           "python",
+          "lua",
         }, -- Add more languages as needed
 
         -- Enable Treesitter-based syntax highlighting
@@ -200,11 +201,11 @@ return {
                 query = "@function.outer",
                 desc = "Select around function (TypeScript, etc.)",
               },
-              ["iclass"] = {
+              ["ik"] = {
                 query = "@class.inner",
                 desc = "Select inside class (TypeScript, etc.)",
               },
-              ["aclass"] = {
+              ["ak"] = {
                 query = "@class.outer",
                 desc = "Select around class (TypeScript, etc.)",
               },
@@ -227,6 +228,11 @@ return {
                 query = "@codeblock.outer",
                 desc = "Next code block start",
               },
+              ["]f"] = {
+                query = "@function.outer",
+                desc = "Next function start",
+              },
+              ["]k"] = { query = "@class.outer", desc = "Next class start" },
             },
             goto_next_end = {
               ["]C"] = {
@@ -239,6 +245,11 @@ return {
                 query = "@codeblock.outer",
                 desc = "Previous code block start",
               },
+              ["[f"] = {
+                query = "@function.outer",
+                desc = "Previous function start",
+              },
+              ["[k"] = { query = "@class.outer", desc = "Previous class start" },
             },
             goto_previous_end = {
               ["[C"] = {

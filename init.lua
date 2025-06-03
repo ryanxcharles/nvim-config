@@ -46,4 +46,3 @@ require("keybindings")
 require("colors")
 
 package.path = original_path
-
