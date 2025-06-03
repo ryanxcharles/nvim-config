@@ -199,6 +199,34 @@ return {
               ["@codeblock.outer"] = "V", -- Use linewise visual mode for outer selection
             },
           },
+          move = {
+            enable = true,
+            set_jumps = true, -- Add to jump list for navigation history
+            goto_next_start = {
+              ["]c"] = {
+                query = "@codeblock.outer",
+                desc = "Next code block start",
+              },
+            },
+            goto_next_end = {
+              ["]C"] = {
+                query = "@codeblock.outer",
+                desc = "Next code block end",
+              },
+            },
+            goto_previous_start = {
+              ["[c"] = {
+                query = "@codeblock.outer",
+                desc = "Previous code block start",
+              },
+            },
+            goto_previous_end = {
+              ["[C"] = {
+                query = "@codeblock.outer",
+                desc = "Previous code block end",
+              },
+            },
+          },
         },
       })
 
