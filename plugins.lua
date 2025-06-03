@@ -203,8 +203,6 @@ return {
       })
 
       -- Define the custom Tree-sitter queries for markdown code blocks
-      -- local ts_repeatable_move =
-      --   require("nvim-treesitter.textobjects.repeatable_move")
       vim.treesitter.query.set(
         "markdown",
         "textobjects",
