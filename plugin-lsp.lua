@@ -9,19 +9,32 @@ lspconfig.lua_ls.setup({
       runtime = {
         -- Tell the language server which version of Lua you're using (LuaJIT for Neovim)
         version = "LuaJIT",
+        -- Set the path to Lua modules (optional, helps with module resolution)
         path = vim.split(package.path, ";"),
       },
       diagnostics = {
-        -- Get the language server to recognize the `vim` global
-        globals = { "vim", "use" },
+        -- Recognize the `vim` global to avoid "undefined global" warnings
+        globals = { "vim" }, -- Removed "use" unless you specifically need it for another global
       },
       workspace = {
-        -- Make the server aware of Neovim runtime files
+        -- Make the server aware of Neovim runtime files for API recognition
         library = vim.api.nvim_get_runtime_file("", true),
-        checkThirdParty = false, -- Set this to true if using third-party libraries
+        -- Optionally, disable third-party library checks to avoid prompts
+        checkThirdParty = false,
+        -- Preload Neovim-specific files or directories (optional, can be tuned)
+        preloadFileSize = 1000, -- Increase if needed for larger runtime files
       },
+      -- Enable completion for Neovim APIs
+      completion = {
+        callSnippet = "Replace", -- Show function call snippets in completion
+      },
+      -- Disable telemetry for privacy
       telemetry = {
         enable = false,
+      },
+      -- Hinting for better inline feedback (optional)
+      hint = {
+        enable = true, -- Show parameter hints and other inline info
       },
     },
   },
