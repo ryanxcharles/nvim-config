@@ -427,20 +427,20 @@ return {
   },
 
   -- ChatVim: public install
-  {
-    "chatvim/chatvim.nvim",
-    build = "npm install",
-    config = function()
-      require("chatvim")
-    end,
-  },
-
-  -- ChatVim: local install
   -- {
-  --   dir = "~/dev/chatvim.nvim",
-  --   name = "chatvim.nvim",
+  --   "chatvim/chatvim.nvim",
+  --   build = "npm install",
   --   config = function()
   --     require("chatvim")
   --   end,
   -- },
+
+  -- ChatVim: local install
+  {
+    dir = "~/dev/chatvim.nvim",
+    name = "chatvim.nvim",
+    config = function()
+      require("chatvim")
+    end,
+  },
 }
