@@ -337,3 +337,4 @@ vim.api.nvim_set_keymap(
 
 -- ChatVim (chatvim.nvim) keybindings
 vim.api.nvim_set_keymap("n", "<Leader>cvc", ":ChatVimComplete<CR>", opts)
+vim.api.nvim_set_keymap("n", "<Leader>cvs", ":ChatVimStop<CR>", opts)
