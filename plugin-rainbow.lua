@@ -36,4 +36,18 @@ vim.g.rainbow_delimiters = {
     "RainbowDelimiterLightBlue",
     "RainbowDelimiterLightGray",
   },
+  whitelist = {
+    "vim",
+    "lua",
+    "javascript",
+    "typescript",
+    "html",
+    "css",
+    "json",
+    "markdown",
+    "python",
+    "rust",
+    "c",
+    "cpp",
+  },
 }
