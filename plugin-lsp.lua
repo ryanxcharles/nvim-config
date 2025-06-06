@@ -159,6 +159,7 @@ local function find_venv_python()
       -- On Unix-like systems, the interpreter is typically in .venv/bin/python
       local python_path = venv_path .. "/bin/python"
       if vim.fn.executable(python_path) == 1 then
+        print("Using Python path: " .. python_path)
         return python_path
       end
     end
@@ -172,26 +173,17 @@ local function find_venv_python()
   end
 
   -- Fallback to system Python if no virtual environment is found
+  print("Falling back to system Python")
   return vim.fn.exepath("python3")
 end
 
--- Python: PyRight LSP Setup
 lspconfig.pyright.setup({
   settings = {
     pyright = {
-      -- Enable type checking
       typeCheckingMode = "basic", -- Options: "off", "basic", "strict"
     },
     python = {
       pythonPath = find_venv_python(), -- Dynamically set the Python path
     },
-    on_init = function(client)
-      -- Optionally, update pythonPath dynamically when initializing the LSP client
-      client.config.settings.python.pythonPath = find_venv_python()
-      client.notify(
-        "workspace/didChangeConfiguration",
-        { settings = client.config.settings }
-      )
-    end,
   },
 })
