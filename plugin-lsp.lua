@@ -141,20 +141,47 @@ lspconfig.tailwindcss.setup({
 -- cargo install --git https://github.com/wgsl-analyzer/wgsl-analyzer.git wgsl_analyzer
 lspconfig.wgsl_analyzer.setup({})
 
--- Python: Ruff LSP setup
-lspconfig.ruff.setup({
-  cmd = { "ruff", "server" }, -- Path to Ruff in ml_env
-  on_attach = function(client, bufnr)
-    -- Disable Ruff's formatting to avoid conflicts with Black/isort (handled by Fmt)
-    -- client.server_capabilities.documentFormattingProvider = false
-    -- Ensure Fmt command (via conform.nvim) works
-    -- vim.api.nvim_buf_set_option(bufnr, "formatexpr", "v:lua.vim.lsp.formatexpr()")
-    -- Optional: Keymap for diagnostics
-    -- vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float, { buffer = bufnr, desc = "Show diagnostics" })
-  end,
+-- Function to find the virtual environment Python interpreter
+local function find_venv_python()
+  local cwd = vim.fn.getcwd()
+  local venv_path = cwd .. "/.venv"
+
+  -- Check if .venv exists in the project root
+  if vim.fn.isdirectory(venv_path) == 1 then
+    -- On Unix-like systems, the interpreter is typically in .venv/bin/python
+    local python_path = venv_path .. "/bin/python"
+    if vim.fn.executable(python_path) == 1 then
+      return python_path
+    end
+
+    -- On Windows, it might be in .venv/Scripts/python.exe
+    python_path = venv_path .. "/Scripts/python.exe"
+    if vim.fn.executable(python_path) == 1 then
+      return python_path
+    end
+  end
+
+  -- Fallback to system Python if no virtual environment is found
+  return vim.fn.exepath("python3")
+end
+
+-- Python: PyRight LSP Setup
+lspconfig.pyright.setup({
   settings = {
-    args = { "--line-length=88" }, -- Match Black's line length
+    pyright = {
+      -- Enable type checking
+      typeCheckingMode = "basic", -- Options: "off", "basic", "strict"
+    },
+    python = {
+      pythonPath = find_venv_python(), -- Dynamically set the Python path
+    },
+    on_init = function(client)
+      -- Optionally, update pythonPath dynamically when initializing the LSP client
+      client.config.settings.python.pythonPath = find_venv_python()
+      client.notify(
+        "workspace/didChangeConfiguration",
+        { settings = client.config.settings }
+      )
+    end,
   },
-  filetypes = { "python" },
-  root_dir = lspconfig.util.root_pattern("pyproject.toml", "setup.py", ".git"),
 })
