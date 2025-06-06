@@ -291,12 +291,12 @@ return {
   },
 
   -- Rainbow delimiters <{[(
-  {
-    "HiPhish/rainbow-delimiters.nvim",
-    config = function()
-      require("plugin-rainbow")
-    end,
-  },
+  -- {
+  --   "HiPhish/rainbow-delimiters.nvim",
+  --   config = function()
+  --     require("plugin-rainbow")
+  --   end,
+  -- },
 
   -- Lualine for status line
   {
