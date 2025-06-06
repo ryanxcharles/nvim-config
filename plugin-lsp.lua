@@ -141,28 +141,44 @@ lspconfig.tailwindcss.setup({
 -- cargo install --git https://github.com/wgsl-analyzer/wgsl-analyzer.git wgsl_analyzer
 lspconfig.wgsl_analyzer.setup({})
 
--- Function to find the virtual environment Python interpreter
+-- Function to find the virtual environment Python interpreter by searching upwards
 local function find_venv_python()
-  local cwd = vim.fn.getcwd()
-  local venv_path = cwd .. "/.venv"
+  -- Start from the directory of the current file
+  local current_dir = vim.fn.expand('%:p:h')
+  if current_dir == '' then
+    -- If no file is open, fall back to the current working directory
+    current_dir = vim.fn.getcwd()
+  end
 
-  -- Check if .venv exists in the project root
-  if vim.fn.isdirectory(venv_path) == 1 then
-    -- On Unix-like systems, the interpreter is typically in .venv/bin/python
-    local python_path = venv_path .. "/bin/python"
-    if vim.fn.executable(python_path) == 1 then
-      return python_path
+  -- Traverse up the directory tree
+  while current_dir ~= '/' and current_dir ~= '' do
+    local venv_path = current_dir .. '/.venv'
+
+    -- Check if .venv exists in the current directory
+    if vim.fn.isdirectory(venv_path) == 1 then
+      -- On Unix-like systems, the interpreter is typically in .venv/bin/python
+      local python_path = venv_path .. '/bin/python'
+      if vim.fn.executable(python_path) == 1 then
+        return python_path
+      end
+
+      -- On Windows, it might be in .venv/Scripts/python.exe
+      python_path = venv_path .. '/Scripts/python.exe'
+      if vim.fn.executable(python_path) == 1 then
+        return python_path
+      end
     end
 
-    -- On Windows, it might be in .venv/Scripts/python.exe
-    python_path = venv_path .. "/Scripts/python.exe"
-    if vim.fn.executable(python_path) == 1 then
-      return python_path
+    -- Move up one directory level
+    current_dir = vim.fn.fnamemodify(current_dir, ':h')
+    -- Break if we've reached the root (on Windows, fnamemodify might return the same path)
+    if current_dir == vim.fn.fnamemodify(current_dir, ':h') then
+      break
     end
   end
 
   -- Fallback to system Python if no virtual environment is found
-  return vim.fn.exepath("python3")
+  return vim.fn.exepath('python3')
 end
 
 -- Python: PyRight LSP Setup
