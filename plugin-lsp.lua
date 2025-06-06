@@ -144,35 +144,35 @@ lspconfig.wgsl_analyzer.setup({})
 -- Function to find the virtual environment Python interpreter by searching upwards
 local function find_venv_python()
   -- Start from the directory of the current file
-  local current_dir = vim.fn.expand('%:p:h')
-  if current_dir == '' then
+  local current_dir = vim.fn.expand("%:p:h")
+  if current_dir == "" then
     -- If no file is open, fall back to the current working directory
     current_dir = vim.fn.getcwd()
   end
 
   -- Traverse up the directory tree
-  while current_dir ~= '/' and current_dir ~= '' do
-    local venv_path = current_dir .. '/.venv'
+  while current_dir ~= "/" and current_dir ~= "" do
+    local venv_path = current_dir .. "/.venv"
 
     -- Check if .venv exists in the current directory
     if vim.fn.isdirectory(venv_path) == 1 then
       -- On Unix-like systems, the interpreter is typically in .venv/bin/python
-      local python_path = venv_path .. '/bin/python'
+      local python_path = venv_path .. "/bin/python"
       if vim.fn.executable(python_path) == 1 then
         return python_path
       end
     end
 
     -- Move up one directory level
-    current_dir = vim.fn.fnamemodify(current_dir, ':h')
+    current_dir = vim.fn.fnamemodify(current_dir, ":h")
     -- Break if we've reached the root (on Windows, fnamemodify might return the same path)
-    if current_dir == vim.fn.fnamemodify(current_dir, ':h') then
+    if current_dir == vim.fn.fnamemodify(current_dir, ":h") then
       break
     end
   end
 
   -- Fallback to system Python if no virtual environment is found
-  return vim.fn.exepath('python3')
+  return vim.fn.exepath("python3")
 end
 
 -- Python: PyRight LSP Setup
