@@ -161,12 +161,6 @@ local function find_venv_python()
       if vim.fn.executable(python_path) == 1 then
         return python_path
       end
-
-      -- On Windows, it might be in .venv/Scripts/python.exe
-      python_path = venv_path .. '/Scripts/python.exe'
-      if vim.fn.executable(python_path) == 1 then
-        return python_path
-      end
     end
 
     -- Move up one directory level
