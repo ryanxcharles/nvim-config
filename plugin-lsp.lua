@@ -141,10 +141,13 @@ lspconfig.tailwindcss.setup({
 -- cargo install --git https://github.com/wgsl-analyzer/wgsl-analyzer.git wgsl_analyzer
 lspconfig.wgsl_analyzer.setup({})
 
-lspconfig.pyright.setup({
+require('lspconfig').pyright.setup({
   settings = {
+    python = {
+      pythonPath = vim.fn.getcwd() .. '/.venv/bin/python',  -- Use cwd as artintellica
+    },
     pyright = {
-      typeCheckingMode = "basic", -- Options: "off", "basic", "strict"
+      typeCheckingMode = "basic",
     },
   },
 })
