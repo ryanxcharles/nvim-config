@@ -336,9 +336,9 @@ vim.api.nvim_set_keymap(
 )
 
 -- zT: scroll so current line is 10 lines from top
-vim.keymap.set('n', 'zT', 'zt10<C-y>', { noremap = true, silent = true })
+vim.keymap.set('n', 'zr', 'zt10<C-y>', { noremap = true, silent = true })
 -- zB: scroll so current line is 10 lines from bottom
-vim.keymap.set('n', 'zB', 'zb10<C-e>', { noremap = true, silent = true })
+vim.keymap.set('n', 'zv', 'zb10<C-e>', { noremap = true, silent = true })
 
 -- ChatVim (chatvim.nvim) keybindings
 vim.api.nvim_set_keymap("n", "<Leader>cvc", ":ChatVimComplete<CR>", opts)
