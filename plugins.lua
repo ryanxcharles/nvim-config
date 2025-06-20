@@ -51,7 +51,7 @@ return {
         },
         sources = cmp.config.sources({
           { name = "nvim_lsp" }, -- LSP completions
-          { name = "buffer" }, -- Buffer completions
+          -- { name = "buffer" }, -- Buffer completions
           { name = "path" }, -- Path completions
           { name = "luasnip" }, -- Snippet completions
         }),
@@ -148,22 +148,23 @@ return {
       require("nvim-treesitter.configs").setup({
         -- Install parsers for various languages
         ensure_installed = {
+          "css",
+          "html",
           "javascript",
-          "typescript",
-          "tsx",
+          "jsdoc",
           "json",
           "jsonc",
-          "jsdoc",
-          "html",
-          "css",
-          "rust",
+          "lua",
           "markdown",
           "markdown_inline",
-          "toml",
-          "wgsl",
           "nu",
           "python",
-          "lua",
+          "rust",
+          "toml",
+          "tsx",
+          "typescript",
+          "wgsl",
+          "yaml",
         }, -- Add more languages as needed
 
         -- Enable Treesitter-based syntax highlighting
