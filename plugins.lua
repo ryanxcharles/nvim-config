@@ -429,7 +429,9 @@ return {
 
   -- watch for changes in files and reload them
   {
-    "djoshea/vim-autoread",
+    -- "djoshea/vim-autoread",
+    -- dir = "~/dev/vim-autoread",
+    "ryanxcharles/vim-autoclose"
   },
 
   -- ChatVim: public install
