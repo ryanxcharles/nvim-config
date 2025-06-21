@@ -178,13 +178,29 @@ vim.api.nvim_create_user_command("Fmt", format_buffer, {})
 
 -- Function to replace LaTeX math delimiters with Markdown math delimiters
 local function replace_math()
-  vim.cmd [[
+  vim.cmd([[
     silent! %s/\\\[\s*/$$/ge
     silent! %s/\s*\\\]/$$/ge
     silent! %s/\\(\s*/$/ge
     silent! %s/\s*\\)/$/ge
-  ]]
+  ]])
 end
 
 -- Create a user command to trigger the replacements
-vim.api.nvim_create_user_command("ReplaceMath", replace_math, { desc = "Replace LaTeX math delimiters with Markdown delimiters" })
+vim.api.nvim_create_user_command(
+  "ReplaceMath",
+  replace_math,
+  { desc = "Replace LaTeX math delimiters with Markdown delimiters" }
+)
+
+-- Autocmd to check if the file exists before writing
+vim.api.nvim_create_autocmd({ "BufWritePre", "FileChangedShellPost" }, {
+  callback = function()
+    if not vim.fn.filereadable(vim.api.nvim_buf_get_name(0)) then
+      vim.notify(
+        "Warning: File no longer exists on disk! It may have been renamed or deleted.",
+        vim.log.levels.WARN
+      )
+    end
+  end,
+})
