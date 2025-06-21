@@ -143,16 +143,41 @@ vim.api.nvim_create_user_command("LspRenameFile", function(opts)
     -- Rename the file in the file system
     vim.fn.rename(old_file_name, new_file_name)
 
-    -- Run the LSP rename command to update imports
-    vim.lsp.buf.execute_command({
-      command = "_typescript.applyRenameFile",
-      arguments = {
-        {
-          sourceUri = vim.uri_from_fname(old_file_name),
-          targetUri = vim.uri_from_fname(new_file_name),
+    local clients = vim.lsp.get_active_clients({ bufnr = 0 })
+    local target_client = nil
+    for _, client in ipairs(clients) do
+      if client.name == "ts_ls" then -- Adjust this if the name is different
+        target_client = client
+        break
+      end
+      -- TODO: Also support other LSPs that can handle file renames
+    end
+
+    if target_client then
+      target_client.request("workspace/executeCommand", {
+        command = "_typescript.applyRenameFile",
+        arguments = {
+          {
+            sourceUri = vim.uri_from_fname(old_file_name),
+            targetUri = vim.uri_from_fname(new_file_name),
+          },
         },
-      },
-    })
+      }, function(err, result, ctx, config)
+        if err then
+          vim.notify(
+            "Error executing command: " .. vim.inspect(err),
+            vim.log.levels.ERROR
+          )
+        else
+          vim.notify(
+            "Command executed successfully: " .. vim.inspect(result),
+            vim.log.levels.INFO
+          )
+        end
+      end)
+    else
+      vim.notify("No ts_ls found among active clients", vim.log.levels.WARN)
+    end
 
     -- Open the new file in the buffer
     vim.cmd("edit " .. new_file_name)
