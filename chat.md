@@ -237,3 +237,195 @@ i have a problem with my nvim config. with large markdown files, there is a prob
     end,
   },
 ```
+
+# === ASSISTANT ===
+
+You're absolutely correct that the type of completion you're referring to is called "buffer" completions. In your `nvim-cmp` configuration, the `buffer` source is responsible for providing completions based on the text in the current file (or other open buffers, depending on the setup). This can indeed cause performance issues with large files like Markdown documents, as it scans the buffer content for suggestions.
+
+To disable buffer completions entirely, you can simply remove the `buffer` source from your `nvim-cmp` configuration. I'll guide you through how to do this and address any potential concerns.
+
+---
+
+### Why Buffer Completions Cause Slowness
+The `buffer` source in `nvim-cmp` indexes words from the current buffer (and sometimes other buffers) to provide completions. For large Markdown files, this means scanning thousands of lines of text, which can lead to noticeable lag during typing or completion triggering.
+
+---
+
+### How to Disable Buffer Completions
+In your provided configuration, the `buffer` source is explicitly included in the `sources` table:
+
+```lua
+sources = cmp.config.sources({
+  { name = "nvim_lsp" }, -- LSP completions
+  { name = "buffer" },   -- Buffer completions
+  { name = "path" },     -- Path completions
+  { name = "luasnip" },  -- Snippet completions
+}),
+```
+
+To disable buffer completions, simply remove the `{ name = "buffer" }` entry. Here's the updated section of your config:
+
+```lua
+sources = cmp.config.sources({
+  { name = "nvim_lsp" }, -- LSP completions
+  { name = "path" },     -- Path completions
+  { name = "luasnip" },  -- Snippet completions
+}),
+```
+
+This will prevent `nvim-cmp` from suggesting completions based on the content of any buffers.
+
+---
+
+### Alternative: Disable Buffer Completions for Specific Filetypes
+If you want to keep buffer completions for some filetypes (e.g., small code files) but disable them for Markdown or large files, you can use `nvim-cmp`'s filetype-specific configuration. For example:
+
+```lua
+cmp.setup.filetype("markdown", {
+  sources = cmp.config.sources({
+    { name = "nvim_lsp" },
+    { name = "path" },
+    { name = "luasnip" },
+  }),
+})
+```
+
+This snippet overrides the sources for Markdown files, excluding the `buffer` source, while keeping it enabled for other filetypes. Add this right after your main `cmp.setup()` call.
+
+You can also apply this to multiple filetypes by passing a table of filetypes:
+
+```lua
+cmp.setup.filetype({ "markdown", "text" }, {
+  sources = cmp.config.sources({
+    { name = "nvim_lsp" },
+    { name = "path" },
+    { name = "luasnip" },
+  }),
+})
+```
+
+---
+
+### Verifying the Change
+After updating your configuration:
+1. Restart Neovim to apply the changes.
+2. Open a large Markdown file.
+3. Type something and trigger completion (e.g., with `<C-Space>`).
+4. Check if completions from the buffer content no longer appear. You should only see suggestions from `nvim_lsp`, `path`, and `luasnip`.
+
+Additionally, since you've removed the `buffer` source, the `[Buffer]` label in the completion menu (from your `formatting.format` function) won't appear anymore. If you want to keep the formatting clean, you can also remove the `buffer = "[Buffer]"` line from the `menu` table in your `formatting` section, like so:
+
+```lua
+formatting = {
+  fields = { "abbr", "kind", "menu" },
+  expandable_indicator = true,
+  format = function(entry, item)
+    item = tailwind_colorizer(entry, item)
+    item.menu = ({
+      nvim_lsp = "[LSP]",
+      path = "[Path]",
+      luasnip = "[Snippet]",
+    })[entry.source.name]
+    return item
+  end,
+},
+```
+
+---
+
+### Additional Performance Tips
+If you still experience slowness with large Markdown files, consider the following:
+1. **Disable LSP for Markdown if unnecessary**: If you don't need LSP features (e.g., diagnostics or completions) for Markdown, you can disable the LSP source for Markdown filetypes similarly to the above method.
+   ```lua
+   cmp.setup.filetype("markdown", {
+     sources = cmp.config.sources({
+       { name = "path" },
+       { name = "luasnip" },
+     }),
+   })
+   ```
+2. **Adjust `nvim-cmp` performance settings**: You can tweak settings like `performance.debounce` or `performance.throttle` in `cmp.setup()` to reduce the frequency of completion updates.
+   ```lua
+   performance = {
+     debounce = 60, -- Delay before updating completions (ms)
+     throttle = 30, -- Delay between updates during typing (ms)
+   },
+   ```
+3. **Use `vim.b.omnifunc` for minimal completion**: If you don't need `nvim-cmp` at all for Markdown, you can disable it entirely for specific filetypes by setting up an autocommand to turn off `nvim-cmp` or revert to Vim's default completion.
+   ```lua
+   vim.api.nvim_create_autocmd("FileType", {
+     pattern = "markdown",
+     callback = function()
+       require("cmp").setup.buffer({ enabled = false })
+     end,
+   })
+   ```
+
+---
+
+### Final Updated Config (Minimal Change)
+Here’s your config with the `buffer` source removed globally:
+
+```lua
+{
+  "hrsh7th/nvim-cmp",
+  -- dependencies = {
+  --   "roobert/tailwindcss-colorizer-cmp.nvim",
+  -- },
+  config = function()
+    local cmp = require("cmp")
+    local tailwind_colorizer = require("tailwindcss-colorizer-cmp").formatter
+
+    cmp.setup({
+      snippet = {
+        expand = function(args)
+          require("luasnip").lsp_expand(args.body) -- For Luasnip users.
+        end,
+      },
+      mapping = {
+        ["<C-Space>"] = cmp.mapping.complete(), -- Manually trigger completion
+        ["<CR>"] = cmp.mapping.confirm({ select = false }), -- Confirm the first suggestion
+        ["<Down>"] = cmp.mapping.select_next_item(), -- Navigate to next item
+        ["<Up>"] = cmp.mapping.select_prev_item(), -- Navigate to previous item
+        ["<C-e>"] = cmp.mapping.abort(), -- Close the completion window
+      },
+      sources = cmp.config.sources({
+        { name = "nvim_lsp" }, -- LSP completions
+        { name = "path" },     -- Path completions
+        { name = "luasnip" },  -- Snippet completions
+      }),
+      formatting = {
+        fields = { "abbr", "kind", "menu" },
+        expandable_indicator = true,
+        format = function(entry, item)
+          item = tailwind_colorizer(entry, item)
+          item.menu = ({
+            nvim_lsp = "[LSP]",
+            path = "[Path]",
+            luasnip = "[Snippet]",
+          })[entry.source.name]
+          return item
+        end,
+      },
+    })
+
+    -- Set up cmdline completion
+    cmp.setup.cmdline(":", {
+      mapping = cmp.mapping.preset.cmdline(),
+      sources = {
+        { name = "path" },
+        { name = "cmdline" },
+      },
+    })
+  end,
+},
+```
+
+---
+
+### Conclusion
+By removing the `buffer` source or disabling it for specific filetypes like Markdown, you should see a significant performance improvement in large files. If you have any other issues or want to fine-tune this further (e.g., conditional sources based on file size), let me know!
+
+# === USER ===
+
+
