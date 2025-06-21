@@ -143,7 +143,7 @@ vim.api.nvim_create_user_command("LspRenameFile", function(opts)
     -- Rename the file in the file system
     vim.fn.rename(old_file_name, new_file_name)
 
-    local clients = vim.lsp.get_active_clients({ bufnr = 0 })
+    local clients = vim.lsp.get_clients({ bufnr = 0 })
     local target_client = nil
     for _, client in ipairs(clients) do
       if client.name == "ts_ls" then -- Adjust this if the name is different
@@ -170,7 +170,7 @@ vim.api.nvim_create_user_command("LspRenameFile", function(opts)
           )
         else
           vim.notify(
-            "Command executed successfully: " .. vim.inspect(result),
+            "File renamed. Remember to :wa !",
             vim.log.levels.INFO
           )
         end
