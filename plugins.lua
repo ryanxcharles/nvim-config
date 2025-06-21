@@ -427,6 +427,11 @@ return {
     end,
   },
 
+  -- watch for changes in files and reload them
+  {
+    "djoshea/vim-autoread",
+  },
+
   -- ChatVim: public install
   -- {
   --   "chatvim/chatvim.nvim",
