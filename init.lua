@@ -241,9 +241,9 @@ require("lazy").setup({
 
   {
     "hrsh7th/nvim-cmp",
-    -- dependencies = {
-    --   "roobert/tailwindcss-colorizer-cmp.nvim",
-    -- },
+    dependencies = {
+      "roobert/tailwindcss-colorizer-cmp.nvim",
+    },
     config = function()
       local cmp = require("cmp")
       local tailwind_colorizer = require("tailwindcss-colorizer-cmp").formatter
