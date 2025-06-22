@@ -302,38 +302,57 @@ require("lazy").setup({
   { "L3MON4D3/LuaSnip" }, -- Snippet engine
 
   -- GitHub Copilot (vimscript)
-  -- {
-  --   "github/copilot.vim"
-  -- },
-
-  -- Unofficial Copilot Lua plugin for Neovim
   {
-    "zbirenbaum/copilot.lua",
+    "github/copilot.vim",
     config = function()
-      require("copilot").setup({
-        filetypes = {
-          sh = function()
-            if
-              string.match(
-                vim.fs.basename(vim.api.nvim_buf_get_name(0)),
-                "%.env$"
-              )
-            then
-              -- disable for .env files
-              return false
-            end
-            return true
-          end,
-          -- enable copilot for all other filetypes
-        },
+      -- Vim sets .env files to filetype "sh" by default, but we don't want to
+      -- disable copilot for .sh files, just .env. so we rename .env files to
+      -- have filetype "env". Then we disable copilot for that filetype.
+      vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
+        pattern = "*.env",
+        callback = function()
+          vim.bo.filetype = "env"
+        end,
       })
+      vim.g.copilot_filetypes = {
+        ["*"] = true, -- Enable for all filetypes
+        env = false, -- Disable for .env files
+      }
     end,
   },
+
+  -- -- Unofficial Copilot Lua plugin for Neovim
+  -- {
+  --   "zbirenbaum/copilot.lua",
+  --   config = function()
+  --     require("copilot").setup({
+  --       -- filetypes = {
+  --       --   ["*"] = true,
+  --       --   lua = true,
+  --       --   -- testing autocom
+  --       --   sh = function()
+  --       --     if
+  --       --       string.match(
+  --       --         vim.fs.basename(vim.api.nvim_buf_get_name(0)),
+  --       --         "%.env$"
+  --       --       )
+  --       --     then
+  --       --       -- disable for .env files
+  --       --       return false
+  --       --     end
+  --       --     return true
+  --       --   end,
+  --       --   -- enable copilot for all other filetypes
+  --       -- },
+  --     })
+  --   end,
+  -- },
 
   -- Copilot completion source for nvim-cmp
   {
     "zbirenbaum/copilot-cmp", -- Copilot completion source for cmp
     dependencies = { "github/copilot.vim" }, -- Ensure it loads after copilot.vim
+    -- dependencies = { "zbirenbaum/copilot.lua" }, -- Ensure it loads after copilot.lua
     config = function()
       require("copilot_cmp").setup()
     end,
@@ -344,11 +363,13 @@ require("lazy").setup({
     "CopilotC-Nvim/CopilotChat.nvim",
     dependencies = {
       { "github/copilot.vim" }, -- or zbirenbaum/copilot.lua
+      -- { "zbirenbaum/copilot.lua" },
       { "nvim-lua/plenary.nvim", branch = "master" }, -- for curl, log and async functions
     },
     build = "make tiktoken", -- Only on MacOS or Linux
     opts = {
       -- See Configuration section for options
+      -- Testing autocomp
     },
     -- See Commands section for default commands if you want to lazy load on them
   },
