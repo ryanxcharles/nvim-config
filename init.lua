@@ -1075,14 +1075,6 @@ require("lazy").setup({
     end,
   },
 
-  -- Codewindow setup (minimap)
-  {
-    "gorbit99/codewindow.nvim",
-    config = function()
-      require("plugin-codewindow")
-    end,
-  },
-
   -- Dressing - better input boxes
   {
     "stevearc/dressing.nvim",
