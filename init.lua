@@ -301,11 +301,32 @@ require("lazy").setup({
   { "saadparwaiz1/cmp_luasnip" }, -- Snippet completion
   { "L3MON4D3/LuaSnip" }, -- Snippet engine
 
-  -- GitHub Copilot
+  -- GitHub Copilot (vimscript)
+  -- {
+  --   "github/copilot.vim"
+  -- },
+
+  -- Unofficial Copilot Lua plugin for Neovim
   {
-    "github/copilot.vim", -- GitHub Copilot
+    "zbirenbaum/copilot.lua",
     config = function()
-      -- require("plugin-copilot")
+      require("copilot").setup({
+        filetypes = {
+          sh = function()
+            if
+              string.match(
+                vim.fs.basename(vim.api.nvim_buf_get_name(0)),
+                "%.env$"
+              )
+            then
+              -- disable for .env files
+              return false
+            end
+            return true
+          end,
+          -- enable copilot for all other filetypes
+        },
+      })
     end,
   },
 
