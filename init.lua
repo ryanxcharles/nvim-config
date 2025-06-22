@@ -321,42 +321,15 @@ require("lazy").setup({
     end,
   },
 
-  -- -- Unofficial Copilot Lua plugin for Neovim
+  -- -- Copilot completion source for nvim-cmp
   -- {
-  --   "zbirenbaum/copilot.lua",
+  --   "zbirenbaum/copilot-cmp", -- Copilot completion source for cmp
+  --   dependencies = { "github/copilot.vim" }, -- Ensure it loads after copilot.vim
+  --   -- dependencies = { "zbirenbaum/copilot.lua" }, -- Ensure it loads after copilot.lua
   --   config = function()
-  --     require("copilot").setup({
-  --       -- filetypes = {
-  --       --   ["*"] = true,
-  --       --   lua = true,
-  --       --   -- testing autocom
-  --       --   sh = function()
-  --       --     if
-  --       --       string.match(
-  --       --         vim.fs.basename(vim.api.nvim_buf_get_name(0)),
-  --       --         "%.env$"
-  --       --       )
-  --       --     then
-  --       --       -- disable for .env files
-  --       --       return false
-  --       --     end
-  --       --     return true
-  --       --   end,
-  --       --   -- enable copilot for all other filetypes
-  --       -- },
-  --     })
+  --     require("copilot_cmp").setup()
   --   end,
   -- },
-
-  -- Copilot completion source for nvim-cmp
-  {
-    "zbirenbaum/copilot-cmp", -- Copilot completion source for cmp
-    dependencies = { "github/copilot.vim" }, -- Ensure it loads after copilot.vim
-    -- dependencies = { "zbirenbaum/copilot.lua" }, -- Ensure it loads after copilot.lua
-    config = function()
-      require("copilot_cmp").setup()
-    end,
-  },
 
   -- Copilot Chat
   {
