@@ -345,14 +345,14 @@ require("lazy").setup({
     end,
   },
 
-  -- Treesitter for syntax highlighting
-  {
-    "nvim-treesitter/nvim-treesitter",
-    -- dependencies = {
-    --   "LhKipp/nvim-nu",
-    -- },
-    run = ":TSUpdate",
-  },
+  -- -- Treesitter for syntax highlighting
+  -- {
+  --   "nvim-treesitter/nvim-treesitter",
+  --   -- dependencies = {
+  --   --   "LhKipp/nvim-nu",
+  --   -- },
+  --   run = ":TSUpdate",
+  -- },
 
   -- Treesitter for syntax highlighting and text-objects for selecting markdown code blocks
   {
@@ -381,7 +381,8 @@ require("lazy").setup({
           "typescript",
           "wgsl",
           "yaml",
-          "zsh",
+          -- "zsh",
+          "bash",
         }, -- Add more languages as needed
 
         -- Enable Treesitter-based syntax highlighting
@@ -489,6 +490,15 @@ require("lazy").setup({
       ) @codeblock.outer
     ]]
       )
+
+      -- Enable Treesitter folding globally
+      vim.opt.foldmethod = "expr"
+      vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
+      vim.opt.foldenable = true
+      vim.opt.foldlevelstart = 99 -- Start with all folds open
+
+      -- Alias zsh to bash for Markdown code blocks
+      vim.treesitter.language.register("bash", "zsh")
     end,
   },
 
