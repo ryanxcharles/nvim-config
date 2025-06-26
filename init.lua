@@ -321,16 +321,6 @@ require("lazy").setup({
     end,
   },
 
-  -- -- Copilot completion source for nvim-cmp
-  -- {
-  --   "zbirenbaum/copilot-cmp", -- Copilot completion source for cmp
-  --   dependencies = { "github/copilot.vim" }, -- Ensure it loads after copilot.vim
-  --   -- dependencies = { "zbirenbaum/copilot.lua" }, -- Ensure it loads after copilot.lua
-  --   config = function()
-  --     require("copilot_cmp").setup()
-  --   end,
-  -- },
-
   -- Copilot Chat
   {
     "CopilotC-Nvim/CopilotChat.nvim",
@@ -1324,7 +1314,7 @@ vim.api.nvim_create_autocmd("FileType", {
   callback = function()
     vim.opt_local.indentexpr = ""
     vim.opt_local.formatoptions:remove("o") -- Prevent auto-indenting for lists
-    vim.opt_local.foldenable = false -- Disable folding by default
+    -- vim.opt_local.foldenable = false -- Disable folding by default
   end,
 })
 
@@ -1471,6 +1461,19 @@ vim.api.nvim_create_user_command(
   replace_math,
   { desc = "Replace LaTeX math delimiters with Markdown delimiters" }
 )
+
+-- Create a user command to copy the filename of the current buffer to the system clipboard
+vim.api.nvim_create_user_command("CopyFilename", function()
+  -- vimscript:
+  -- let @+ = expand('%:t')
+
+  -- Get the filename (tail of the path) of the current buffer
+  local filename = vim.fn.expand("%:t")
+  -- Set the system clipboard register (+) with the filename
+  vim.fn.setreg("+", filename)
+  -- Optional: Notify the user that the filename has been copied
+  vim.notify("Copied filename: " .. filename, vim.log.levels.INFO)
+end, { nargs = 0 })
 
 -- ## Keybindings
 -- Set space as the leader key. Space is the biggest key and the easiest to
