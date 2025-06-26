@@ -337,13 +337,13 @@ require("lazy").setup({
     -- See Commands section for default commands if you want to lazy load on them
   },
 
-  -- nushell
-  {
-    "LhKipp/nvim-nu",
-    config = function()
-      require("nu").setup()
-    end,
-  },
+  -- -- nushell
+  -- {
+  --   "LhKipp/nvim-nu",
+  --   config = function()
+  --     require("nu").setup()
+  --   end,
+  -- },
 
   -- -- Treesitter for syntax highlighting
   -- {
@@ -357,7 +357,10 @@ require("lazy").setup({
   -- Treesitter for syntax highlighting and text-objects for selecting markdown code blocks
   {
     "nvim-treesitter/nvim-treesitter-textobjects",
-    dependencies = { "nvim-treesitter/nvim-treesitter", "LhKipp/nvim-nu" },
+    dependencies = {
+      "nvim-treesitter/nvim-treesitter",
+      -- "LhKipp/nvim-nu"
+    },
     run = ":TSUpdate",
     config = function()
       ---@diagnostic disable-next-line: missing-fields
@@ -373,7 +376,7 @@ require("lazy").setup({
           "lua",
           "markdown",
           "markdown_inline",
-          "nu",
+          -- "nu",
           "python",
           "rust",
           "toml",
@@ -841,7 +844,7 @@ require("lazy").setup({
           "typescriptreact",
           "lua",
           "tsx",
-          "nu",
+          -- "nu",
         },
         user_default_options = {
           RGB = true, -- #RGB hex codes
