@@ -346,13 +346,13 @@ require("lazy").setup({
   },
 
   -- Treesitter for syntax highlighting
-  -- {
-  --   "nvim-treesitter/nvim-treesitter",
-  --   dependencies = {
-  --     "LhKipp/nvim-nu",
-  --   },
-  --   run = ":TSUpdate",
-  -- },
+  {
+    "nvim-treesitter/nvim-treesitter",
+    -- dependencies = {
+    --   "LhKipp/nvim-nu",
+    -- },
+    run = ":TSUpdate",
+  },
 
   -- Treesitter for syntax highlighting and text-objects for selecting markdown code blocks
   {
@@ -381,6 +381,7 @@ require("lazy").setup({
           "typescript",
           "wgsl",
           "yaml",
+          "zsh",
         }, -- Add more languages as needed
 
         -- Enable Treesitter-based syntax highlighting
