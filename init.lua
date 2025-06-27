@@ -14,7 +14,8 @@
 -- - rust/cargo (for Rust tools)
 -- - lua-language-server (for Lua completions and diagnostics)
 -- - wgsl-analyzer (for WebGPU Shading Language diagnostics)
--- - ruff (for Python diagnostics)
+-- - pyright (Python language server)
+-- - topiary (with special nushell plugin for nushell support) (formatting nushell)
 
 -- TODO:
 -- [ ] replace formatter with null-ls
@@ -72,6 +73,38 @@ require("lazy").setup({
       -- LSP configuration goes here
       -- Import the LSP config plugin
       local lspconfig = require("lspconfig")
+
+      vim.lsp.enable("nushell")
+      lspconfig.nushell.setup({
+        cmd = { "nu", "--lsp" },
+        filetypes = { "nu" },
+        -- root_dir = function(bufnr, on_dir)
+        --   on_dir(
+        --     vim.fs.root(bufnr, { ".git" })
+        --       or vim.fs.dirname(vim.api.nvim_buf_get_name(bufnr))
+        --   )
+        -- end,
+      })
+      -- lspconfig.nushell = {
+      --   default_config = {
+      --     cmd = { "nu", "--lsp" },
+      --     filetypes = { "nu" },
+      --     root_dir = function(fname)
+      --       return lspconfig.util.find_git_ancestor(fname) or vim.fn.getcwd()
+      --     end,
+      --     settings = {},
+      --   },
+      -- }
+      -- -- Setup Nushell LSP
+      -- lspconfig.nushell.setup {
+      --   on_attach = function(client, bufnr)
+      --     print("Nushell LSP attached to buffer " .. bufnr)
+      --     local opts = { buffer = bufnr, noremap = true, silent = true }
+      --     vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
+      --     vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
+      --     vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, opts)
+      --   end,
+      -- }
 
       -- lua: Set up the Lua Language Server first (because lua is used by nvim -
       -- seems logical)
@@ -551,6 +584,16 @@ require("lazy").setup({
 
       require("formatter").setup({
         filetype = {
+          nu = {
+            -- Use topiary for formatting nushell scripts
+            function()
+              return {
+                exe = "topiary",
+                args = { "format", "--language", "nu" }, -- Format via stdin
+                stdin = true,
+              }
+            end,
+          },
           markdown = {
             -- Prettier for formatting Markdown
             function()
@@ -1152,8 +1195,31 @@ require("lazy").setup({
           end,
           settings = {
             ["rust-analyzer"] = {
-              cargo = { allFeatures = true },
-              checkOnSave = { command = "clippy" }, -- Run clippy on save
+              cargo = {
+                allFeatures = true, -- Build with all features enabled
+                features = "all", -- Ensure all features are considered during analysis
+              },
+              check = {
+                command = "clippy", -- Use clippy for checking
+                features = "all", -- Enable all features for clippy
+                extraArgs = {
+                  "--all",
+                  "--",
+                  "-W",
+                  "clippy::all",
+                  "-W",
+                  "clippy::pedantic",
+                }, -- Enable more clippy lints
+              },
+              checkOnSave = true, -- Run checks on save
+              diagnostics = {
+                enable = true, -- Explicitly enable diagnostics
+                disabled = {}, -- Don't disable any diagnostics by default
+                enableExperimental = true, -- Enable experimental diagnostics (if available)
+              },
+              rustc = {
+                source = "discover", -- Automatically discover rustc source for better diagnostics
+              },
             },
           },
         },
