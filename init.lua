@@ -249,9 +249,42 @@ require("lazy").setup({
       lspconfig.wgsl_analyzer.setup({})
 
       lspconfig.pyright.setup({
+        root_dir = lspconfig.util.root_pattern(
+          "pyproject.toml",
+          "setup.py",
+          "requirements.txt"
+        ),
+        on_new_config = function(new_config, root_dir)
+          -- Dynamically set pythonPath based on the root_dir
+          local python_path = nil
+          if root_dir then
+            local venv_paths = {
+              root_dir .. "/.venv/bin/python",
+              root_dir .. "/venv/bin/python",
+            }
+            for _, path in ipairs(venv_paths) do
+              if vim.fn.executable(path) == 1 then
+                python_path = path
+                break
+              end
+            end
+          end
+          -- Fallback to system Python if no venv is found
+          if not python_path then
+            python_path = vim.fn.exepath("python3")
+              or vim.fn.exepath("python")
+              or "python"
+          end
+          -- Update the settings with the computed pythonPath
+          new_config.settings.python.pythonPath = python_path
+        end,
         settings = {
           python = {
-            pythonPath = vim.fn.getcwd() .. "/.venv/bin/python", -- Use cwd as artintellica
+            analysis = {
+              autoSearchPaths = true,
+              useLibraryCodeForTypes = true,
+              diagnosticMode = "openFilesOnly",
+            },
           },
           pyright = {
             typeCheckingMode = "basic",

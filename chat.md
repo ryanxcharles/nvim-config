@@ -837,3 +837,627 @@ mappings or plugins, share relevant parts of your config or the output of
 `:map | grep z`, and I’ll help narrow it down further!
 
 # === USER ===
+
+i want to reconsider the way i'm loading pyright, the python lsp, inside neovim.
+right now, it has to load python from a particular place so that it loads the
+corect environment. the problem is, it loads in the same directory as the
+editor. but what it should actually do is have a different instance for every
+python file. it should go up the directory tree until it finds a
+`pyproject.toml` or `setup.py` file, and then use that directory as the root for
+the LSP. is this possible?
+
+```lua
+      lspconfig.pyright.setup({
+        settings = {
+          python = {
+            pythonPath = vim.fn.getcwd() .. "/.venv/bin/python", -- Use cwd as artintellica
+          },
+          pyright = {
+            typeCheckingMode = "basic",
+          },
+        },
+      })
+```
+
+# === ASSISTANT ===
+
+Yes, it is absolutely possible to configure the Pyright LSP in Neovim to
+dynamically determine the root directory for each Python file by searching up
+the directory tree for a `pyproject.toml` or `setup.py` file (or other markers)
+and then use that directory as the root for the LSP. This approach ensures that
+Pyright operates in the correct project context, especially when working with
+virtual environments or multiple projects. Additionally, you can configure it to
+find the appropriate Python interpreter (e.g., in a `.venv` directory) relative
+to that root.
+
+Let’s modify your current setup to achieve this behavior using `nvim-lspconfig`
+for Pyright. I'll explain how to set a dynamic root directory and how to locate
+the correct Python environment for each file.
+
+### Current Issue
+
+In your current configuration:
+
+```lua
+lspconfig.pyright.setup({
+  settings = {
+    python = {
+      pythonPath = vim.fn.getcwd() .. "/.venv/bin/python", -- Use cwd as root
+    },
+    pyright = {
+      typeCheckingMode = "basic",
+    },
+  },
+})
+```
+
+- `vim.fn.getcwd()` uses the current working directory of Neovim (where you
+  launched the editor), not the directory of the file you're editing. This means
+  every Pyright instance uses the same root and virtual environment, regardless
+  of the file's location.
+- This approach doesn't adapt to different projects or files in different
+  directories, which can lead to incorrect diagnostics or missing dependencies
+  if the file belongs to a different project.
+
+### Solution: Dynamic Root Directory and Python Path
+
+To make Pyright use a different instance per project (based on the file's
+location), you can:
+
+1. **Set a Dynamic Root Directory**: Use the `root_dir` option in `lspconfig` to
+   search for project markers like `pyproject.toml` or `setup.py` by traversing
+   up the directory tree from the file's location.
+2. **Dynamically Set the Python Path**: Configure Pyright to locate the Python
+   interpreter (e.g., in `.venv/bin/python`) relative to the determined root
+   directory, or let Pyright auto-detect it based on the project root.
+
+Here’s how to implement this.
+
+### Updated Configuration
+
+```lua
+local lspconfig = require('lspconfig')
+
+lspconfig.pyright.setup({
+  -- Dynamically determine the root directory for each file
+  root_dir = lspconfig.util.root_pattern('pyproject.toml', 'setup.py', '.git', 'requirements.txt'),
+  settings = {
+    python = {
+      -- Optionally, specify a pythonPath if needed; otherwise, Pyright can auto-detect
+      -- pythonPath = function()
+      --   local root = lspconfig.util.find_git_ancestor(vim.fn.expand('%:p:h'))
+      --   if root then
+      --     return root .. '/.venv/bin/python'
+      --   end
+      --   return vim.fn.exepath('python3') or vim.fn.exepath('python') or 'python'
+      -- end,
+      analysis = {
+        autoSearchPaths = true, -- Automatically search for Python paths
+        useLibraryCodeForTypes = true, -- Use library code for type checking
+        diagnosticMode = 'openFilesOnly', -- Can be 'workspace' for broader analysis
+      },
+    },
+    pyright = {
+      typeCheckingMode = 'basic', -- Can be 'off', 'basic', or 'strict'
+    },
+  },
+})
+```
+
+### Explanation of Key Changes
+
+1. **`root_dir`**:
+   - `lspconfig.util.root_pattern('pyproject.toml', 'setup.py', '.git', 'requirements.txt')`
+     tells Neovim to search upward from the current file's directory for any of
+     the specified markers. The first directory containing one of these files or
+     directories will be used as the root for the LSP.
+   - This ensures that each file is associated with its project root, allowing
+     separate Pyright instances for different projects. For example:
+     - If a file is in `/project1/src/module.py` and `pyproject.toml` is in
+       `/project1/`, the root will be `/project1/`.
+     - If another file is in `/project2/app/main.py` with `setup.py` in
+       `/project2/`, the root will be `/project2/`.
+   - You can customize the list of markers to include other files or directories
+     (e.g., `venv`, `.venv`, `Pipfile`).
+
+2. **`python.pythonPath`** (Commented Out in Example):
+   - I’ve included a commented-out example of dynamically setting `pythonPath`
+     based on the root directory. If uncommented, it tries to find a
+     `.venv/bin/python` relative to the root.
+   - However, Pyright can often auto-detect the correct Python interpreter if
+     `autoSearchPaths` is enabled (see below). You might not need to explicitly
+     set `pythonPath` unless you have a very specific setup.
+   - If auto-detection fails, uncomment and adjust the `pythonPath` function to
+     match your virtual environment structure (e.g., `venv/bin/python` on
+     Windows might be `venv/Scripts/python.exe`).
+
+3. **`python.analysis.autoSearchPaths`**:
+   - Setting this to `true` allows Pyright to automatically search for Python
+     interpreters and site-packages in the project root or standard locations.
+     This often works well with virtual environments if they’re in a standard
+     location like `.venv`.
+
+4. **`python.analysis.diagnosticMode`**:
+   - Set to `'openFilesOnly'` by default to limit diagnostics to currently open
+     files (faster). You can change it to `'workspace'` to analyze the entire
+     project, though this might be slower for large projects.
+
+### Additional Considerations
+
+#### Virtual Environment Detection
+
+If Pyright's auto-detection doesn't work for your setup (e.g., non-standard
+`.venv` locations), you can use a more explicit `pythonPath` function. Here’s an
+enhanced version:
+
+```lua
+settings = {
+  python = {
+    pythonPath = function()
+      local root = lspconfig.util.find_git_ancestor(vim.fn.expand('%:p:h'))
+      if root then
+        local venv_path = root .. '/.venv/bin/python'
+        if vim.fn.executable(venv_path) == 1 then
+          return venv_path
+        end
+        venv_path = root .. '/venv/bin/python' -- Alternative venv name
+        if vim.fn.executable(venv_path) == 1 then
+          return venv_path
+        end
+      end
+      -- Fallback to system Python if no venv is found
+      return vim.fn.exepath('python3') or vim.fn.exepath('python') or 'python'
+    end,
+  },
+  -- Other settings as above
+}
+```
+
+This checks for common virtual environment paths relative to the root and falls
+back to a system-wide Python if none are found.
+
+#### Multiple Python Files in Different Projects
+
+With the `root_dir` setting, Neovim will spawn a separate Pyright instance for
+each unique root directory. This ensures that files in different projects use
+their respective environments and configurations.
+
+#### Debugging Root Directory Issues
+
+If Pyright isn’t picking the correct root directory:
+
+- Use `:LspInfo` to see the root directory and workspace used by Pyright for the
+  current file.
+- Adjust the `root_pattern` list to prioritize certain markers or add debug
+  logging to see which root is being selected.
+
+### Final Notes
+
+This setup should address your need to have a different Pyright instance for
+each Python file based on its project root. It dynamically finds the root by
+looking for `pyproject.toml`, `setup.py`, or other markers, and it can be
+configured to locate the appropriate virtual environment.
+
+If you encounter issues (e.g., Pyright not finding the correct interpreter or
+root), let me know, and I can help refine the configuration further. You might
+also want to check Pyright’s documentation for additional settings related to
+virtual environment detection or workspace configuration.
+
+Try the updated configuration above, and feel free to share any feedback or
+specific project structures you’re working with!
+
+# === USER ===
+
+this is progress, but still doesn't really solve it in my case. i have a project
+with many programming languages. the python code is in the `py` directory, which
+is not the root of the repo. because the repo also has `rs`, `ts`, and more. i
+don't want to put python dependencies all the way at the top, unless i
+absolutely need to. is there a way to look up the directory tree from the
+current file until it finds a `pyproject.toml` or `setup.py` file, and then use
+that directory as the root for the LSP?
+
+# === ASSISTANT ===
+
+Yes, it’s definitely possible to configure Pyright in Neovim to search up the
+directory tree from the current file’s location until it finds a
+`pyproject.toml` or `setup.py` file, and then use that specific directory as
+the root for the LSP, even if it’s a subdirectory within a larger multi-language
+repository. This approach will work for your case where Python code is in a `py`
+subdirectory and you want to keep Python-specific dependencies and
+configuration files (like `pyproject.toml`) within that subdirectory rather
+than at the top-level root of the repository.
+
+The `nvim-lspconfig` utility `root_pattern` already searches upward from the
+current file’s directory for specified markers, so we can use it to achieve
+exactly what you’re describing. Let’s refine the configuration to ensure it
+works for your nested `py` directory structure and avoids using the top-level
+repository root unless necessary.
+
+### Understanding the Problem
+
+In a multi-language project, your directory structure might look like this:
+
+```
+/my-project
+├── py/
+│   ├── pyproject.toml  # Python-specific config
+│   ├── .venv/          # Virtual environment for Python
+│   └── src/
+│       └── module.py   # Python code
+├── rs/                 # Rust code
+├── ts/                 # TypeScript code
+└── .git/               # Top-level repo root
+```
+
+- You want Pyright to use `/my-project/py/` as the root for Python files (e.g.,
+  `module.py`), not `/my-project/`, because the Python configuration and
+  dependencies are in `py/`.
+- The default `root_pattern` in `lspconfig` will search upward from the file’s
+  directory (`/my-project/py/src/` in this case) and stop at the first directory
+  containing a specified marker (e.g., `pyproject.toml` in `/my-project/py/`).
+
+### Solution: Fine-Tuned `root_pattern` for Python Subdirectory
+
+Since `lspconfig.util.root_pattern` already searches upward from the current
+file’s directory, we can use it with markers specific to Python projects to
+ensure the root is set to the directory containing `pyproject.toml` or
+`setup.py`, even if it’s a subdirectory. We’ll also avoid including top-level
+markers like `.git` in the pattern (unless you want a fallback), so it prioritizes
+Python-specific roots.
+
+Here’s the updated configuration:
+
+```lua
+local lspconfig = require('lspconfig')
+
+lspconfig.pyright.setup({
+  -- Search up from the current file's directory for Python-specific markers
+  root_dir = lspconfig.util.root_pattern('pyproject.toml', 'setup.py', 'requirements.txt'),
+  settings = {
+    python = {
+      analysis = {
+        autoSearchPaths = true, -- Automatically search for Python paths
+        useLibraryCodeForTypes = true, -- Use library code for type checking
+        diagnosticMode = 'openFilesOnly', -- Can be 'workspace' for broader analysis
+      },
+    },
+    pyright = {
+      typeCheckingMode = 'basic', -- Can be 'off', 'basic', or 'strict'
+    },
+  },
+})
+```
+
+### Explanation of Configuration
+
+1. **`root_dir = lspconfig.util.root_pattern('pyproject.toml', 'setup.py', 'requirements.txt')`**:
+   - This tells Neovim to start from the directory of the current file (e.g.,
+     `/my-project/py/src/` for `module.py`) and search upward through parent
+     directories until it finds one containing `pyproject.toml`, `setup.py`, or
+     `requirements.txt`.
+   - In your case, if `pyproject.toml` is in `/my-project/py/`, that directory
+     will be selected as the root for Pyright, not `/my-project/`.
+   - I’ve excluded `.git` from the pattern to avoid selecting the top-level
+     repository root unless no Python-specific markers are found. If you want a
+     fallback to the repo root, you can add `.git` back to the list.
+
+2. **`python.analysis.autoSearchPaths = true`**:
+   - This allows Pyright to automatically detect the Python interpreter and
+     site-packages relative to the determined root directory (e.g.,
+     `/my-project/py/.venv/bin/python` if it exists). This often works well for
+     standard virtual environment setups.
+
+### Handling Virtual Environment Paths
+
+If Pyright’s auto-detection of the Python interpreter doesn’t work (e.g., your
+virtual environment is in a non-standard location), you can explicitly set
+`pythonPath` dynamically based on the root directory. Here’s how to add that:
+
+```lua
+local lspconfig = require('lspconfig')
+
+lspconfig.pyright.setup({
+  root_dir = lspconfig.util.root_pattern('pyproject.toml', 'setup.py', 'requirements.txt'),
+  settings = {
+    python = {
+      pythonPath = function()
+        -- Get the root directory determined by root_pattern
+        local root = lspconfig.util.root_pattern('pyproject.toml', 'setup.py', 'requirements.txt')(vim.fn.expand('%:p:h'))
+        if root then
+          -- Check common virtual environment paths relative to the root
+          local venv_paths = {
+            root .. '/.venv/bin/python',
+            root .. '/venv/bin/python',
+            root .. '/.venv/Scripts/python.exe', -- For Windows
+            root .. '/venv/Scripts/python.exe',  -- For Windows
+          }
+          for _, path in ipairs(venv_paths) do
+            if vim.fn.executable(path) == 1 then
+              return path
+            end
+          end
+        end
+        -- Fallback to system Python if no venv is found
+        return vim.fn.exepath('python3') or vim.fn.exepath('python') or 'python'
+      end,
+      analysis = {
+        autoSearchPaths = true,
+        useLibraryCodeForTypes = true,
+        diagnosticMode = 'openFilesOnly',
+      },
+    },
+    pyright = {
+      typeCheckingMode = 'basic',
+    },
+  },
+})
+```
+
+#### Explanation of `pythonPath` Function
+
+- It dynamically retrieves the root directory using the same `root_pattern`
+  logic.
+- It checks for common virtual environment paths (e.g., `.venv/bin/python`)
+  relative to that root.
+- If no virtual environment is found, it falls back to a system-wide Python
+  interpreter.
+
+### Why This Solves Your Case
+
+- For a file like `/my-project/py/src/module.py`, `root_pattern` will search
+  upward and find `pyproject.toml` in `/my-project/py/`, setting that as the
+  root for Pyright.
+- This ensures Pyright uses the Python configuration and environment specific to
+  the `py` subdirectory, not the top-level `/my-project/` directory.
+- Other language LSPs (e.g., for Rust in `rs/` or TypeScript in `ts/`) can have
+  their own `root_dir` configurations pointing to different roots, ensuring
+  separation of concerns.
+
+### Additional Notes and Debugging
+
+1. **Verify Root Directory**:
+   - After applying this configuration, open a Python file and run `:LspInfo` to
+     confirm the root directory used by Pyright. It should show something like
+     `/my-project/py/` if `pyproject.toml` or `setup.py` is there.
+   - If it’s not picking the correct root, adjust the markers in `root_pattern`
+     or double-check the file paths.
+
+2. **Top-Level Fallback (Optional)**:
+   - If you sometimes want to fall back to the top-level repo root (e.g., if no
+     Python markers are found in subdirectories), add `.git` or another
+     top-level marker to the `root_pattern` list:
+     ```lua
+     root_dir = lspconfig.util.root_pattern('pyproject.toml', 'setup.py', 'requirements.txt', '.git'),
+     ```
+
+3. **Multi-Root Workspaces**:
+   - Pyright supports multi-root workspaces, but in most cases, setting the root
+     per file via `root_dir` as above is sufficient. If you need more complex
+     workspace handling, you can explore Pyright’s `workspace` settings.
+
+4. **Performance**:
+   - Using `diagnosticMode = 'openFilesOnly'` limits analysis to open files,
+     which is faster for large projects. If you need workspace-wide diagnostics,
+     change it to `'workspace'`, but be aware it might slow down for large
+     codebases.
+
+### Final Configuration for Multi-Language Repo
+
+Here’s a complete example tailored to your multi-language setup, ensuring
+Python’s root is correctly set to the subdirectory:
+
+```lua
+local lspconfig = require('lspconfig')
+
+lspconfig.pyright.setup({
+  root_dir = lspconfig.util.root_pattern('pyproject.toml', 'setup.py', 'requirements.txt'),
+  settings = {
+    python = {
+      pythonPath = function()
+        local root = lspconfig.util.root_pattern('pyproject.toml', 'setup.py', 'requirements.txt')(vim.fn.expand('%:p:h'))
+        if root then
+          local venv_paths = {
+            root .. '/.venv/bin/python',
+            root .. '/venv/bin/python',
+            root .. '/.venv/Scripts/python.exe',
+            root .. '/venv/Scripts/python.exe',
+          }
+          for _, path in ipairs(venv_paths) do
+            if vim.fn.executable(path) == 1 then
+              return path
+            end
+          end
+        end
+        return vim.fn.exepath('python3') or vim.fn.exepath('python') or 'python'
+      end,
+      analysis = {
+        autoSearchPaths = true,
+        useLibraryCodeForTypes = true,
+        diagnosticMode = 'openFilesOnly',
+      },
+    },
+    pyright = {
+      typeCheckingMode = 'basic',
+    },
+  },
+})
+```
+
+This should solve your issue by ensuring Pyright uses the closest Python project
+directory (e.g., `/my-project/py/`) as the root, rather than the top-level repo
+root. If you have other LSPs for Rust (`rs/`) or TypeScript (`ts/`), you can
+configure their `root_dir` separately to point to their respective
+subdirectories or the top-level root as needed.
+
+Let me know if you run into any issues with this setup or if your directory
+structure has additional complexities to account for!
+
+# === USER ===
+
+when i run that latest code, i get this error in neovim when opening a file:
+
+```
+Error executing vim.schedule lua callback: ...lar/neovim/0.11.2/share/nvim/runtime/lua/vim/lsp/rpc.lua:281: Cannot serialise function: type not supported
+stack traceback:
+        [C]: in function 'encode'
+        ...lar/neovim/0.11.2/share/nvim/runtime/lua/vim/lsp/rpc.lua:281: in function 'notify'
+        .../neovim/0.11.2/share/nvim/runtime/lua/vim/lsp/client.lua:772: in function 'notify'
+        .../neovim/0.11.2/share/nvim/runtime/lua/vim/lsp/client.lua:562: in function ''
+        vim/_editor.lua: in function <vim/_editor.lua:0>
+```
+
+how do i fix this?
+
+# === ASSISTANT ===
+
+The error you're encountering in Neovim when opening a file with the latest
+Pyright LSP configuration is due to attempting to serialize a Lua function
+directly in the `settings` table for the LSP client. Specifically, the
+`python.pythonPath` field in the `settings` table is set to a Lua function, but
+Neovim's LSP client (via `nvim-lspconfig`) expects the `settings` table to
+contain only serializable data (like strings, numbers, tables, etc.) that can be
+sent to the LSP server as JSON. Functions are not serializable in this context,
+which causes the error:
+
+```
+Cannot serialise function: type not supported
+```
+
+### Why This Happens
+
+In the latest configuration I provided, I included a dynamic `pythonPath` as a
+Lua function to determine the Python interpreter path based on the root
+directory. While this approach works in theory for local computation, the
+`settings` table is passed to the LSP server via the RPC (Remote Procedure Call)
+protocol, which requires JSON serialization. Since Lua functions cannot be
+converted to JSON, Neovim throws this error when trying to initialize the
+Pyright client.
+
+### How to Fix It
+
+To resolve this, we need to compute the `pythonPath` value as a string (the
+actual path to the Python interpreter) before passing it to the `settings` table,
+rather than passing a function. We can achieve this by using the `on_new_config`
+hook provided by `nvim-lspconfig`, which allows us to dynamically modify the
+configuration (including `settings`) when a new LSP client is created for a
+buffer. This way, we can calculate the `pythonPath` as a string based on the
+root directory and set it in `settings` before the configuration is sent to the
+server.
+
+Here’s the corrected configuration:
+
+```lua
+local lspconfig = require('lspconfig')
+
+lspconfig.pyright.setup({
+  root_dir = lspconfig.util.root_pattern('pyproject.toml', 'setup.py', 'requirements.txt'),
+  on_new_config = function(new_config, root_dir)
+    -- Dynamically set pythonPath based on the root_dir
+    local python_path = nil
+    if root_dir then
+      local venv_paths = {
+        root_dir .. '/.venv/bin/python',
+        root_dir .. '/venv/bin/python',
+        root_dir .. '/.venv/Scripts/python.exe', -- For Windows
+        root_dir .. '/venv/Scripts/python.exe',  -- For Windows
+      }
+      for _, path in ipairs(venv_paths) do
+        if vim.fn.executable(path) == 1 then
+          python_path = path
+          break
+        end
+      end
+    end
+    -- Fallback to system Python if no venv is found
+    if not python_path then
+      python_path = vim.fn.exepath('python3') or vim.fn.exepath('python') or 'python'
+    end
+    -- Update the settings with the computed pythonPath
+    new_config.settings.python.pythonPath = python_path
+  end,
+  settings = {
+    python = {
+      analysis = {
+        autoSearchPaths = true,
+        useLibraryCodeForTypes = true,
+        diagnosticMode = 'openFilesOnly',
+      },
+    },
+    pyright = {
+      typeCheckingMode = 'basic',
+    },
+  },
+})
+```
+
+### Explanation of the Fix
+
+1. **`on_new_config` Hook**:
+   - The `on_new_config` function is called by `nvim-lspconfig` when a new LSP
+     client configuration is created for a buffer. It receives `new_config` (the
+     configuration object) and `root_dir` (the determined root directory for the
+     current file based on `root_dir`).
+   - We use this hook to dynamically compute the `pythonPath` as a string based
+     on the `root_dir`, checking for common virtual environment paths relative
+     to the root.
+   - Once computed, we set `new_config.settings.python.pythonPath` to the
+     resulting string, ensuring it’s a serializable value.
+
+2. **Removed `pythonPath` Function from `settings`**:
+   - In the static `settings` table, we no longer include a function for
+     `pythonPath`. Instead, it’s populated dynamically via `on_new_config`.
+   - The rest of the `settings` (like `analysis` and `typeCheckingMode`) remain
+     as static, serializable values.
+
+3. **Fallback for `pythonPath`**:
+   - If no virtual environment is found in the root directory, we fall back to a
+     system-wide Python interpreter using `vim.fn.exepath('python3')` or
+     similar. This ensures a valid path is always set.
+
+### Why This Works
+
+- The `on_new_config` hook runs before the configuration is sent to the LSP
+  server, allowing us to compute and set `pythonPath` as a string in the
+  `settings` table.
+- Since the final `settings` table contains only serializable data (strings,
+  booleans, etc.), Neovim can successfully serialize it to JSON for the RPC
+  communication with Pyright, avoiding the error.
+
+### Additional Notes
+
+1. **Verify the Configuration**:
+   - After applying this, open a Python file and run `:LspInfo` to confirm the
+     root directory and settings used by Pyright. Ensure the `pythonPath` is set
+     to the expected interpreter (e.g., `/my-project/py/.venv/bin/python` if
+     applicable).
+   - If the wrong path is selected, adjust the `venv_paths` list in
+     `on_new_config` to match your virtual environment structure.
+
+2. **Debugging Issues**:
+   - If you still encounter errors, check the LSP logs with `:LspLog` to see if
+     there are issues with Pyright initialization or the computed `pythonPath`.
+   - You can temporarily add a `print` or `vim.notify` statement in
+     `on_new_config` to inspect the computed `root_dir` and `python_path`:
+     ```lua
+     vim.notify("Root Dir: " .. (root_dir or "none") .. ", Python Path: " .. (python_path or "none"))
+     ```
+
+3. **Performance**:
+   - The `on_new_config` computation is lightweight and runs only when a new LSP
+     client is initialized for a buffer, so it shouldn’t impact performance.
+
+### Final Notes
+
+This corrected configuration should resolve the serialization error by ensuring
+that `pythonPath` is set as a string dynamically using `on_new_config` rather
+than passing a function directly in `settings`. It still achieves your goal of
+searching up the directory tree for Python project markers (`pyproject.toml`,
+etc.) and using that directory as the root for Pyright, even in a
+multi-language repository with Python in a subdirectory.
+
+If you encounter further issues or need to tweak the virtual environment path
+logic, let me know, and I’ll help refine it further!
+
+# === USER ===
+
+
