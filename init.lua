@@ -1579,8 +1579,10 @@ vim.g.mapleader = " "
 vim.opt.breakindent = true
 
 -- ctrl+; exits terminal mode
-vim.api.nvim_set_keymap("t", "<C-;>", [[<C-\><C-n>]], opts)
+-- vim.api.nvim_set_keymap("t", "<C-;>", [[<C-\><C-n>]], opts)
 -- vim.api.nvim_set_keymap("t", "<C-Esc>", [[<C-\><C-n>]], opts)
+-- vim.api.nvim_set_keymap("t", "<C-;>", "<C-\\><C-n>", opts)
+vim.api.nvim_set_keymap("t", "<Esc>", [[<C-\><C-n>]], opts)
 
 -- Key mappings using leader key
 vim.api.nvim_set_keymap("n", "<Leader>w", ":w<CR>", opts)
