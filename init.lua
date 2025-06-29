@@ -1719,8 +1719,8 @@ vim.api.nvim_set_keymap(
 vim.api.nvim_set_keymap(
   "n",
   "<Leader>Ls",
-  --":lua vim.lsp.stop_client(vim.lsp.get_active_clients())<CR>:lua vim.defer_fn(function() vim.cmd('edit') end, 1000)<CR>",
-  ":lua vim.lsp.stop_client(vim.lsp.get_active_clients())<CR>",
+  --":lua vim.lsp.stop_client(vim.lsp.get_clients())<CR>:lua vim.defer_fn(function() vim.cmd('edit') end, 1000)<CR>",
+  ":lua vim.lsp.stop_client(vim.lsp.get_clients())<CR>",
   opts
 )
 
@@ -1728,8 +1728,8 @@ vim.api.nvim_set_keymap(
 vim.api.nvim_set_keymap(
   "n",
   "<Leader>Lr",
-  "lua vim.lsp.stop_client(vim.lsp.get_active_clients())<CR>:lua vim.defer_fn(function() vim.cmd('edit') end, 1000)<CR>",
-  --":lua vim.lsp.stop_client(vim.lsp.get_active_clients())<CR>",
+  "lua vim.lsp.stop_client(vim.lsp.get_clients())<CR>:lua vim.defer_fn(function() vim.cmd('edit') end, 1000)<CR>",
+  --":lua vim.lsp.stop_client(vim.lsp.get_clients())<CR>",
   opts
 )
 
