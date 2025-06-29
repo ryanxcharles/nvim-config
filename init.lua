@@ -1707,57 +1707,18 @@ vim.api.nvim_set_keymap(
   opts
 )
 
--- Key binding to reload init.lua file
-vim.api.nvim_set_keymap(
-  "n",
-  "<Leader>rl",
-  ":luafile ~/.config/nvim/init.lua<CR>",
-  opts
-)
-
--- Key binding to stop LSP
-vim.api.nvim_set_keymap(
-  "n",
-  "<Leader>Ls",
-  --":lua vim.lsp.stop_client(vim.lsp.get_clients())<CR>:lua vim.defer_fn(function() vim.cmd('edit') end, 1000)<CR>",
-  ":lua vim.lsp.stop_client(vim.lsp.get_clients())<CR>",
-  opts
-)
-
--- Key binding to restart LSP
-vim.api.nvim_set_keymap(
-  "n",
-  "<Leader>Lr",
-  "lua vim.lsp.stop_client(vim.lsp.get_clients())<CR>:lua vim.defer_fn(function() vim.cmd('edit') end, 1000)<CR>",
-  --":lua vim.lsp.stop_client(vim.lsp.get_clients())<CR>",
-  opts
-)
-
--- rust: Rust-specific keybindings
-vim.api.nvim_set_keymap("n", "<Leader>rr", ":!cargo run<CR>", opts)
-vim.api.nvim_set_keymap("n", "<Leader>rt", ":!cargo test<CR>", opts)
-vim.api.nvim_set_keymap("n", "<Leader>rb", ":!cargo build<CR>", opts)
-
--- Optional keybinding to update dependencies with `crates.nvim`
-vim.api.nvim_set_keymap(
-  "n",
-  "<Leader>cu",
-  ":lua require('crates').update_crate()<CR>",
-  opts
-)
-
 -- Set custom keybindings for cycling through Copilot suggestions
 vim.api.nvim_set_keymap(
   "i",
   "<C-n>",
   "copilot#Next()",
-  { silent = true, expr = true }
+  opts
 )
 vim.api.nvim_set_keymap(
   "i",
   "<C-p>",
   "copilot#Previous()",
-  { silent = true, expr = true }
+  opts
 )
 
 -- Keybinding to toggle Neo-tree
