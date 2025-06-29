@@ -554,7 +554,7 @@ require("lazy").setup({
     end,
   },
 
-  -- Code formatting
+  -- Code formatting (":Format" command)
   {
     "mhartington/formatter.nvim",
     config = function()
@@ -632,6 +632,19 @@ require("lazy").setup({
             function()
               return {
                 exe = "dprint", -- Use dprint executable
+                args = {
+                  "fmt", -- Format command for dprint
+                  "--stdin", -- Pass content via stdin
+                  vim.api.nvim_buf_get_name(0), -- Pass the file path for context (helps dprint determine config)
+                },
+                stdin = true, -- Input is passed via stdin
+              }
+            end,
+          },
+          toml = {
+            function()
+              return {
+                exe = "dprint", -- Use dprint for formatting TOML
                 args = {
                   "fmt", -- Format command for dprint
                   "--stdin", -- Pass content via stdin
@@ -1595,7 +1608,8 @@ vim.api.nvim_set_keymap(
   { silent = true }
 )
 vim.api.nvim_set_keymap("n", "<Leader>q", ":q<CR>", opts)
-vim.api.nvim_set_keymap("n", "<Leader>v", ":vsp<CR>:wincmd l<CR>", opts)
+vim.api.nvim_set_keymap("n", "<Leader>V", ":vsp<CR>:wincmd l<CR>", opts)
+vim.api.nvim_set_keymap("n", "<Leader>v", ":vsp<CR>", opts)
 
 -- Window navigation
 vim.api.nvim_set_keymap("n", ";h", ":wincmd h<CR>", opts)
