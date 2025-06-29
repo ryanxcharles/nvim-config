@@ -16,6 +16,7 @@
 -- - wgsl-analyzer (for WebGPU Shading Language diagnostics)
 -- - pyright (Python language server)
 -- - topiary (with special nushell plugin for nushell support) (formatting nushell)
+-- - dprint (for formatting Markdown)
 
 -- TODO:
 -- [ ] replace formatter with null-ls
@@ -628,17 +629,15 @@ require("lazy").setup({
             end,
           },
           markdown = {
-            -- Prettier for formatting Markdown
             function()
               return {
-                exe = "prettier", -- Make sure Prettier is installed globally
+                exe = "dprint", -- Use dprint executable
                 args = {
-                  "--stdin-filepath",
-                  vim.api.nvim_buf_get_name(0), -- Prettier needs the file path to infer formatting rules
-                  "--prose-wrap",
-                  "always", -- Ensures text in markdown files is always wrapped
+                  "fmt", -- Format command for dprint
+                  "--stdin", -- Pass content via stdin
+                  vim.api.nvim_buf_get_name(0), -- Pass the file path for context (helps dprint determine config)
                 },
-                stdin = true,
+                stdin = true, -- Input is passed via stdin
               }
             end,
           },
@@ -1703,7 +1702,7 @@ vim.api.nvim_set_keymap(
 -- Go to the previous diagnostic (error, warning, etc.)
 vim.api.nvim_set_keymap(
   "n",
-  "<Leader>dp",
+  "<Leader>dN",
   ":lua vim.diagnostic.goto_prev()<CR>",
   opts
 )
