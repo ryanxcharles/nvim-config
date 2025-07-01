@@ -554,141 +554,52 @@ require("lazy").setup({
     end,
   },
 
-{
-  "mhartington/formatter.nvim",
-  config = function()
-    require("formatter").setup({
-      filetype = {
-        nu = {
-          function()
-            return {
-              exe = "topiary",
-              args = { "format", "--language", "nu" },
-              stdin = true,
-            }
-          end,
-        },
-        markdown = {
-          function()
-            return {
-              exe = "dprint",
-              args = {
-                "fmt",
-                "--stdin",
-                vim.api.nvim_buf_get_name(0),
-              },
-              stdin = true,
-            }
-          end,
-        },
-        toml = {
-          function()
-            return {
-              exe = "dprint",
-              args = {
-                "fmt",
-                "--stdin",
-                vim.api.nvim_buf_get_name(0),
-              },
-              stdin = true,
-            }
-          end,
-        },
-        typescript = {
-          function()
-            if vim.fn.findfile("deno.json", ".;") ~= "" or vim.fn.findfile("deno.jsonc", ".;") ~= "" then
+  {
+    "mhartington/formatter.nvim",
+    config = function()
+      require("formatter").setup({
+        filetype = {
+          nu = {
+            function()
               return {
-                exe = "deno",
-                args = { "fmt", "-" },
+                exe = "topiary",
+                args = { "format", "--language", "nu" },
                 stdin = true,
               }
-            else
-              local biome_config = vim.fn.findfile("biome.json", ".;")
-              local config_path = biome_config ~= "" and vim.fn.fnamemodify(biome_config, ":h") or vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":h")
+            end,
+          },
+          markdown = {
+            function()
               return {
-                exe = "biome",
-                args = {
-                  "format",
-                  "--config-path",
-                  config_path,
-                  "--stdin-file-path",
-                  string.format('"%s"', vim.api.nvim_buf_get_name(0)),
-                  "--write",
-                },
-                stdin = true,
-              }
-            end
-          end,
-        },
-        typescriptreact = {
-          function()
-            if vim.fn.findfile("deno.json", ".;") ~= "" or vim.fn.findfile("deno.jsonc", ".;") ~= "" then
-              return {
-                exe = "deno",
-                args = { "fmt", "-" },
-                stdin = true,
-              }
-            else
-              local biome_config = vim.fn.findfile("biome.json", ".;")
-              local config_path = biome_config ~= "" and vim.fn.fnamemodify(biome_config, ":h") or vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":h")
-              return {
-                exe = "biome",
-                args = {
-                  "format",
-                  "--config-path",
-                  config_path,
-                  "--stdin-file-path",
-                  string.format('"%s"', vim.api.nvim_buf_get_name(0)),
-                  "--write",
-                },
-                stdin = true,
-              }
-            end
-          end,
-        },
-        json = {
-          function()
-            if vim.fn.findfile("deno.json", ".;") ~= "" or vim.fn.findfile("deno.jsonc", ".;") ~= "" then
-              return {
-                exe = "deno",
+                exe = "dprint",
                 args = {
                   "fmt",
+                  "--stdin",
                   vim.api.nvim_buf_get_name(0),
-                },
-                stdin = false,
-              }
-            else
-              local biome_config = vim.fn.findfile("biome.json", ".;")
-              local config_path = biome_config ~= "" and vim.fn.fnamemodify(biome_config, ":h") or vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":h")
-              return {
-                exe = "biome",
-                args = {
-                  "format",
-                  "--config-path",
-                  config_path,
-                  "--stdin-file-path",
-                  string.format('"%s"', vim.api.nvim_buf_get_name(0)),
-                  "--write",
                 },
                 stdin = true,
               }
-            end
-          end,
-        },
-        jsonc = {
-          function()
-            if vim.fn.findfile("deno.json", ".;") ~= "" or vim.fn.findfile("deno.jsonc", ".;") ~= "" then
+            end,
+          },
+          toml = {
+            function()
               return {
-                exe = "deno",
+                exe = "dprint",
                 args = {
                   "fmt",
+                  "--stdin",
                   vim.api.nvim_buf_get_name(0),
                 },
-                stdin = false,
+                stdin = true,
               }
-            else
+            end,
+          },
+          typescript = {
+            function()
               local biome_config = vim.fn.findfile("biome.json", ".;")
-              local config_path = biome_config ~= "" and vim.fn.fnamemodify(biome_config, ":h") or vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":h")
+              local config_path = biome_config ~= ""
+                  and vim.fn.fnamemodify(biome_config, ":h")
+                or vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":h")
               return {
                 exe = "biome",
                 args = {
@@ -701,20 +612,14 @@ require("lazy").setup({
                 },
                 stdin = true,
               }
-            end
-          end,
-        },
-        javascript = {
-          function()
-            if vim.fn.findfile("deno.json", ".;") ~= "" or vim.fn.findfile("deno.jsonc", ".;") ~= "" then
-              return {
-                exe = "deno",
-                args = { "fmt", "-" },
-                stdin = true,
-              }
-            else
+            end,
+          },
+          typescriptreact = {
+            function()
               local biome_config = vim.fn.findfile("biome.json", ".;")
-              local config_path = biome_config ~= "" and vim.fn.fnamemodify(biome_config, ":h") or vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":h")
+              local config_path = biome_config ~= ""
+                  and vim.fn.fnamemodify(biome_config, ":h")
+                or vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":h")
               return {
                 exe = "biome",
                 args = {
@@ -727,20 +632,14 @@ require("lazy").setup({
                 },
                 stdin = true,
               }
-            end
-          end,
-        },
-        javascriptreact = {
-          function()
-            if vim.fn.findfile("deno.json", ".;") ~= "" or vim.fn.findfile("deno.jsonc", ".;") ~= "" then
-              return {
-                exe = "deno",
-                args = { "fmt", "-" },
-                stdin = true,
-              }
-            else
+            end,
+          },
+          json = {
+            function()
               local biome_config = vim.fn.findfile("biome.json", ".;")
-              local config_path = biome_config ~= "" and vim.fn.fnamemodify(biome_config, ":h") or vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":h")
+              local config_path = biome_config ~= ""
+                  and vim.fn.fnamemodify(biome_config, ":h")
+                or vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":h")
               return {
                 exe = "biome",
                 args = {
@@ -753,56 +652,115 @@ require("lazy").setup({
                 },
                 stdin = true,
               }
-            end
-          end,
+            end,
+          },
+          jsonc = {
+            function()
+              local biome_config = vim.fn.findfile("biome.json", ".;")
+              local config_path = biome_config ~= ""
+                  and vim.fn.fnamemodify(biome_config, ":h")
+                or vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":h")
+              return {
+                exe = "biome",
+                args = {
+                  "format",
+                  "--config-path",
+                  config_path,
+                  "--stdin-file-path",
+                  string.format('"%s"', vim.api.nvim_buf_get_name(0)),
+                  "--write",
+                },
+                stdin = true,
+              }
+            end,
+          },
+          javascript = {
+            function()
+              local biome_config = vim.fn.findfile("biome.json", ".;")
+              local config_path = biome_config ~= ""
+                  and vim.fn.fnamemodify(biome_config, ":h")
+                or vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":h")
+              return {
+                exe = "biome",
+                args = {
+                  "format",
+                  "--config-path",
+                  config_path,
+                  "--stdin-file-path",
+                  string.format('"%s"', vim.api.nvim_buf_get_name(0)),
+                  "--write",
+                },
+                stdin = true,
+              }
+            end,
+          },
+          javascriptreact = {
+            function()
+              local biome_config = vim.fn.findfile("biome.json", ".;")
+              local config_path = biome_config ~= ""
+                  and vim.fn.fnamemodify(biome_config, ":h")
+                or vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":h")
+              return {
+                exe = "biome",
+                args = {
+                  "format",
+                  "--config-path",
+                  config_path,
+                  "--stdin-file-path",
+                  string.format('"%s"', vim.api.nvim_buf_get_name(0)),
+                  "--write",
+                },
+                stdin = true,
+              }
+            end,
+          },
+          lua = {
+            function()
+              return {
+                exe = "stylua",
+                args = {
+                  "--indent-type",
+                  "Spaces",
+                  "--indent-width",
+                  "2",
+                  "--search-parent-directories",
+                  "-",
+                },
+                stdin = true,
+              }
+            end,
+          },
+          rust = {
+            function()
+              return {
+                exe = "rustfmt",
+                args = { "--emit", "stdout" },
+                stdin = true,
+              }
+            end,
+          },
+          wgsl = {
+            function()
+              return {
+                exe = "wgsl_analyzer",
+                args = { "format" },
+                stdin = true,
+              }
+            end,
+          },
+          python = {
+            function()
+              return {
+                exe = "black",
+                args = { "-" },
+                stdin = true,
+              }
+            end,
+          },
         },
-        lua = {
-          function()
-            return {
-              exe = "stylua",
-              args = {
-                "--indent-type",
-                "Spaces",
-                "--indent-width",
-                "2",
-                "--search-parent-directories",
-                "-",
-              },
-              stdin = true,
-            }
-          end,
-        },
-        rust = {
-          function()
-            return {
-              exe = "rustfmt",
-              args = { "--emit", "stdout" },
-              stdin = true,
-            }
-          end,
-        },
-        wgsl = {
-          function()
-            return {
-              exe = "wgsl_analyzer",
-              args = { "format" },
-              stdin = true,
-            }
-          end,
-        },
-        python = {
-          function()
-            return {
-              exe = "black",
-              args = { "-" },
-              stdin = true,
-            }
-          end,
-        },
-      },
-    })
-  end,
-},
+      })
+    end,
+  },
 
   -- Colorizer for HTML/CSS
   {
@@ -1627,18 +1585,8 @@ vim.api.nvim_set_keymap(
 )
 
 -- Set custom keybindings for cycling through Copilot suggestions
-vim.api.nvim_set_keymap(
-  "i",
-  "<C-n>",
-  "copilot#Next()",
-  opts
-)
-vim.api.nvim_set_keymap(
-  "i",
-  "<C-p>",
-  "copilot#Previous()",
-  opts
-)
+vim.api.nvim_set_keymap("i", "<C-n>", "copilot#Next()", opts)
+vim.api.nvim_set_keymap("i", "<C-p>", "copilot#Previous()", opts)
 
 -- Keybinding to toggle Neo-tree
 vim.api.nvim_set_keymap("n", "<Leader>tt", ":Neotree toggle<CR>", opts)
@@ -1803,7 +1751,9 @@ vim.opt.termguicolors = true
 
 -- TODO: test todo highlighting
 -- Define a highlight group for TODO comments
-vim.api.nvim_command("highlight TodoComment guifg=#FA8603 guibg=#1e1e2e gui=bold") -- Orange color with bold
+vim.api.nvim_command(
+  "highlight TodoComment guifg=#FA8603 guibg=#1e1e2e gui=bold"
+) -- Orange color with bold
 -- Automatically highlight TODO comments when entering a buffer
 vim.api.nvim_create_autocmd({ "BufEnter", "BufReadPost" }, {
   group = vim.api.nvim_create_augroup("TodoHighlight", { clear = true }),
