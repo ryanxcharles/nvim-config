@@ -604,8 +604,6 @@ require("lazy").setup({
                 exe = "biome",
                 args = {
                   "format",
-                  -- "--config-path",
-                  -- config_path,
                   "--stdin-file-path",
                   string.format('"%s"', vim.api.nvim_buf_get_name(0)),
                   "--write",
@@ -624,8 +622,6 @@ require("lazy").setup({
                 exe = "biome",
                 args = {
                   "format",
-                  -- "--config-path",
-                  -- config_path,
                   "--stdin-file-path",
                   string.format('"%s"', vim.api.nvim_buf_get_name(0)),
                   "--write",
@@ -644,8 +640,6 @@ require("lazy").setup({
                 exe = "biome",
                 args = {
                   "format",
-                  -- "--config-path",
-                  -- config_path,
                   "--stdin-file-path",
                   string.format('"%s"', vim.api.nvim_buf_get_name(0)),
                   "--write",
@@ -664,8 +658,6 @@ require("lazy").setup({
                 exe = "biome",
                 args = {
                   "format",
-                  -- "--config-path",
-                  -- config_path,
                   "--stdin-file-path",
                   string.format('"%s"', vim.api.nvim_buf_get_name(0)),
                   "--write",
@@ -684,8 +676,6 @@ require("lazy").setup({
                 exe = "biome",
                 args = {
                   "format",
-                  -- "--config-path",
-                  -- config_path,
                   "--stdin-file-path",
                   string.format('"%s"', vim.api.nvim_buf_get_name(0)),
                   "--write",
@@ -704,8 +694,6 @@ require("lazy").setup({
                 exe = "biome",
                 args = {
                   "format",
-                  -- "--config-path",
-                  -- config_path,
                   "--stdin-file-path",
                   string.format('"%s"', vim.api.nvim_buf_get_name(0)),
                   "--write",
