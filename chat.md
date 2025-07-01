@@ -2236,3 +2236,1719 @@ above. Let me know if you’d like help setting up a specific plugin or refining
 the custom script!
 
 # === USER ===
+
+i use a tool called `mhartington/formatter.nvim` to format my code and text
+files. it's a great tool, but has a problem with large files. when formatting a
+large file, it blocks the main thread, and the entire app freezes while it is
+formatting. this leads me to think there is a problem with this tool running the
+formatter in the main thread. i know nvim/lua has good support for asynchronous
+operations. i'm curious about ways to fix this. i have several questions.
+
+1. is there another formatter calling external tools that supports asynchronous
+   formats, showing a spinner while formatting?
+2. is there any way to wrap this tool in a separate asynchronous call, showing a
+   spinner while it formats?
+3. how difficult would it be to fork this tool and add asynchronous support to
+   it? it would be exactly the same, except it would be asynchronous and run a
+   spinner while formatting.
+
+here is my current configuration:
+
+```lua
+  -- Code formatting (":Format" command)
+  {
+    "mhartington/formatter.nvim",
+    config = function()
+      local uv = vim.loop -- Use Neovim's built-in libuv wrapper for filesystem operations
+
+      -- Function to recursively search for a file in the current directory or any parent directory
+      local function find_file_in_cwd_parents(filename)
+        ---@diagnostic disable-next-line: undefined-field
+        local cwd = uv.cwd() -- Get the current working directory
+
+        while cwd do
+          local filepath = cwd .. "/" .. filename
+          ---@diagnostic disable-next-line: undefined-field
+          local stat = uv.fs_stat(filepath)
+          if stat then
+            return true -- File found
+          end
+
+          -- Move to the parent directory
+          local parent = cwd:match("(.*/)[^/]+/?$")
+          if parent == cwd then
+            break -- Reached the root directory
+          end
+          cwd = parent
+        end
+
+        return false -- File not found in any parent directory
+      end
+
+      -- Function to search for a file (filename) in the directory of another file (full_path)
+      -- and recursively in its parent directories.
+      local function find_file_in_file_parents(filename, full_path)
+        -- Get the directory of the file passed in as full_path
+        local dir = vim.fn.fnamemodify(full_path, ":h") -- ":h" extracts the directory from full_path
+        --print("Starting search in directory: " .. dir)
+
+        while dir do
+          local filepath = dir .. "/" .. filename
+          --print("Checking for file at: " .. filepath) -- Debug print
+
+          local stat = vim.loop.fs_stat(filepath)
+          if stat then
+            print("File found: " .. filepath) -- Debug print when file is found
+            return filepath -- Return the absolute file path if found
+          end
+
+          -- Move to the parent directory
+          local parent = dir:match("(.*/)[^/]+/?$")
+          if not parent or parent == dir then
+            --print("Reached root directory, stopping search.") -- Debug print
+            break -- Reached the root directory
+          end
+
+          --print("Moving to parent directory: " .. parent) -- Debug print for parent
+          dir = parent
+        end
+
+        print("File not found.") -- Debug print when file is not found
+        return nil -- File not found
+      end
+
+      require("formatter").setup({
+        filetype = {
+          nu = {
+            -- Use topiary for formatting nushell scripts
+            function()
+              return {
+                exe = "topiary",
+                args = { "format", "--language", "nu" }, -- Format via stdin
+                stdin = true,
+              }
+            end,
+          },
+          markdown = {
+            function()
+              return {
+                exe = "dprint", -- Use dprint executable
+                args = {
+                  "fmt", -- Format command for dprint
+                  "--stdin", -- Pass content via stdin
+                  vim.api.nvim_buf_get_name(0), -- Pass the file path for context (helps dprint determine config)
+                },
+                stdin = true, -- Input is passed via stdin
+              }
+            end,
+          },
+          toml = {
+            function()
+              return {
+                exe = "dprint", -- Use dprint for formatting TOML
+                args = {
+                  "fmt", -- Format command for dprint
+                  "--stdin", -- Pass content via stdin
+                  vim.api.nvim_buf_get_name(0), -- Pass the file path for context (helps dprint determine config)
+                },
+                stdin = true, -- Input is passed via stdin
+              }
+            end,
+          },
+          -- other filetypes here...
+          typescript = {
+            function()
+              -- Detect if this is a Deno project by looking for a 'deno.json' or 'deno.jsonc'
+              if
+                find_file_in_cwd_parents("deno.json")
+                or find_file_in_cwd_parents("deno.jsonc")
+              then
+                return {
+                  exe = "deno",
+                  args = { "fmt", "-" }, -- Format via stdin
+                  stdin = true,
+                }
+              else
+                -- Use Biome for non-Deno TypeScript projects
+                local config_path = find_file_in_file_parents(
+                  "biome.json",
+                  vim.api.nvim_buf_get_name(0)
+                )
+                return {
+                  exe = "biome",
+                  args = {
+                    "format",
+                    "--config-path",
+                    config_path,
+                    "--stdin-file-path",
+                    string.format('"%s"', vim.api.nvim_buf_get_name(0)),
+                    "--write",
+                  },
+                  stdin = true,
+                }
+              end
+            end,
+          },
+          typescriptreact = {
+            function()
+              if
+                find_file_in_cwd_parents("deno.json")
+                or find_file_in_cwd_parents("deno.jsonc")
+              then
+                return {
+                  exe = "deno",
+                  args = { "fmt", "-" }, -- Format via stdin
+                  stdin = true,
+                }
+              else
+                local config_path = find_file_in_file_parents(
+                  "biome.json",
+                  vim.api.nvim_buf_get_name(0)
+                )
+                return {
+                  exe = "biome",
+                  args = {
+                    "format",
+                    "--config-path",
+                    config_path,
+                    "--stdin-file-path",
+                    string.format('"%s"', vim.api.nvim_buf_get_name(0)),
+                    "--write",
+                  },
+                  stdin = true,
+                }
+              end
+            end,
+          },
+          json = {
+            -- Conditional formatter for JSON files
+            function()
+              if
+                find_file_in_cwd_parents("deno.json")
+                or find_file_in_cwd_parents("deno.jsonc")
+              then
+                return {
+                  exe = "deno",
+                  args = {
+                    "fmt", -- Format command
+                    vim.api.nvim_buf_get_name(0), -- Pass the current file path to Deno
+                  },
+                  stdin = false, -- We’re passing the filename, not using stdin
+                }
+              else
+                local config_path = find_file_in_file_parents(
+                  "biome.json",
+                  vim.api.nvim_buf_get_name(0)
+                )
+                return {
+                  exe = "biome",
+                  args = {
+                    "format",
+                    "--config-path",
+                    config_path,
+                    "--stdin-file-path",
+                    string.format('"%s"', vim.api.nvim_buf_get_name(0)),
+                    "--write",
+                  },
+                  stdin = true,
+                }
+              end
+            end,
+          },
+          jsonc = {
+            -- Conditional formatter for JSONC files
+            function()
+              if
+                find_file_in_cwd_parents("deno.json")
+                or find_file_in_cwd_parents("deno.jsonc")
+              then
+                return {
+                  exe = "deno",
+                  args = {
+                    "fmt", -- Format command
+                    vim.api.nvim_buf_get_name(0), -- Pass the current file path to Deno
+                  },
+                  stdin = false, -- We’re passing the filename, not using stdin
+                }
+              else
+                local config_path = find_file_in_file_parents(
+                  "biome.json",
+                  vim.api.nvim_buf_get_name(0)
+                )
+                return {
+                  exe = "biome",
+                  args = {
+                    "format",
+                    "--config-path",
+                    config_path,
+                    "--stdin-file-path",
+                    string.format('"%s"', vim.api.nvim_buf_get_name(0)),
+                    "--write",
+                  },
+                  stdin = true,
+                }
+              end
+            end,
+          },
+          javascript = {
+            function()
+              if
+                find_file_in_cwd_parents("deno.json")
+                or find_file_in_cwd_parents("deno.jsonc")
+              then
+                return {
+                  exe = "deno",
+                  args = { "fmt", "-" }, -- Format via stdin
+                  stdin = true,
+                }
+              else
+                local config_path = find_file_in_file_parents(
+                  "biome.json",
+                  vim.api.nvim_buf_get_name(0)
+                )
+                return {
+                  exe = "biome",
+                  args = {
+                    "format",
+                    "--config-path",
+                    config_path,
+                    "--stdin-file-path",
+                    string.format('"%s"', vim.api.nvim_buf_get_name(0)),
+                    "--write",
+                  },
+                  stdin = true,
+                }
+              end
+            end,
+          },
+          javascriptreact = {
+            function()
+              if
+                find_file_in_cwd_parents("deno.json")
+                or find_file_in_cwd_parents("deno.jsonc")
+              then
+                return {
+                  exe = "deno",
+                  args = { "fmt", "-" }, -- Format via stdin
+                  stdin = true,
+                }
+              else
+                local config_path = find_file_in_file_parents(
+                  "biome.json",
+                  vim.api.nvim_buf_get_name(0)
+                )
+                return {
+                  exe = "biome",
+                  args = {
+                    "format",
+                    "--config-path",
+                    config_path,
+                    "--stdin-file-path",
+                    string.format('"%s"', vim.api.nvim_buf_get_name(0)),
+                    "--write",
+                  },
+                  stdin = true,
+                }
+              end
+            end,
+          },
+          lua = {
+            function()
+              return {
+                exe = "stylua",
+                args = {
+                  "--indent-type",
+                  "Spaces",
+                  "--indent-width",
+                  "2",
+                  "--search-parent-directories",
+                  "-",
+                },
+                stdin = true,
+              }
+            end,
+          },
+          rust = {
+            function()
+              return {
+                exe = "rustfmt",
+                args = { "--emit", "stdout" },
+                stdin = true,
+              }
+            end,
+          },
+          wgsl = {
+            function()
+              return {
+                exe = "wgsl_analyzer",
+                args = { "format" },
+                stdin = true,
+              }
+            end,
+          },
+          python = {
+            function()
+              return {
+                exe = "black",
+                args = { "-" },
+                stdin = true,
+              }
+            end,
+          },
+        },
+      })
+    end,
+  },
+```
+
+
+
+# === ASSISTANT ===
+
+I'm glad you're finding `mhartington/formatter.nvim` useful for formatting
+your code and text files in Neovim. You're correct that the issue of freezing on
+large files is likely due to the formatter running synchronously on the main
+thread, which blocks the UI during the operation. Neovim does have excellent
+support for asynchronous operations via its `vim.loop` API and other mechanisms,
+and there are ways to address this issue. Let's tackle each of your questions
+about asynchronous formatting and potential solutions.
+
+### Overview of the Problem
+
+`mhartington/formatter.nvim` (as of its latest versions at the time of this
+response) runs external formatting tools synchronously by default, which means
+that when formatting a large file, Neovim waits for the external process (e.g.,
+`black`, `prettier`, `rustfmt`) to complete before updating the buffer and
+returning control to the user. This results in the UI freezing, especially for
+large files or slow formatters. Fortunately, there are alternatives and
+workarounds to make formatting asynchronous, including showing a spinner or
+progress indicator.
+
+I'll address each of your questions in detail.
+
+---
+
+### 1. Is there another formatter calling external tools that supports asynchronous formats, showing a spinner while formatting?
+
+**Yes**, there are alternative formatter plugins for Neovim that support
+asynchronous formatting and can display a spinner or progress indicator during
+the operation. One of the most popular and actively maintained options is
+**`stevearc/conform.nvim`**, which is designed to run formatters asynchronously
+by default and integrates well with Neovim's modern Lua ecosystem.
+
+#### About `conform.nvim`
+- **Asynchronous by Default**: `conform.nvim` uses Neovim's `vim.loop` to run
+  external formatting tools asynchronously, preventing the UI from freezing even
+  on large files.
+- **Progress Feedback**: It supports showing notifications or progress
+  indicators via integration with plugins like `nvim-notify` or Neovim's built-in
+  status line updates (though a spinner might require additional setup or a
+  plugin like `fidget.nvim` for LSP-like progress spinners).
+- **Highly Configurable**: It supports multiple formatters per filetype, LSP
+  fallback, and custom configurations similar to `formatter.nvim`.
+
+#### Setup with `conform.nvim`
+To switch to `conform.nvim`, you can adapt your current configuration. Here's an
+example of how to migrate your setup:
+
+```lua
+{
+  "stevearc/conform.nvim",
+  config = function()
+    require("conform").setup({
+      formatters_by_ft = {
+        markdown = { "dprint" },
+        toml = { "dprint" },
+        typescript = {
+          function(bufnr)
+            if vim.fn.filereadable(vim.fn.findfile("deno.json", ".;") or vim.fn.findfile("deno.jsonc", ".;")) == 1 then
+              return { "deno_fmt" }
+            else
+              return { "biome" }
+            end
+          end,
+        },
+        typescriptreact = {
+          function(bufnr)
+            if vim.fn.filereadable(vim.fn.findfile("deno.json", ".;") or vim.fn.findfile("deno.jsonc", ".;")) == 1 then
+              return { "deno_fmt" }
+            else
+              return { "biome" }
+            end
+          end,
+        },
+        javascript = {
+          function(bufnr)
+            if vim.fn.filereadable(vim.fn.findfile("deno.json", ".;") or vim.fn.findfile("deno.jsonc", ".;")) == 1 then
+              return { "deno_fmt" }
+            else
+              return { "biome" }
+            end
+          end,
+        },
+        javascriptreact = {
+          function(bufnr)
+            if vim.fn.filereadable(vim.fn.findfile("deno.json", ".;") or vim.fn.findfile("deno.jsonc", ".;")) == 1 then
+              return { "deno_fmt" }
+            else
+              return { "biome" }
+            end
+          end,
+        },
+        json = {
+          function(bufnr)
+            if vim.fn.filereadable(vim.fn.findfile("deno.json", ".;") or vim.fn.findfile("deno.jsonc", ".;")) == 1 then
+              return { "deno_fmt" }
+            else
+              return { "biome" }
+            end
+          end,
+        },
+        jsonc = {
+          function(bufnr)
+            if vim.fn.filereadable(vim.fn.findfile("deno.json", ".;") or vim.fn.findfile("deno.jsonc", ".;")) == 1 then
+              return { "deno_fmt" }
+            else
+              return { "biome" }
+            end
+          end,
+        },
+        lua = { "stylua" },
+        rust = { "rustfmt" },
+        python = { "black" },
+        nu = { "topiary" },
+        wgsl = { "wgsl_analyzer" },
+      },
+      format_on_save = {
+        timeout_ms = 500,
+        lsp_fallback = true,
+      },
+      formatters = {
+        deno_fmt = {
+          command = "deno",
+          args = { "fmt", "-" },
+          stdin = true,
+        },
+        biome = {
+          command = "biome",
+          args = function(self, ctx)
+            local config_path = vim.fn.findfile("biome.json", vim.fn.fnamemodify(ctx.filename, ":h") .. ";")
+            if config_path == "" then
+              config_path = vim.fn.fnamemodify(ctx.filename, ":h")
+            else
+              config_path = vim.fn.fnamemodify(config_path, ":h")
+            end
+            return {
+              "format",
+              "--config-path",
+              config_path,
+              "--stdin-file-path",
+              ctx.filename,
+            }
+          end,
+          stdin = true,
+        },
+        dprint = {
+          command = "dprint",
+          args = function(self, ctx)
+            return { "fmt", "--stdin", ctx.filename }
+          end,
+          stdin = true,
+        },
+        stylua = {
+          command = "stylua",
+          args = { "--indent-type", "Spaces", "--indent-width", "2", "--search-parent-directories", "-" },
+          stdin = true,
+        },
+        rustfmt = {
+          command = "rustfmt",
+          args = { "--emit", "stdout" },
+          stdin = true,
+        },
+        black = {
+          command = "black",
+          args = { "-" },
+          stdin = true,
+        },
+        topiary = {
+          command = "topiary",
+          args = { "format", "--language", "nu" },
+          stdin = true,
+        },
+        wgsl_analyzer = {
+          command = "wgsl_analyzer",
+          args = { "format" },
+          stdin = true,
+        },
+      },
+    })
+  end,
+},
+```
+
+#### Adding a Spinner with `fidget.nvim`
+To show a spinner or progress indicator while formatting, you can pair
+`conform.nvim` with a plugin like `j-hui/fidget.nvim`, which displays
+progress notifications for asynchronous tasks (originally designed for LSP but
+works with other async operations via custom integration). While `conform.nvim`
+doesn't natively show a spinner, you can hook into its events to display
+progress:
+
+1. Install `fidget.nvim`:
+   ```lua
+   { "j-hui/fidget.nvim", tag = "legacy", opts = {} }
+   ```
+
+2. Use `conform.nvim` events to show a spinner (requires a custom wrapper or
+   listening to formatting start/end events, which might need a small script or
+   PR to `conform.nvim` for better event support). For now, `fidget.nvim` works
+   best with LSP, so you might see progress via LSP fallback formatting.
+
+Alternatively, `conform.nvim` can display notifications via `vim.notify` if you
+enable it, though it’s not a spinner by default.
+
+#### Why Switch?
+Switching to `conform.nvim` is likely the easiest and most sustainable solution.
+It’s actively maintained, supports async formatting out of the box, and has a
+similar configuration style to `formatter.nvim`, making migration
+straightforward as shown above.
+
+---
+
+### 2. Is there any way to wrap this tool in a separate asynchronous call, showing a spinner while it formats?
+
+**Yes**, you can wrap `mhartington/formatter.nvim` in an asynchronous call to
+prevent blocking the main thread, though this requires modifying how the
+formatter is invoked since `formatter.nvim` itself does not natively support
+asynchronous execution in its current design (as of the latest version). You can
+achieve this by overriding the formatting behavior with Neovim’s `vim.loop` API
+to run the external formatter process asynchronously, and you can display a
+spinner or progress indicator during the operation.
+
+#### Approach to Make `formatter.nvim` Asynchronous
+`formatter.nvim` allows custom formatter definitions, but its internal execution
+of the `exe` command (via `vim.fn.jobstart` or similar) is synchronous by
+default. To make it asynchronous:
+
+1. **Override the Formatter Execution**: Use a custom wrapper around the
+   formatter configuration to run the external command asynchronously with
+   `vim.loop.new_async()` or `vim.fn.jobstart` with proper callbacks.
+2. **Show a Spinner**: Use a plugin like `j-hui/fidget.nvim` or a custom
+   `vim.notify` message with a spinner animation while the async job runs.
+
+However, directly modifying `formatter.nvim`’s behavior without forking it is
+challenging because its core logic isn’t designed for async callbacks. A simpler
+workaround is to create a custom command or wrapper function that intercepts the
+formatting request and runs it asynchronously.
+
+Here’s a basic example of wrapping a formatter in an async call (this is a
+proof-of-concept and may need integration with `formatter.nvim`’s internals):
+
+```lua
+local function async_format(formatter_config)
+  local bufnr = vim.api.nvim_get_current_buf()
+  local content = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
+  local input = table.concat(content, "\n")
+  local output = ""
+
+  -- Show a spinner or notification
+  vim.notify("Formatting...", vim.log.levels.INFO, { title = "Formatter", timeout = false })
+
+  -- Run the formatter asynchronously using vim.loop
+  local handle = vim.loop.spawn(formatter_config.exe, {
+    args = formatter_config.args,
+    stdio = { nil, nil, nil }, -- We'll handle stdin/stdout manually if needed
+  }, function(code, signal)
+    if code == 0 then
+      vim.schedule(function()
+        -- Apply the formatted output to the buffer
+        local lines = vim.split(output, "\n")
+        vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, lines)
+        vim.notify("Formatting complete!", vim.log.levels.INFO, { title = "Formatter" })
+      end)
+    else
+      vim.schedule(function()
+        vim.notify("Formatting failed with code " .. code, vim.log.levels.ERROR, { title = "Formatter" })
+      end)
+    end
+    handle:close()
+  end)
+
+  -- Write input to stdin if the formatter supports it
+  if formatter_config.stdin then
+    handle:write(input)
+    handle:write(nil) -- Close stdin
+  end
+
+  -- Read stdout
+  handle:read_start(function(err, data)
+    if err then
+      vim.schedule(function()
+        vim.notify("Error reading formatter output: " .. err, vim.log.levels.ERROR, { title = "Formatter" })
+      end)
+    elseif data then
+      output = output .. data
+    end
+  end)
+end
+```
+
+This is a rough sketch and would need to be integrated with `formatter.nvim`’s
+configuration and event system. A full implementation would involve overriding
+the default `Format` command or hooking into the plugin’s internals, which is
+non-trivial without forking.
+
+#### Spinner Implementation
+For a spinner, you can use a plugin like `j-hui/fidget.nvim` or animate a simple
+`vim.notify` message with a timer to update a spinner character (e.g., `|`, `/`,
+`-`, `\`) while the async job runs. This requires additional scripting and isn’t
+built into `formatter.nvim`.
+
+**Challenges**:
+- Integrating this async wrapper with `formatter.nvim` without forking the
+  plugin is complex because you’d need to override its default synchronous
+  behavior.
+- A better approach might be switching to `conform.nvim` as described in
+  question 1, which already handles async formatting natively.
+
+---
+
+### 3. How difficult would it be to fork this tool and add asynchronous support to it? It would be exactly the same, except it would be asynchronous and run a spinner while formatting.
+
+**Forking `mhartington/formatter.nvim` and adding asynchronous support is
+feasible but involves moderate effort**, depending on your familiarity with Lua
+and Neovim’s API. Here’s an assessment of the difficulty and steps involved:
+
+#### Difficulty Level
+- **Moderate**: If you’re comfortable with Lua programming and Neovim’s
+  asynchronous APIs (`vim.loop`, `vim.fn.jobstart`), forking and modifying the
+  plugin is a reasonable task. The core logic of `formatter.nvim` is
+  straightforward—it constructs a command from `exe` and `args`, runs it, and
+  applies the output to the buffer. Changing this to use asynchronous job
+  control is a focused change.
+- **Time Estimate**: For someone with intermediate Lua/Neovim experience, this
+  could take a few hours to a day to implement and test basic async support.
+  Adding a spinner or progress UI might add another hour or two.
+
+#### Steps to Fork and Modify
+1. **Fork the Repository**:
+   - Clone the `mhartington/formatter.nvim` repository from GitHub
+     (`https://github.com/mhartington/formatter.nvim`).
+   - Create your own fork or local branch to work on.
+
+2. **Understand the Code**:
+   - The core of `formatter.nvim` is in `lua/formatter/init.lua` and related
+     files. Look for the function that executes the formatter (likely using
+     `vim.fn.system` or similar for synchronous execution).
+   - Identify where the `Format` command is defined and how it calls the
+     formatter.
+
+3. **Replace Synchronous Execution with Asynchronous**:
+   - Replace calls to `vim.fn.system` (or equivalent) with `vim.fn.jobstart` or
+     `vim.loop.spawn` to run the formatter process asynchronously.
+   - Use callbacks or `vim.schedule` to update the buffer with the formatter’s
+     output once the job completes.
+   - Here’s a pseudo-code example of the change:
+     ```lua
+     -- Old synchronous call (example)
+     local result = vim.fn.system(formatter_cmd)
+     vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, vim.split(result, "\n"))
+
+     -- New asynchronous call
+     vim.fn.jobstart(formatter_cmd, {
+       stdout_buffered = true,
+       on_stdout = function(_, data)
+         vim.schedule(function()
+           vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, data)
+         end)
+       end,
+       on_exit = function(_, code)
+         vim.schedule(function()
+           if code == 0 then
+             vim.notify("Formatting complete!", vim.log.levels.INFO)
+           else
+             vim.notify("Formatting failed!", vim.log.levels.ERROR)
+           end
+         end)
+       end,
+     })
+     ```
+
+4. **Add a Spinner or Progress Indicator**:
+   - Integrate a spinner using `vim.notify` with a timer to animate characters
+     (e.g., `|`, `/`, `-`, `\`), or use a plugin like `fidget.nvim` to show
+     progress.
+   - Start the spinner before the job begins and stop it in the `on_exit`
+     callback.
+
+5. **Test the Changes**:
+   - Test with small and large files across different formatters (`black`,
+     `dprint`, etc.) to ensure async behavior works without freezing.
+   - Handle edge cases like formatter errors, timeouts, and buffer updates.
+
+6. **Publish or Use Locally**:
+   - If successful, you can publish your fork as a new plugin (e.g.,
+     `yourname/async-formatter.nvim`) or use it locally by pointing your plugin
+     manager to your forked repository or local path.
+
+#### Challenges
+- **Error Handling**: Ensuring proper error handling for async jobs (e.g.,
+  timeouts, crashed formatters) adds complexity.
+- **Compatibility**: Maintaining compatibility with existing `formatter.nvim`
+  configs (like your complex conditional logic for `deno` vs. `biome`) requires
+  careful testing.
+- **Spinner UI**: Implementing a smooth spinner or progress UI in Neovim
+  requires additional scripting for animation or integration with a UI plugin.
+
+#### Recommendation
+Forking and modifying `formatter.nvim` is a good learning exercise if you’re
+interested in Neovim plugin development, but it might not be the most efficient
+solution given that `conform.nvim` already offers async support with a similar
+feature set. If you decide to fork, start with a minimal change to make one
+formatter async (e.g., `black` for Python) and expand from there.
+
+---
+
+### Final Recommendations
+
+1. **Easiest Solution (Switch to `conform.nvim`)**:
+   - I strongly recommend switching to `conform.nvim` as outlined in question 1.
+     It’s async by default, actively maintained, and supports your complex
+     conditional formatter logic (e.g., `deno` vs. `biome`). Pair it with
+     `fidget.nvim` or `vim.notify` for progress feedback. This avoids the need
+     to fork or hack `formatter.nvim`.
+
+2. **Wrapping `formatter.nvim` in Async Call**:
+   - Wrapping `formatter.nvim` in a custom async call is possible but requires
+     significant scripting to override its default behavior. It’s less practical
+     than switching to a natively async plugin like `conform.nvim`.
+
+3. **Forking `formatter.nvim`**:
+   - Forking and adding async support is a moderate-effort task if you’re
+     comfortable with Lua and Neovim’s API. It’s a viable option if you’re
+     attached to `formatter.nvim`’s specific workflow and want to contribute
+     back to the community, but it’s likely overkill given existing
+     alternatives.
+
+### Next Steps
+- **Try `conform.nvim` First**: Install and configure `conform.nvim` as shown
+  above. Test it with a large file to confirm it doesn’t block the UI. Add
+  `fidget.nvim` or a custom `vim.notify` for visual feedback.
+- **Fallback to Forking**: If `conform.nvim` doesn’t meet your needs (e.g., due
+  to specific `formatter.nvim` features you rely on), consider forking and
+  modifying `formatter.nvim`. I can help with specific code changes or PR
+  guidance if you choose this path.
+
+Let me know if you’d like a more detailed setup for `conform.nvim`, help with
+forking `formatter.nvim`, or a custom async wrapper script. I’m happy to assist
+further!
+
+# === USER ===
+
+ok, i agree that switching to `conform.nvim` is the best option. however, before i do that, i suspect i can clean up my current config to be better before switching. notice the "find file in cwd parents" function i created. i isn't there a function in neovim that does this already? doesn't it have some sort of pattern matching code to find files up in parent directories?
+
+```lua
+  -- Code formatting (":Format" command)
+  {
+    "mhartington/formatter.nvim",
+    config = function()
+      local uv = vim.loop -- Use Neovim's built-in libuv wrapper for filesystem operations
+
+      -- Function to recursively search for a file in the current directory or any parent directory
+      local function find_file_in_cwd_parents(filename)
+        ---@diagnostic disable-next-line: undefined-field
+        local cwd = uv.cwd() -- Get the current working directory
+
+        while cwd do
+          local filepath = cwd .. "/" .. filename
+          ---@diagnostic disable-next-line: undefined-field
+          local stat = uv.fs_stat(filepath)
+          if stat then
+            return true -- File found
+          end
+
+          -- Move to the parent directory
+          local parent = cwd:match("(.*/)[^/]+/?$")
+          if parent == cwd then
+            break -- Reached the root directory
+          end
+          cwd = parent
+        end
+
+        return false -- File not found in any parent directory
+      end
+
+      -- Function to search for a file (filename) in the directory of another file (full_path)
+      -- and recursively in its parent directories.
+      local function find_file_in_file_parents(filename, full_path)
+        -- Get the directory of the file passed in as full_path
+        local dir = vim.fn.fnamemodify(full_path, ":h") -- ":h" extracts the directory from full_path
+        --print("Starting search in directory: " .. dir)
+
+        while dir do
+          local filepath = dir .. "/" .. filename
+          --print("Checking for file at: " .. filepath) -- Debug print
+
+          local stat = vim.loop.fs_stat(filepath)
+          if stat then
+            print("File found: " .. filepath) -- Debug print when file is found
+            return filepath -- Return the absolute file path if found
+          end
+
+          -- Move to the parent directory
+          local parent = dir:match("(.*/)[^/]+/?$")
+          if not parent or parent == dir then
+            --print("Reached root directory, stopping search.") -- Debug print
+            break -- Reached the root directory
+          end
+
+          --print("Moving to parent directory: " .. parent) -- Debug print for parent
+          dir = parent
+        end
+
+        print("File not found.") -- Debug print when file is not found
+        return nil -- File not found
+      end
+
+      require("formatter").setup({
+        filetype = {
+          nu = {
+            -- Use topiary for formatting nushell scripts
+            function()
+              return {
+                exe = "topiary",
+                args = { "format", "--language", "nu" }, -- Format via stdin
+                stdin = true,
+              }
+            end,
+          },
+          markdown = {
+            function()
+              return {
+                exe = "dprint", -- Use dprint executable
+                args = {
+                  "fmt", -- Format command for dprint
+                  "--stdin", -- Pass content via stdin
+                  vim.api.nvim_buf_get_name(0), -- Pass the file path for context (helps dprint determine config)
+                },
+                stdin = true, -- Input is passed via stdin
+              }
+            end,
+          },
+          toml = {
+            function()
+              return {
+                exe = "dprint", -- Use dprint for formatting TOML
+                args = {
+                  "fmt", -- Format command for dprint
+                  "--stdin", -- Pass content via stdin
+                  vim.api.nvim_buf_get_name(0), -- Pass the file path for context (helps dprint determine config)
+                },
+                stdin = true, -- Input is passed via stdin
+              }
+            end,
+          },
+          -- other filetypes here...
+          typescript = {
+            function()
+              -- Detect if this is a Deno project by looking for a 'deno.json' or 'deno.jsonc'
+              if
+                find_file_in_cwd_parents("deno.json")
+                or find_file_in_cwd_parents("deno.jsonc")
+              then
+                return {
+                  exe = "deno",
+                  args = { "fmt", "-" }, -- Format via stdin
+                  stdin = true,
+                }
+              else
+                -- Use Biome for non-Deno TypeScript projects
+                local config_path = find_file_in_file_parents(
+                  "biome.json",
+                  vim.api.nvim_buf_get_name(0)
+                )
+                return {
+                  exe = "biome",
+                  args = {
+                    "format",
+                    "--config-path",
+                    config_path,
+                    "--stdin-file-path",
+                    string.format('"%s"', vim.api.nvim_buf_get_name(0)),
+                    "--write",
+                  },
+                  stdin = true,
+                }
+              end
+            end,
+          },
+          typescriptreact = {
+            function()
+              if
+                find_file_in_cwd_parents("deno.json")
+                or find_file_in_cwd_parents("deno.jsonc")
+              then
+                return {
+                  exe = "deno",
+                  args = { "fmt", "-" }, -- Format via stdin
+                  stdin = true,
+                }
+              else
+                local config_path = find_file_in_file_parents(
+                  "biome.json",
+                  vim.api.nvim_buf_get_name(0)
+                )
+                return {
+                  exe = "biome",
+                  args = {
+                    "format",
+                    "--config-path",
+                    config_path,
+                    "--stdin-file-path",
+                    string.format('"%s"', vim.api.nvim_buf_get_name(0)),
+                    "--write",
+                  },
+                  stdin = true,
+                }
+              end
+            end,
+          },
+          json = {
+            -- Conditional formatter for JSON files
+            function()
+              if
+                find_file_in_cwd_parents("deno.json")
+                or find_file_in_cwd_parents("deno.jsonc")
+              then
+                return {
+                  exe = "deno",
+                  args = {
+                    "fmt", -- Format command
+                    vim.api.nvim_buf_get_name(0), -- Pass the current file path to Deno
+                  },
+                  stdin = false, -- We’re passing the filename, not using stdin
+                }
+              else
+                local config_path = find_file_in_file_parents(
+                  "biome.json",
+                  vim.api.nvim_buf_get_name(0)
+                )
+                return {
+                  exe = "biome",
+                  args = {
+                    "format",
+                    "--config-path",
+                    config_path,
+                    "--stdin-file-path",
+                    string.format('"%s"', vim.api.nvim_buf_get_name(0)),
+                    "--write",
+                  },
+                  stdin = true,
+                }
+              end
+            end,
+          },
+          jsonc = {
+            -- Conditional formatter for JSONC files
+            function()
+              if
+                find_file_in_cwd_parents("deno.json")
+                or find_file_in_cwd_parents("deno.jsonc")
+              then
+                return {
+                  exe = "deno",
+                  args = {
+                    "fmt", -- Format command
+                    vim.api.nvim_buf_get_name(0), -- Pass the current file path to Deno
+                  },
+                  stdin = false, -- We’re passing the filename, not using stdin
+                }
+              else
+                local config_path = find_file_in_file_parents(
+                  "biome.json",
+                  vim.api.nvim_buf_get_name(0)
+                )
+                return {
+                  exe = "biome",
+                  args = {
+                    "format",
+                    "--config-path",
+                    config_path,
+                    "--stdin-file-path",
+                    string.format('"%s"', vim.api.nvim_buf_get_name(0)),
+                    "--write",
+                  },
+                  stdin = true,
+                }
+              end
+            end,
+          },
+          javascript = {
+            function()
+              if
+                find_file_in_cwd_parents("deno.json")
+                or find_file_in_cwd_parents("deno.jsonc")
+              then
+                return {
+                  exe = "deno",
+                  args = { "fmt", "-" }, -- Format via stdin
+                  stdin = true,
+                }
+              else
+                local config_path = find_file_in_file_parents(
+                  "biome.json",
+                  vim.api.nvim_buf_get_name(0)
+                )
+                return {
+                  exe = "biome",
+                  args = {
+                    "format",
+                    "--config-path",
+                    config_path,
+                    "--stdin-file-path",
+                    string.format('"%s"', vim.api.nvim_buf_get_name(0)),
+                    "--write",
+                  },
+                  stdin = true,
+                }
+              end
+            end,
+          },
+          javascriptreact = {
+            function()
+              if
+                find_file_in_cwd_parents("deno.json")
+                or find_file_in_cwd_parents("deno.jsonc")
+              then
+                return {
+                  exe = "deno",
+                  args = { "fmt", "-" }, -- Format via stdin
+                  stdin = true,
+                }
+              else
+                local config_path = find_file_in_file_parents(
+                  "biome.json",
+                  vim.api.nvim_buf_get_name(0)
+                )
+                return {
+                  exe = "biome",
+                  args = {
+                    "format",
+                    "--config-path",
+                    config_path,
+                    "--stdin-file-path",
+                    string.format('"%s"', vim.api.nvim_buf_get_name(0)),
+                    "--write",
+                  },
+                  stdin = true,
+                }
+              end
+            end,
+          },
+          lua = {
+            function()
+              return {
+                exe = "stylua",
+                args = {
+                  "--indent-type",
+                  "Spaces",
+                  "--indent-width",
+                  "2",
+                  "--search-parent-directories",
+                  "-",
+                },
+                stdin = true,
+              }
+            end,
+          },
+          rust = {
+            function()
+              return {
+                exe = "rustfmt",
+                args = { "--emit", "stdout" },
+                stdin = true,
+              }
+            end,
+          },
+          wgsl = {
+            function()
+              return {
+                exe = "wgsl_analyzer",
+                args = { "format" },
+                stdin = true,
+              }
+            end,
+          },
+          python = {
+            function()
+              return {
+                exe = "black",
+                args = { "-" },
+                stdin = true,
+              }
+            end,
+          },
+        },
+      })
+    end,
+  },
+```
+
+# === ASSISTANT ===
+
+You're right to consider cleaning up your current configuration before
+switching to `conform.nvim`. Simplifying and leveraging built-in Neovim
+functionality will make the transition smoother and your config more
+maintainable. Let's address your question about whether Neovim has built-in
+functions for searching for files in parent directories, and then I'll help
+refactor your configuration to use those utilities. After that, I'll provide an
+updated configuration for `conform.nvim` based on the cleaned-up version.
+
+### Does Neovim Have Built-in Functions for Finding Files in Parent Directories?
+
+**Yes**, Neovim (and Vim) provides built-in functions and utilities to search
+for files in the current directory or parent directories, so you don't need to
+write custom functions like `find_file_in_cwd_parents` or
+`find_file_in_file_parents`. Here are the relevant tools:
+
+1. **`vim.fn.findfile()`**:
+   - This function searches for a file in the current directory and upward
+     through parent directories. It uses the `path` option (or a custom path) to
+     determine where to search.
+   - Syntax: `vim.fn.findfile(name, path)`
+     - `name`: The filename or pattern to search for (e.g., `deno.json`).
+     - `path`: A string like `.;` (start from current directory and go up) or a
+       specific path.
+   - Returns: The full path to the file if found, or an empty string if not
+     found.
+   - Example:
+     ```lua
+     local deno_config = vim.fn.findfile("deno.json", ".;")
+     if deno_config ~= "" then
+       -- File found, use Deno formatter
+     end
+     ```
+
+2. **`vim.fn.filereadable()`**:
+   - Checks if a file exists and is readable. While it doesn't search parent
+     directories on its own, you can combine it with `vim.fn.findfile()` to
+     confirm a file’s existence.
+   - Example:
+     ```lua
+     if vim.fn.filereadable(vim.fn.findfile("deno.json", ".;")) == 1 then
+       -- File exists and is readable
+     end
+     ```
+
+3. **`lspconfig.util.root_pattern()`** (from `nvim-lspconfig`)**:
+   - If you're already using `nvim-lspconfig` for LSP configurations, it
+     provides `lspconfig.util.root_pattern()` which searches for files or
+     directories (like `deno.json`, `biome.json`, etc.) upward from the current
+     file’s directory to determine a project root. This is very similar to what
+     your custom functions do.
+   - While primarily used for LSP root directory detection, you can use it for
+     formatter selection as well.
+   - Example:
+     ```lua
+     local lspconfig = require('lspconfig')
+     local root_dir = lspconfig.util.root_pattern('deno.json', 'deno.jsonc')(vim.fn.expand('%:p:h'))
+     if root_dir then
+       -- Deno project detected
+     end
+     ```
+
+4. **`vim.fn.fnamemodify()`**:
+   - This is already used in your `find_file_in_file_parents` function to get
+     the directory of a file (`:h` modifier). It’s a powerful built-in for path
+     manipulation and works well with other functions like `vim.fn.findfile()`.
+
+### Why Use Built-in Functions?
+Using `vim.fn.findfile()` or `lspconfig.util.root_pattern()` instead of custom
+functions like `find_file_in_cwd_parents` and `find_file_in_file_parents` has
+several advantages:
+- **Simplicity**: Reduces code duplication and potential bugs in custom logic.
+- **Performance**: Built-in functions are optimized and often faster than manual
+  directory traversal in Lua.
+- **Maintainability**: Leverages Neovim’s standard APIs, making your config
+  easier to understand and maintain.
+
+### Refactoring Your Current Configuration
+Let’s refactor your configuration for `mhartington/formatter.nvim` by replacing
+your custom file-search functions with `vim.fn.findfile()`. This will simplify
+the logic for detecting project types (e.g., Deno vs. Biome).
+
+Here’s the cleaned-up version of your current config:
+
+```lua
+{
+  "mhartington/formatter.nvim",
+  config = function()
+    require("formatter").setup({
+      filetype = {
+        nu = {
+          function()
+            return {
+              exe = "topiary",
+              args = { "format", "--language", "nu" },
+              stdin = true,
+            }
+          end,
+        },
+        markdown = {
+          function()
+            return {
+              exe = "dprint",
+              args = {
+                "fmt",
+                "--stdin",
+                vim.api.nvim_buf_get_name(0),
+              },
+              stdin = true,
+            }
+          end,
+        },
+        toml = {
+          function()
+            return {
+              exe = "dprint",
+              args = {
+                "fmt",
+                "--stdin",
+                vim.api.nvim_buf_get_name(0),
+              },
+              stdin = true,
+            }
+          end,
+        },
+        typescript = {
+          function()
+            if vim.fn.findfile("deno.json", ".;") ~= "" or vim.fn.findfile("deno.jsonc", ".;") ~= "" then
+              return {
+                exe = "deno",
+                args = { "fmt", "-" },
+                stdin = true,
+              }
+            else
+              local biome_config = vim.fn.findfile("biome.json", ".;")
+              local config_path = biome_config ~= "" and vim.fn.fnamemodify(biome_config, ":h") or vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":h")
+              return {
+                exe = "biome",
+                args = {
+                  "format",
+                  "--config-path",
+                  config_path,
+                  "--stdin-file-path",
+                  string.format('"%s"', vim.api.nvim_buf_get_name(0)),
+                  "--write",
+                },
+                stdin = true,
+              }
+            end
+          end,
+        },
+        typescriptreact = {
+          function()
+            if vim.fn.findfile("deno.json", ".;") ~= "" or vim.fn.findfile("deno.jsonc", ".;") ~= "" then
+              return {
+                exe = "deno",
+                args = { "fmt", "-" },
+                stdin = true,
+              }
+            else
+              local biome_config = vim.fn.findfile("biome.json", ".;")
+              local config_path = biome_config ~= "" and vim.fn.fnamemodify(biome_config, ":h") or vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":h")
+              return {
+                exe = "biome",
+                args = {
+                  "format",
+                  "--config-path",
+                  config_path,
+                  "--stdin-file-path",
+                  string.format('"%s"', vim.api.nvim_buf_get_name(0)),
+                  "--write",
+                },
+                stdin = true,
+              }
+            end
+          end,
+        },
+        json = {
+          function()
+            if vim.fn.findfile("deno.json", ".;") ~= "" or vim.fn.findfile("deno.jsonc", ".;") ~= "" then
+              return {
+                exe = "deno",
+                args = {
+                  "fmt",
+                  vim.api.nvim_buf_get_name(0),
+                },
+                stdin = false,
+              }
+            else
+              local biome_config = vim.fn.findfile("biome.json", ".;")
+              local config_path = biome_config ~= "" and vim.fn.fnamemodify(biome_config, ":h") or vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":h")
+              return {
+                exe = "biome",
+                args = {
+                  "format",
+                  "--config-path",
+                  config_path,
+                  "--stdin-file-path",
+                  string.format('"%s"', vim.api.nvim_buf_get_name(0)),
+                  "--write",
+                },
+                stdin = true,
+              }
+            end
+          end,
+        },
+        jsonc = {
+          function()
+            if vim.fn.findfile("deno.json", ".;") ~= "" or vim.fn.findfile("deno.jsonc", ".;") ~= "" then
+              return {
+                exe = "deno",
+                args = {
+                  "fmt",
+                  vim.api.nvim_buf_get_name(0),
+                },
+                stdin = false,
+              }
+            else
+              local biome_config = vim.fn.findfile("biome.json", ".;")
+              local config_path = biome_config ~= "" and vim.fn.fnamemodify(biome_config, ":h") or vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":h")
+              return {
+                exe = "biome",
+                args = {
+                  "format",
+                  "--config-path",
+                  config_path,
+                  "--stdin-file-path",
+                  string.format('"%s"', vim.api.nvim_buf_get_name(0)),
+                  "--write",
+                },
+                stdin = true,
+              }
+            end
+          end,
+        },
+        javascript = {
+          function()
+            if vim.fn.findfile("deno.json", ".;") ~= "" or vim.fn.findfile("deno.jsonc", ".;") ~= "" then
+              return {
+                exe = "deno",
+                args = { "fmt", "-" },
+                stdin = true,
+              }
+            else
+              local biome_config = vim.fn.findfile("biome.json", ".;")
+              local config_path = biome_config ~= "" and vim.fn.fnamemodify(biome_config, ":h") or vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":h")
+              return {
+                exe = "biome",
+                args = {
+                  "format",
+                  "--config-path",
+                  config_path,
+                  "--stdin-file-path",
+                  string.format('"%s"', vim.api.nvim_buf_get_name(0)),
+                  "--write",
+                },
+                stdin = true,
+              }
+            end
+          end,
+        },
+        javascriptreact = {
+          function()
+            if vim.fn.findfile("deno.json", ".;") ~= "" or vim.fn.findfile("deno.jsonc", ".;") ~= "" then
+              return {
+                exe = "deno",
+                args = { "fmt", "-" },
+                stdin = true,
+              }
+            else
+              local biome_config = vim.fn.findfile("biome.json", ".;")
+              local config_path = biome_config ~= "" and vim.fn.fnamemodify(biome_config, ":h") or vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":h")
+              return {
+                exe = "biome",
+                args = {
+                  "format",
+                  "--config-path",
+                  config_path,
+                  "--stdin-file-path",
+                  string.format('"%s"', vim.api.nvim_buf_get_name(0)),
+                  "--write",
+                },
+                stdin = true,
+              }
+            end
+          end,
+        },
+        lua = {
+          function()
+            return {
+              exe = "stylua",
+              args = {
+                "--indent-type",
+                "Spaces",
+                "--indent-width",
+                "2",
+                "--search-parent-directories",
+                "-",
+              },
+              stdin = true,
+            }
+          end,
+        },
+        rust = {
+          function()
+            return {
+              exe = "rustfmt",
+              args = { "--emit", "stdout" },
+              stdin = true,
+            }
+          end,
+        },
+        wgsl = {
+          function()
+            return {
+              exe = "wgsl_analyzer",
+              args = { "format" },
+              stdin = true,
+            }
+          end,
+        },
+        python = {
+          function()
+            return {
+              exe = "black",
+              args = { "-" },
+              stdin = true,
+            }
+          end,
+        },
+      },
+    })
+  end,
+},
+```
+
+### Explanation of Changes
+- **Removed Custom Functions**: Replaced `find_file_in_cwd_parents` and
+  `find_file_in_file_parents` with `vim.fn.findfile("filename", ".;")`, which
+  searches upward from the current file’s directory or working directory.
+- **Simplified Logic**: Used `vim.fn.fnamemodify(path, ":h")` to extract the
+  directory of a found config file (e.g., `biome.json`) for use in
+  `--config-path`.
+- **Fallback Path**: If a config file like `biome.json` is not found, the
+  current file’s directory is used as a fallback for `--config-path`, ensuring
+  the formatter doesn’t fail.
+
+This refactoring removes over 50 lines of custom code while maintaining the same
+functionality. It leverages Neovim’s built-in file search capabilities, making
+the config cleaner and less prone to bugs.
+
+### Transition to `conform.nvim`
+Now that your config is simplified, transitioning to `conform.nvim` (which
+supports asynchronous formatting) is straightforward. `conform.nvim` uses a
+similar structure for defining formatters per filetype and supports dynamic
+formatter selection via functions. Below is your configuration adapted to
+`conform.nvim`:
+
+```lua
+{
+  "stevearc/conform.nvim",
+  config = function()
+    require("conform").setup({
+      formatters_by_ft = {
+        markdown = { "dprint" },
+        toml = { "dprint" },
+        typescript = {
+          function(bufnr)
+            if vim.fn.findfile("deno.json", ".;") ~= "" or vim.fn.findfile("deno.jsonc", ".;") ~= "" then
+              return { "deno_fmt" }
+            else
+              return { "biome" }
+            end
+          end,
+        },
+        typescriptreact = {
+          function(bufnr)
+            if vim.fn.findfile("deno.json", ".;") ~= "" or vim.fn.findfile("deno.jsonc", ".;") ~= "" then
+              return { "deno_fmt" }
+            else
+              return { "biome" }
+            end
+          end,
+        },
+        javascript = {
+          function(bufnr)
+            if vim.fn.findfile("deno.json", ".;") ~= "" or vim.fn.findfile("deno.jsonc", ".;") ~= "" then
+              return { "deno_fmt" }
+            else
+              return { "biome" }
+            end
+          end,
+        },
+        javascriptreact = {
+          function(bufnr)
+            if vim.fn.findfile("deno.json", ".;") ~= "" or vim.fn.findfile("deno.jsonc", ".;") ~= "" then
+              return { "deno_fmt" }
+            else
+              return { "biome" }
+            end
+          end,
+        },
+        json = {
+          function(bufnr)
+            if vim.fn.findfile("deno.json", ".;") ~= "" or vim.fn.findfile("deno.jsonc", ".;") ~= "" then
+              return { "deno_fmt_json" }
+            else
+              return { "biome" }
+            end
+          end,
+        },
+        jsonc = {
+          function(bufnr)
+            if vim.fn.findfile("deno.json", ".;") ~= "" or vim.fn.findfile("deno.jsonc", ".;") ~= "" then
+              return { "deno_fmt_jsonc" }
+            else
+              return { "biome" }
+            end
+          end,
+        },
+        lua = { "stylua" },
+        rust = { "rustfmt" },
+        python = { "black" },
+        nu = { "topiary" },
+        wgsl = { "wgsl_analyzer" },
+      },
+      format_on_save = {
+        timeout_ms = 500,
+        lsp_fallback = true,
+      },
+      formatters = {
+        deno_fmt = {
+          command = "deno",
+          args = { "fmt", "-" },
+          stdin = true,
+        },
+        deno_fmt_json = {
+          command = "deno",
+          args = { "fmt", "$FILENAME" },
+          stdin = false,
+          cwd = function(self, ctx)
+            return vim.fn.fnamemodify(ctx.filename, ":h")
+          end,
+        },
+        deno_fmt_jsonc = {
+          command = "deno",
+          args = { "fmt", "$FILENAME" },
+          stdin = false,
+          cwd = function(self, ctx)
+            return vim.fn.fnamemodify(ctx.filename, ":h")
+          end,
+        },
+        biome = {
+          command = "biome",
+          args = function(self, ctx)
+            local biome_config = vim.fn.findfile("biome.json", ".;")
+            local config_path = biome_config ~= "" and vim.fn.fnamemodify(biome_config, ":h") or vim.fn.fnamemodify(ctx.filename, ":h")
+            return {
+              "format",
+              "--config-path",
+              config_path,
+              "--stdin-file-path",
+              ctx.filename,
+            }
+          end,
+          stdin = true,
+        },
+        dprint = {
+          command = "dprint",
+          args = function(self, ctx)
+            return { "fmt", "--stdin", ctx.filename }
+          end,
+          stdin = true,
+        },
+        stylua = {
+          command = "stylua",
+          args = { "--indent-type", "Spaces", "--indent-width", "2", "--search-parent-directories", "-" },
+          stdin = true,
+        },
+        rustfmt = {
+          command = "rustfmt",
+          args = { "--emit", "stdout" },
+          stdin = true,
+        },
+        black = {
+          command = "black",
+          args = { "-" },
+          stdin = true,
+        },
+        topiary = {
+          command = "topiary",
+          args = { "format", "--language", "nu" },
+          stdin = true,
+        },
+        wgsl_analyzer = {
+          command = "wgsl_analyzer",
+          args = { "format" },
+          stdin = true,
+        },
+      },
+    })
+  end,
+},
+```
+
+### Explanation of `conform.nvim` Configuration
+- **Formatters by Filetype**: Maps filetypes to formatters, using functions for
+  conditional logic (e.g., Deno vs. Biome for TypeScript).
+- **Custom Formatters**: Defines formatter configurations with `command`, `args`,
+  and `stdin`. `conform.nvim` runs these asynchronously by default, preventing
+  UI freezing on large files.
+- **Format on Save**: Configures automatic formatting on save with a timeout and
+  LSP fallback if the formatter fails or times out.
+- **Conditional Logic**: Uses `vim.fn.findfile()` for detecting project types,
+  maintaining your original logic for selecting formatters.
+- **Separate JSON/JSONC for Deno**: Since `deno fmt` for JSON/JSONC doesn’t use
+  `stdin` in your config, I created separate formatter entries (`deno_fmt_json`
+  and `deno_fmt_jsonc`) with `stdin = false` and used `$FILENAME` placeholder
+  provided by `conform.nvim`.
+
+### Adding a Progress Indicator (Optional)
+To show a spinner or progress indicator while formatting, you can pair
+`conform.nvim` with a plugin like `j-hui/fidget.nvim` for a nice UI feedback
+loop, though `conform.nvim` doesn't natively integrate with it for formatting
+progress (it’s more LSP-focused). Alternatively, use `vim.notify` for simple
+notifications:
+
+1. Install `fidget.nvim` (optional):
+   ```lua
+   { "j-hui/fidget.nvim", tag = "legacy", opts = {} }
+   ```
+
+2. `conform.nvim` can show basic notifications via `vim.notify` if desired, but
+   for now, its async nature means you won’t experience freezes, and a spinner
+   might be overkill unless formatting takes several seconds.
+
+### Testing the New Setup
+1. Replace your `formatter.nvim` plugin entry with the `conform.nvim`
+   configuration above in your plugin manager (e.g., `packer.nvim`, `lazy.nvim`).
+2. Open a large file (e.g., a large Markdown or Python file) and run `:Format`
+   (or save if `format_on_save` is enabled).
+3. Confirm that Neovim remains responsive during formatting (no freezing).
+4. Use `:LspInfo` or check `vim.notify` messages if there are errors with
+   formatter execution.
+
+### Final Notes
+By refactoring your config to use `vim.fn.findfile()`, you’ve significantly
+simplified the logic for detecting project configuration files like `deno.json`
+and `biome.json`. Switching to `conform.nvim` then builds on this clean base,
+providing asynchronous formatting to avoid UI freezes on large files. If you
+encounter any issues during the transition (e.g., formatter-specific quirks or
+progress indicator setup), let me know, and I’ll help debug or refine the
+configuration further!
+
+# === USER ===
+
+

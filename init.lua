@@ -554,350 +554,255 @@ require("lazy").setup({
     end,
   },
 
-  -- Code formatting (":Format" command)
-  {
-    "mhartington/formatter.nvim",
-    config = function()
-      local uv = vim.loop -- Use Neovim's built-in libuv wrapper for filesystem operations
-
-      -- Function to recursively search for a file in the current directory or any parent directory
-      local function find_file_in_cwd_parents(filename)
-        ---@diagnostic disable-next-line: undefined-field
-        local cwd = uv.cwd() -- Get the current working directory
-
-        while cwd do
-          local filepath = cwd .. "/" .. filename
-          ---@diagnostic disable-next-line: undefined-field
-          local stat = uv.fs_stat(filepath)
-          if stat then
-            return true -- File found
-          end
-
-          -- Move to the parent directory
-          local parent = cwd:match("(.*/)[^/]+/?$")
-          if parent == cwd then
-            break -- Reached the root directory
-          end
-          cwd = parent
-        end
-
-        return false -- File not found in any parent directory
-      end
-
-      -- Function to search for a file (filename) in the directory of another file (full_path)
-      -- and recursively in its parent directories.
-      local function find_file_in_file_parents(filename, full_path)
-        -- Get the directory of the file passed in as full_path
-        local dir = vim.fn.fnamemodify(full_path, ":h") -- ":h" extracts the directory from full_path
-        --print("Starting search in directory: " .. dir)
-
-        while dir do
-          local filepath = dir .. "/" .. filename
-          --print("Checking for file at: " .. filepath) -- Debug print
-
-          local stat = vim.loop.fs_stat(filepath)
-          if stat then
-            print("File found: " .. filepath) -- Debug print when file is found
-            return filepath -- Return the absolute file path if found
-          end
-
-          -- Move to the parent directory
-          local parent = dir:match("(.*/)[^/]+/?$")
-          if not parent or parent == dir then
-            --print("Reached root directory, stopping search.") -- Debug print
-            break -- Reached the root directory
-          end
-
-          --print("Moving to parent directory: " .. parent) -- Debug print for parent
-          dir = parent
-        end
-
-        print("File not found.") -- Debug print when file is not found
-        return nil -- File not found
-      end
-
-      require("formatter").setup({
-        filetype = {
-          nu = {
-            -- Use topiary for formatting nushell scripts
-            function()
-              return {
-                exe = "topiary",
-                args = { "format", "--language", "nu" }, -- Format via stdin
-                stdin = true,
-              }
-            end,
-          },
-          markdown = {
-            function()
-              return {
-                exe = "dprint", -- Use dprint executable
-                args = {
-                  "fmt", -- Format command for dprint
-                  "--stdin", -- Pass content via stdin
-                  vim.api.nvim_buf_get_name(0), -- Pass the file path for context (helps dprint determine config)
-                },
-                stdin = true, -- Input is passed via stdin
-              }
-            end,
-          },
-          toml = {
-            function()
-              return {
-                exe = "dprint", -- Use dprint for formatting TOML
-                args = {
-                  "fmt", -- Format command for dprint
-                  "--stdin", -- Pass content via stdin
-                  vim.api.nvim_buf_get_name(0), -- Pass the file path for context (helps dprint determine config)
-                },
-                stdin = true, -- Input is passed via stdin
-              }
-            end,
-          },
-          -- other filetypes here...
-          typescript = {
-            function()
-              -- Detect if this is a Deno project by looking for a 'deno.json' or 'deno.jsonc'
-              if
-                find_file_in_cwd_parents("deno.json")
-                or find_file_in_cwd_parents("deno.jsonc")
-              then
-                return {
-                  exe = "deno",
-                  args = { "fmt", "-" }, -- Format via stdin
-                  stdin = true,
-                }
-              else
-                -- Use Biome for non-Deno TypeScript projects
-                local config_path = find_file_in_file_parents(
-                  "biome.json",
-                  vim.api.nvim_buf_get_name(0)
-                )
-                return {
-                  exe = "biome",
-                  args = {
-                    "format",
-                    "--config-path",
-                    config_path,
-                    "--stdin-file-path",
-                    string.format('"%s"', vim.api.nvim_buf_get_name(0)),
-                    "--write",
-                  },
-                  stdin = true,
-                }
-              end
-            end,
-          },
-          typescriptreact = {
-            function()
-              if
-                find_file_in_cwd_parents("deno.json")
-                or find_file_in_cwd_parents("deno.jsonc")
-              then
-                return {
-                  exe = "deno",
-                  args = { "fmt", "-" }, -- Format via stdin
-                  stdin = true,
-                }
-              else
-                local config_path = find_file_in_file_parents(
-                  "biome.json",
-                  vim.api.nvim_buf_get_name(0)
-                )
-                return {
-                  exe = "biome",
-                  args = {
-                    "format",
-                    "--config-path",
-                    config_path,
-                    "--stdin-file-path",
-                    string.format('"%s"', vim.api.nvim_buf_get_name(0)),
-                    "--write",
-                  },
-                  stdin = true,
-                }
-              end
-            end,
-          },
-          json = {
-            -- Conditional formatter for JSON files
-            function()
-              if
-                find_file_in_cwd_parents("deno.json")
-                or find_file_in_cwd_parents("deno.jsonc")
-              then
-                return {
-                  exe = "deno",
-                  args = {
-                    "fmt", -- Format command
-                    vim.api.nvim_buf_get_name(0), -- Pass the current file path to Deno
-                  },
-                  stdin = false, -- We’re passing the filename, not using stdin
-                }
-              else
-                local config_path = find_file_in_file_parents(
-                  "biome.json",
-                  vim.api.nvim_buf_get_name(0)
-                )
-                return {
-                  exe = "biome",
-                  args = {
-                    "format",
-                    "--config-path",
-                    config_path,
-                    "--stdin-file-path",
-                    string.format('"%s"', vim.api.nvim_buf_get_name(0)),
-                    "--write",
-                  },
-                  stdin = true,
-                }
-              end
-            end,
-          },
-          jsonc = {
-            -- Conditional formatter for JSONC files
-            function()
-              if
-                find_file_in_cwd_parents("deno.json")
-                or find_file_in_cwd_parents("deno.jsonc")
-              then
-                return {
-                  exe = "deno",
-                  args = {
-                    "fmt", -- Format command
-                    vim.api.nvim_buf_get_name(0), -- Pass the current file path to Deno
-                  },
-                  stdin = false, -- We’re passing the filename, not using stdin
-                }
-              else
-                local config_path = find_file_in_file_parents(
-                  "biome.json",
-                  vim.api.nvim_buf_get_name(0)
-                )
-                return {
-                  exe = "biome",
-                  args = {
-                    "format",
-                    "--config-path",
-                    config_path,
-                    "--stdin-file-path",
-                    string.format('"%s"', vim.api.nvim_buf_get_name(0)),
-                    "--write",
-                  },
-                  stdin = true,
-                }
-              end
-            end,
-          },
-          javascript = {
-            function()
-              if
-                find_file_in_cwd_parents("deno.json")
-                or find_file_in_cwd_parents("deno.jsonc")
-              then
-                return {
-                  exe = "deno",
-                  args = { "fmt", "-" }, -- Format via stdin
-                  stdin = true,
-                }
-              else
-                local config_path = find_file_in_file_parents(
-                  "biome.json",
-                  vim.api.nvim_buf_get_name(0)
-                )
-                return {
-                  exe = "biome",
-                  args = {
-                    "format",
-                    "--config-path",
-                    config_path,
-                    "--stdin-file-path",
-                    string.format('"%s"', vim.api.nvim_buf_get_name(0)),
-                    "--write",
-                  },
-                  stdin = true,
-                }
-              end
-            end,
-          },
-          javascriptreact = {
-            function()
-              if
-                find_file_in_cwd_parents("deno.json")
-                or find_file_in_cwd_parents("deno.jsonc")
-              then
-                return {
-                  exe = "deno",
-                  args = { "fmt", "-" }, -- Format via stdin
-                  stdin = true,
-                }
-              else
-                local config_path = find_file_in_file_parents(
-                  "biome.json",
-                  vim.api.nvim_buf_get_name(0)
-                )
-                return {
-                  exe = "biome",
-                  args = {
-                    "format",
-                    "--config-path",
-                    config_path,
-                    "--stdin-file-path",
-                    string.format('"%s"', vim.api.nvim_buf_get_name(0)),
-                    "--write",
-                  },
-                  stdin = true,
-                }
-              end
-            end,
-          },
-          lua = {
-            function()
-              return {
-                exe = "stylua",
-                args = {
-                  "--indent-type",
-                  "Spaces",
-                  "--indent-width",
-                  "2",
-                  "--search-parent-directories",
-                  "-",
-                },
-                stdin = true,
-              }
-            end,
-          },
-          rust = {
-            function()
-              return {
-                exe = "rustfmt",
-                args = { "--emit", "stdout" },
-                stdin = true,
-              }
-            end,
-          },
-          wgsl = {
-            function()
-              return {
-                exe = "wgsl_analyzer",
-                args = { "format" },
-                stdin = true,
-              }
-            end,
-          },
-          python = {
-            function()
-              return {
-                exe = "black",
-                args = { "-" },
-                stdin = true,
-              }
-            end,
-          },
+{
+  "mhartington/formatter.nvim",
+  config = function()
+    require("formatter").setup({
+      filetype = {
+        nu = {
+          function()
+            return {
+              exe = "topiary",
+              args = { "format", "--language", "nu" },
+              stdin = true,
+            }
+          end,
         },
-      })
-    end,
-  },
+        markdown = {
+          function()
+            return {
+              exe = "dprint",
+              args = {
+                "fmt",
+                "--stdin",
+                vim.api.nvim_buf_get_name(0),
+              },
+              stdin = true,
+            }
+          end,
+        },
+        toml = {
+          function()
+            return {
+              exe = "dprint",
+              args = {
+                "fmt",
+                "--stdin",
+                vim.api.nvim_buf_get_name(0),
+              },
+              stdin = true,
+            }
+          end,
+        },
+        typescript = {
+          function()
+            if vim.fn.findfile("deno.json", ".;") ~= "" or vim.fn.findfile("deno.jsonc", ".;") ~= "" then
+              return {
+                exe = "deno",
+                args = { "fmt", "-" },
+                stdin = true,
+              }
+            else
+              local biome_config = vim.fn.findfile("biome.json", ".;")
+              local config_path = biome_config ~= "" and vim.fn.fnamemodify(biome_config, ":h") or vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":h")
+              return {
+                exe = "biome",
+                args = {
+                  "format",
+                  "--config-path",
+                  config_path,
+                  "--stdin-file-path",
+                  string.format('"%s"', vim.api.nvim_buf_get_name(0)),
+                  "--write",
+                },
+                stdin = true,
+              }
+            end
+          end,
+        },
+        typescriptreact = {
+          function()
+            if vim.fn.findfile("deno.json", ".;") ~= "" or vim.fn.findfile("deno.jsonc", ".;") ~= "" then
+              return {
+                exe = "deno",
+                args = { "fmt", "-" },
+                stdin = true,
+              }
+            else
+              local biome_config = vim.fn.findfile("biome.json", ".;")
+              local config_path = biome_config ~= "" and vim.fn.fnamemodify(biome_config, ":h") or vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":h")
+              return {
+                exe = "biome",
+                args = {
+                  "format",
+                  "--config-path",
+                  config_path,
+                  "--stdin-file-path",
+                  string.format('"%s"', vim.api.nvim_buf_get_name(0)),
+                  "--write",
+                },
+                stdin = true,
+              }
+            end
+          end,
+        },
+        json = {
+          function()
+            if vim.fn.findfile("deno.json", ".;") ~= "" or vim.fn.findfile("deno.jsonc", ".;") ~= "" then
+              return {
+                exe = "deno",
+                args = {
+                  "fmt",
+                  vim.api.nvim_buf_get_name(0),
+                },
+                stdin = false,
+              }
+            else
+              local biome_config = vim.fn.findfile("biome.json", ".;")
+              local config_path = biome_config ~= "" and vim.fn.fnamemodify(biome_config, ":h") or vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":h")
+              return {
+                exe = "biome",
+                args = {
+                  "format",
+                  "--config-path",
+                  config_path,
+                  "--stdin-file-path",
+                  string.format('"%s"', vim.api.nvim_buf_get_name(0)),
+                  "--write",
+                },
+                stdin = true,
+              }
+            end
+          end,
+        },
+        jsonc = {
+          function()
+            if vim.fn.findfile("deno.json", ".;") ~= "" or vim.fn.findfile("deno.jsonc", ".;") ~= "" then
+              return {
+                exe = "deno",
+                args = {
+                  "fmt",
+                  vim.api.nvim_buf_get_name(0),
+                },
+                stdin = false,
+              }
+            else
+              local biome_config = vim.fn.findfile("biome.json", ".;")
+              local config_path = biome_config ~= "" and vim.fn.fnamemodify(biome_config, ":h") or vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":h")
+              return {
+                exe = "biome",
+                args = {
+                  "format",
+                  "--config-path",
+                  config_path,
+                  "--stdin-file-path",
+                  string.format('"%s"', vim.api.nvim_buf_get_name(0)),
+                  "--write",
+                },
+                stdin = true,
+              }
+            end
+          end,
+        },
+        javascript = {
+          function()
+            if vim.fn.findfile("deno.json", ".;") ~= "" or vim.fn.findfile("deno.jsonc", ".;") ~= "" then
+              return {
+                exe = "deno",
+                args = { "fmt", "-" },
+                stdin = true,
+              }
+            else
+              local biome_config = vim.fn.findfile("biome.json", ".;")
+              local config_path = biome_config ~= "" and vim.fn.fnamemodify(biome_config, ":h") or vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":h")
+              return {
+                exe = "biome",
+                args = {
+                  "format",
+                  "--config-path",
+                  config_path,
+                  "--stdin-file-path",
+                  string.format('"%s"', vim.api.nvim_buf_get_name(0)),
+                  "--write",
+                },
+                stdin = true,
+              }
+            end
+          end,
+        },
+        javascriptreact = {
+          function()
+            if vim.fn.findfile("deno.json", ".;") ~= "" or vim.fn.findfile("deno.jsonc", ".;") ~= "" then
+              return {
+                exe = "deno",
+                args = { "fmt", "-" },
+                stdin = true,
+              }
+            else
+              local biome_config = vim.fn.findfile("biome.json", ".;")
+              local config_path = biome_config ~= "" and vim.fn.fnamemodify(biome_config, ":h") or vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":h")
+              return {
+                exe = "biome",
+                args = {
+                  "format",
+                  "--config-path",
+                  config_path,
+                  "--stdin-file-path",
+                  string.format('"%s"', vim.api.nvim_buf_get_name(0)),
+                  "--write",
+                },
+                stdin = true,
+              }
+            end
+          end,
+        },
+        lua = {
+          function()
+            return {
+              exe = "stylua",
+              args = {
+                "--indent-type",
+                "Spaces",
+                "--indent-width",
+                "2",
+                "--search-parent-directories",
+                "-",
+              },
+              stdin = true,
+            }
+          end,
+        },
+        rust = {
+          function()
+            return {
+              exe = "rustfmt",
+              args = { "--emit", "stdout" },
+              stdin = true,
+            }
+          end,
+        },
+        wgsl = {
+          function()
+            return {
+              exe = "wgsl_analyzer",
+              args = { "format" },
+              stdin = true,
+            }
+          end,
+        },
+        python = {
+          function()
+            return {
+              exe = "black",
+              args = { "-" },
+              stdin = true,
+            }
+          end,
+        },
+      },
+    })
+  end,
+},
 
   -- Colorizer for HTML/CSS
   {
