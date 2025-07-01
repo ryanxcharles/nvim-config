@@ -613,10 +613,6 @@ require("lazy").setup({
           biome = {
             command = "biome",
             args = function(self, ctx)
-              -- local biome_config = vim.fn.findfile("biome.json", ".;")
-              -- local config_path = biome_config ~= ""
-              --     and vim.fn.fnamemodify(biome_config, ":h")
-              --   or vim.fn.fnamemodify(ctx.filename, ":h")
               local config_path = find_file_in_file_parents("biome.json", ctx.filename)
               return {
                 "format",
