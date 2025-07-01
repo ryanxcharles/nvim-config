@@ -2601,12 +2601,10 @@ here is my current configuration:
   },
 ```
 
-
-
 # === ASSISTANT ===
 
-I'm glad you're finding `mhartington/formatter.nvim` useful for formatting
-your code and text files in Neovim. You're correct that the issue of freezing on
+I'm glad you're finding `mhartington/formatter.nvim` useful for formatting your
+code and text files in Neovim. You're correct that the issue of freezing on
 large files is likely due to the formatter running synchronously on the main
 thread, which blocks the UI during the operation. Neovim does have excellent
 support for asynchronous operations via its `vim.loop` API and other mechanisms,
@@ -2637,17 +2635,19 @@ the operation. One of the most popular and actively maintained options is
 by default and integrates well with Neovim's modern Lua ecosystem.
 
 #### About `conform.nvim`
+
 - **Asynchronous by Default**: `conform.nvim` uses Neovim's `vim.loop` to run
   external formatting tools asynchronously, preventing the UI from freezing even
   on large files.
 - **Progress Feedback**: It supports showing notifications or progress
-  indicators via integration with plugins like `nvim-notify` or Neovim's built-in
-  status line updates (though a spinner might require additional setup or a
-  plugin like `fidget.nvim` for LSP-like progress spinners).
+  indicators via integration with plugins like `nvim-notify` or Neovim's
+  built-in status line updates (though a spinner might require additional setup
+  or a plugin like `fidget.nvim` for LSP-like progress spinners).
 - **Highly Configurable**: It supports multiple formatters per filetype, LSP
   fallback, and custom configurations similar to `formatter.nvim`.
 
 #### Setup with `conform.nvim`
+
 To switch to `conform.nvim`, you can adapt your current configuration. Here's an
 example of how to migrate your setup:
 
@@ -2787,12 +2787,12 @@ example of how to migrate your setup:
 ```
 
 #### Adding a Spinner with `fidget.nvim`
+
 To show a spinner or progress indicator while formatting, you can pair
-`conform.nvim` with a plugin like `j-hui/fidget.nvim`, which displays
-progress notifications for asynchronous tasks (originally designed for LSP but
-works with other async operations via custom integration). While `conform.nvim`
-doesn't natively show a spinner, you can hook into its events to display
-progress:
+`conform.nvim` with a plugin like `j-hui/fidget.nvim`, which displays progress
+notifications for asynchronous tasks (originally designed for LSP but works with
+other async operations via custom integration). While `conform.nvim` doesn't
+natively show a spinner, you can hook into its events to display progress:
 
 1. Install `fidget.nvim`:
    ```lua
@@ -2808,6 +2808,7 @@ Alternatively, `conform.nvim` can display notifications via `vim.notify` if you
 enable it, though it’s not a spinner by default.
 
 #### Why Switch?
+
 Switching to `conform.nvim` is likely the easiest and most sustainable solution.
 It’s actively maintained, supports async formatting out of the box, and has a
 similar configuration style to `formatter.nvim`, making migration
@@ -2826,6 +2827,7 @@ to run the external formatter process asynchronously, and you can display a
 spinner or progress indicator during the operation.
 
 #### Approach to Make `formatter.nvim` Asynchronous
+
 `formatter.nvim` allows custom formatter definitions, but its internal execution
 of the `exe` command (via `vim.fn.jobstart` or similar) is synchronous by
 default. To make it asynchronous:
@@ -2899,12 +2901,14 @@ the default `Format` command or hooking into the plugin’s internals, which is
 non-trivial without forking.
 
 #### Spinner Implementation
+
 For a spinner, you can use a plugin like `j-hui/fidget.nvim` or animate a simple
 `vim.notify` message with a timer to update a spinner character (e.g., `|`, `/`,
 `-`, `\`) while the async job runs. This requires additional scripting and isn’t
 built into `formatter.nvim`.
 
 **Challenges**:
+
 - Integrating this async wrapper with `formatter.nvim` without forking the
   plugin is complex because you’d need to override its default synchronous
   behavior.
@@ -2920,6 +2924,7 @@ feasible but involves moderate effort**, depending on your familiarity with Lua
 and Neovim’s API. Here’s an assessment of the difficulty and steps involved:
 
 #### Difficulty Level
+
 - **Moderate**: If you’re comfortable with Lua programming and Neovim’s
   asynchronous APIs (`vim.loop`, `vim.fn.jobstart`), forking and modifying the
   plugin is a reasonable task. The core logic of `formatter.nvim` is
@@ -2931,6 +2936,7 @@ and Neovim’s API. Here’s an assessment of the difficulty and steps involved:
   Adding a spinner or progress UI might add another hour or two.
 
 #### Steps to Fork and Modify
+
 1. **Fork the Repository**:
    - Clone the `mhartington/formatter.nvim` repository from GitHub
      (`https://github.com/mhartington/formatter.nvim`).
@@ -2992,6 +2998,7 @@ and Neovim’s API. Here’s an assessment of the difficulty and steps involved:
      manager to your forked repository or local path.
 
 #### Challenges
+
 - **Error Handling**: Ensuring proper error handling for async jobs (e.g.,
   timeouts, crashed formatters) adds complexity.
 - **Compatibility**: Maintaining compatibility with existing `formatter.nvim`
@@ -3001,6 +3008,7 @@ and Neovim’s API. Here’s an assessment of the difficulty and steps involved:
   requires additional scripting for animation or integration with a UI plugin.
 
 #### Recommendation
+
 Forking and modifying `formatter.nvim` is a good learning exercise if you’re
 interested in Neovim plugin development, but it might not be the most efficient
 solution given that `conform.nvim` already offers async support with a similar
@@ -3031,6 +3039,7 @@ formatter async (e.g., `black` for Python) and expand from there.
      alternatives.
 
 ### Next Steps
+
 - **Try `conform.nvim` First**: Install and configure `conform.nvim` as shown
   above. Test it with a large file to confirm it doesn’t block the UI. Add
   `fidget.nvim` or a custom `vim.notify` for visual feedback.
@@ -3045,7 +3054,11 @@ further!
 
 # === USER ===
 
-ok, i agree that switching to `conform.nvim` is the best option. however, before i do that, i suspect i can clean up my current config to be better before switching. notice the "find file in cwd parents" function i created. i isn't there a function in neovim that does this already? doesn't it have some sort of pattern matching code to find files up in parent directories?
+ok, i agree that switching to `conform.nvim` is the best option. however, before
+i do that, i suspect i can clean up my current config to be better before
+switching. notice the "find file in cwd parents" function i created. i isn't
+there a function in neovim that does this already? doesn't it have some sort of
+pattern matching code to find files up in parent directories?
 
 ```lua
   -- Code formatting (":Format" command)
@@ -3396,13 +3409,13 @@ ok, i agree that switching to `conform.nvim` is the best option. however, before
 
 # === ASSISTANT ===
 
-You're right to consider cleaning up your current configuration before
-switching to `conform.nvim`. Simplifying and leveraging built-in Neovim
-functionality will make the transition smoother and your config more
-maintainable. Let's address your question about whether Neovim has built-in
-functions for searching for files in parent directories, and then I'll help
-refactor your configuration to use those utilities. After that, I'll provide an
-updated configuration for `conform.nvim` based on the cleaned-up version.
+You're right to consider cleaning up your current configuration before switching
+to `conform.nvim`. Simplifying and leveraging built-in Neovim functionality will
+make the transition smoother and your config more maintainable. Let's address
+your question about whether Neovim has built-in functions for searching for
+files in parent directories, and then I'll help refactor your configuration to
+use those utilities. After that, I'll provide an updated configuration for
+`conform.nvim` based on the cleaned-up version.
 
 ### Does Neovim Have Built-in Functions for Finding Files in Parent Directories?
 
@@ -3463,9 +3476,11 @@ write custom functions like `find_file_in_cwd_parents` or
      manipulation and works well with other functions like `vim.fn.findfile()`.
 
 ### Why Use Built-in Functions?
+
 Using `vim.fn.findfile()` or `lspconfig.util.root_pattern()` instead of custom
 functions like `find_file_in_cwd_parents` and `find_file_in_file_parents` has
 several advantages:
+
 - **Simplicity**: Reduces code duplication and potential bugs in custom logic.
 - **Performance**: Built-in functions are optimized and often faster than manual
   directory traversal in Lua.
@@ -3473,6 +3488,7 @@ several advantages:
   easier to understand and maintain.
 
 ### Refactoring Your Current Configuration
+
 Let’s refactor your configuration for `mhartington/formatter.nvim` by replacing
 your custom file-search functions with `vim.fn.findfile()`. This will simplify
 the logic for detecting project types (e.g., Deno vs. Biome).
@@ -3732,6 +3748,7 @@ Here’s the cleaned-up version of your current config:
 ```
 
 ### Explanation of Changes
+
 - **Removed Custom Functions**: Replaced `find_file_in_cwd_parents` and
   `find_file_in_file_parents` with `vim.fn.findfile("filename", ".;")`, which
   searches upward from the current file’s directory or working directory.
@@ -3747,6 +3764,7 @@ functionality. It leverages Neovim’s built-in file search capabilities, making
 the config cleaner and less prone to bugs.
 
 ### Transition to `conform.nvim`
+
 Now that your config is simplified, transitioning to `conform.nvim` (which
 supports asynchronous formatting) is straightforward. `conform.nvim` uses a
 similar structure for defining formatters per filetype and supports dynamic
@@ -3901,11 +3919,12 @@ formatter selection via functions. Below is your configuration adapted to
 ```
 
 ### Explanation of `conform.nvim` Configuration
+
 - **Formatters by Filetype**: Maps filetypes to formatters, using functions for
   conditional logic (e.g., Deno vs. Biome for TypeScript).
-- **Custom Formatters**: Defines formatter configurations with `command`, `args`,
-  and `stdin`. `conform.nvim` runs these asynchronously by default, preventing
-  UI freezing on large files.
+- **Custom Formatters**: Defines formatter configurations with `command`,
+  `args`, and `stdin`. `conform.nvim` runs these asynchronously by default,
+  preventing UI freezing on large files.
 - **Format on Save**: Configures automatic formatting on save with a timeout and
   LSP fallback if the formatter fails or times out.
 - **Conditional Logic**: Uses `vim.fn.findfile()` for detecting project types,
@@ -3916,6 +3935,7 @@ formatter selection via functions. Below is your configuration adapted to
   provided by `conform.nvim`.
 
 ### Adding a Progress Indicator (Optional)
+
 To show a spinner or progress indicator while formatting, you can pair
 `conform.nvim` with a plugin like `j-hui/fidget.nvim` for a nice UI feedback
 loop, though `conform.nvim` doesn't natively integrate with it for formatting
@@ -3932,8 +3952,10 @@ notifications:
    might be overkill unless formatting takes several seconds.
 
 ### Testing the New Setup
+
 1. Replace your `formatter.nvim` plugin entry with the `conform.nvim`
-   configuration above in your plugin manager (e.g., `packer.nvim`, `lazy.nvim`).
+   configuration above in your plugin manager (e.g., `packer.nvim`,
+   `lazy.nvim`).
 2. Open a large file (e.g., a large Markdown or Python file) and run `:Format`
    (or save if `format_on_save` is enabled).
 3. Confirm that Neovim remains responsive during formatting (no freezing).
@@ -3941,6 +3963,7 @@ notifications:
    formatter execution.
 
 ### Final Notes
+
 By refactoring your config to use `vim.fn.findfile()`, you’ve significantly
 simplified the logic for detecting project configuration files like `deno.json`
 and `biome.json`. Switching to `conform.nvim` then builds on this clean base,
@@ -3948,6 +3971,1177 @@ providing asynchronous formatting to avoid UI freezes on large files. If you
 encounter any issues during the transition (e.g., formatter-specific quirks or
 progress indicator setup), let me know, and I’ll help debug or refine the
 configuration further!
+
+# === USER ===
+
+quick tangent: when i have a selection, i know there is a way to move the cursor
+to the other side of the selection (in nvim). how do i do that? please give me a
+brief answer.
+
+# === ASSISTANT ===
+
+In Neovim, when you have an active visual selection, you can move the cursor to
+the other side of the selection using the `o` key in visual mode.
+
+- **How it works**: Pressing `o` toggles the cursor between the start and end of
+  the current visual selection (whether in character-wise, line-wise, or
+  block-wise visual mode).
+- **Example**: If you start a selection with `v` and move right to select text,
+  pressing `o` moves the cursor to the start of the selection. Pressing `o`
+  again moves it back to the end.
+
+This is a built-in feature and requires no additional configuration.
+
+# === USER ===
+
+thanks.
+
+i believe my refactored configuration with the old `mhartington/formatter.nvim`
+is working.
+
+i have dropped support for deno and other complexities that i don't need.
+
+now i would like to proceed to switch to `conform.nvim`.
+
+can you please re-write this configuration (ideally, in a minimal way) to use
+`conform.nvim`?
+
+```lua
+{
+  "mhartington/formatter.nvim",
+  config = function()
+    require("formatter").setup({
+      filetype = {
+        nu = {
+          function()
+            return {
+              exe = "topiary",
+              args = { "format", "--language", "nu" },
+              stdin = true,
+            }
+          end,
+        },
+        markdown = {
+          function()
+            return {
+              exe = "dprint",
+              args = {
+                "fmt",
+                "--stdin",
+                vim.api.nvim_buf_get_name(0),
+              },
+              stdin = true,
+            }
+          end,
+        },
+        toml = {
+          function()
+            return {
+              exe = "dprint",
+              args = {
+                "fmt",
+                "--stdin",
+                vim.api.nvim_buf_get_name(0),
+              },
+              stdin = true,
+            }
+          end,
+        },
+        typescript = {
+          function()
+            local biome_config = vim.fn.findfile("biome.json", ".;")
+            local config_path = biome_config ~= ""
+                and vim.fn.fnamemodify(biome_config, ":h")
+              or vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":h")
+            return {
+              exe = "biome",
+              args = {
+                "format",
+                "--stdin-file-path",
+                string.format('"%s"', vim.api.nvim_buf_get_name(0)),
+                "--write",
+              },
+              stdin = true,
+            }
+          end,
+        },
+        typescriptreact = {
+          function()
+            local biome_config = vim.fn.findfile("biome.json", ".;")
+            local config_path = biome_config ~= ""
+                and vim.fn.fnamemodify(biome_config, ":h")
+              or vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":h")
+            return {
+              exe = "biome",
+              args = {
+                "format",
+                "--stdin-file-path",
+                string.format('"%s"', vim.api.nvim_buf_get_name(0)),
+                "--write",
+              },
+              stdin = true,
+            }
+          end,
+        },
+        json = {
+          function()
+            local biome_config = vim.fn.findfile("biome.json", ".;")
+            local config_path = biome_config ~= ""
+                and vim.fn.fnamemodify(biome_config, ":h")
+              or vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":h")
+            return {
+              exe = "biome",
+              args = {
+                "format",
+                "--stdin-file-path",
+                string.format('"%s"', vim.api.nvim_buf_get_name(0)),
+                "--write",
+              },
+              stdin = true,
+            }
+          end,
+        },
+        jsonc = {
+          function()
+            local biome_config = vim.fn.findfile("biome.json", ".;")
+            local config_path = biome_config ~= ""
+                and vim.fn.fnamemodify(biome_config, ":h")
+              or vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":h")
+            return {
+              exe = "biome",
+              args = {
+                "format",
+                "--stdin-file-path",
+                string.format('"%s"', vim.api.nvim_buf_get_name(0)),
+                "--write",
+              },
+              stdin = true,
+            }
+          end,
+        },
+        javascript = {
+          function()
+            local biome_config = vim.fn.findfile("biome.json", ".;")
+            local config_path = biome_config ~= ""
+                and vim.fn.fnamemodify(biome_config, ":h")
+              or vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":h")
+            return {
+              exe = "biome",
+              args = {
+                "format",
+                "--stdin-file-path",
+                string.format('"%s"', vim.api.nvim_buf_get_name(0)),
+                "--write",
+              },
+              stdin = true,
+            }
+          end,
+        },
+        javascriptreact = {
+          function()
+            local biome_config = vim.fn.findfile("biome.json", ".;")
+            local config_path = biome_config ~= ""
+                and vim.fn.fnamemodify(biome_config, ":h")
+              or vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":h")
+            return {
+              exe = "biome",
+              args = {
+                "format",
+                "--stdin-file-path",
+                string.format('"%s"', vim.api.nvim_buf_get_name(0)),
+                "--write",
+              },
+              stdin = true,
+            }
+          end,
+        },
+        lua = {
+          function()
+            return {
+              exe = "stylua",
+              args = {
+                "--indent-type",
+                "Spaces",
+                "--indent-width",
+                "2",
+                "--search-parent-directories",
+                "-",
+              },
+              stdin = true,
+            }
+          end,
+        },
+        rust = {
+          function()
+            return {
+              exe = "rustfmt",
+              args = { "--emit", "stdout" },
+              stdin = true,
+            }
+          end,
+        },
+        wgsl = {
+          function()
+            return {
+              exe = "wgsl_analyzer",
+              args = { "format" },
+              stdin = true,
+            }
+          end,
+        },
+        python = {
+          function()
+            return {
+              exe = "black",
+              args = { "-" },
+              stdin = true,
+            }
+          end,
+        },
+      },
+    })
+  end,
+},
+```
+
+# === ASSISTANT ===
+
+I'm glad to hear that your refactored configuration with
+`mhartington/formatter.nvim` is working well. Let's proceed with switching to
+`stevearc/conform.nvim`, which supports asynchronous formatting and will prevent
+UI freezing on large files. I'll rewrite your configuration in a minimal way for
+`conform.nvim`, maintaining the same functionality while leveraging its async
+capabilities.
+
+### Transition to `conform.nvim`
+
+Below is your configuration adapted to `conform.nvim`. I've kept it minimal by
+grouping similar filetypes (e.g., JavaScript/TypeScript variants) where
+possible, and I've preserved the logic for dynamically determining the
+`biome.json` config path.
+
+```lua
+{
+  "stevearc/conform.nvim",
+  config = function()
+    require("conform").setup({
+      formatters_by_ft = {
+        markdown = { "dprint" },
+        toml = { "dprint" },
+        typescript = { "biome" },
+        typescriptreact = { "biome" },
+        javascript = { "biome" },
+        javascriptreact = { "biome" },
+        json = { "biome" },
+        jsonc = { "biome" },
+        lua = { "stylua" },
+        rust = { "rustfmt" },
+        python = { "black" },
+        nu = { "topiary" },
+        wgsl = { "wgsl_analyzer" },
+      },
+      format_on_save = {
+        timeout_ms = 500,
+        lsp_fallback = true,
+      },
+      formatters = {
+        biome = {
+          command = "biome",
+          args = function(self, ctx)
+            local biome_config = vim.fn.findfile("biome.json", ".;")
+            local config_path = biome_config ~= "" and vim.fn.fnamemodify(biome_config, ":h") or vim.fn.fnamemodify(ctx.filename, ":h")
+            return {
+              "format",
+              "--stdin-file-path",
+              ctx.filename,
+            }
+          end,
+          stdin = true,
+        },
+        dprint = {
+          command = "dprint",
+          args = function(self, ctx)
+            return { "fmt", "--stdin", ctx.filename }
+          end,
+          stdin = true,
+        },
+        stylua = {
+          command = "stylua",
+          args = { "--indent-type", "Spaces", "--indent-width", "2", "--search-parent-directories", "-" },
+          stdin = true,
+        },
+        rustfmt = {
+          command = "rustfmt",
+          args = { "--emit", "stdout" },
+          stdin = true,
+        },
+        black = {
+          command = "black",
+          args = { "-" },
+          stdin = true,
+        },
+        topiary = {
+          command = "topiary",
+          args = { "format", "--language", "nu" },
+          stdin = true,
+        },
+        wgsl_analyzer = {
+          command = "wgsl_analyzer",
+          args = { "format" },
+          stdin = true,
+        },
+      },
+    })
+  end,
+},
+```
+
+### Explanation of the Configuration
+
+- **Formatters by Filetype**: Maps filetypes to predefined formatters. Since
+  you've dropped support for conditional logic like Deno, I've assigned `biome`
+  directly to JavaScript/TypeScript-related filetypes. Each filetype links to a
+  formatter defined in the `formatters` table.
+- **Format on Save**: Enables automatic formatting on save with a 500ms timeout
+  and falls back to LSP formatting if the external formatter fails or times out.
+- **Formatters Table**: Defines each formatter with its `command`, `args`, and
+  `stdin` setting. `conform.nvim` runs these asynchronously by default,
+  preventing UI freezes.
+  - For `biome`, the `args` function dynamically determines the config path
+    using `vim.fn.findfile()`, just as in your original config. Note that I
+    removed `--write` since `conform.nvim` handles writing the formatted output
+    to the buffer itself (it doesn't rely on the formatter modifying the file
+    directly).
+  - For other formatters like `dprint`, `stylua`, etc., the configuration
+    mirrors your original setup.
+- **Minimal Structure**: I've grouped related filetypes (e.g., `typescript`,
+  `typescriptreact`, etc.) to use the same formatter (`biome`) directly,
+  reducing redundancy.
+
+### Key Differences from `formatter.nvim`
+
+- **Asynchronous Execution**: `conform.nvim` runs formatters asynchronously by
+  default, so formatting large files won’t block the Neovim UI.
+- **Simplified API**: `conform.nvim` uses a more declarative style for
+  formatters, with named entries in `formatters` that can be reused across
+  filetypes.
+- **No Explicit `--write` for Biome**: As mentioned, `conform.nvim` applies the
+  formatted output to the buffer directly, so flags like `--write` are not
+  needed.
+
+### Testing the Configuration
+
+1. Replace your `mhartington/formatter.nvim` plugin entry with the
+   `stevearc/conform.nvim` configuration above in your plugin manager (e.g.,
+   `packer.nvim`, `lazy.nvim`).
+2. Reload your Neovim configuration or restart Neovim to apply the changes.
+3. Open a file of one of the supported types (e.g., a large Markdown or Python
+   file) and run `:Format` (or save if `format_on_save` is enabled).
+4. Confirm that Neovim remains responsive during formatting (no freezing).
+5. Check `:messages` or use `vim.notify` if there are errors with formatter
+   execution.
+
+### Optional: Adding a Progress Indicator
+
+If you want a visual indicator (like a spinner) while formatting, `conform.nvim`
+doesn't natively provide one, but you can use `vim.notify` for basic feedback or
+pair it with a plugin like `j-hui/fidget.nvim` (though `fidget.nvim` is more
+LSP-focused and may require custom integration). For simplicity, you can add a
+notification:
+
+```lua
+require("conform").setup({
+  notify_on_error = true,
+  notify = function(msg, level, opts)
+    vim.notify(msg, level, vim.tbl_extend("force", opts or {}, { title = "Conform" }))
+  end,
+  -- Rest of the config as above
+})
+```
+
+This will show a notification if there’s an error, but you can extend it for
+progress messages with custom logic if desired.
+
+### Final Notes
+
+This minimal configuration for `conform.nvim` should work seamlessly with your
+refactored setup, providing asynchronous formatting to address the freezing
+issue with large files. If you encounter any issues (e.g., specific formatter
+errors or configuration quirks), let me know, and I’ll help troubleshoot or
+adjust the setup further!
+
+# === USER ===
+
+i don't want `format_on_save`. how do i disable that?
+
+# === ASSISTANT ===
+
+To disable `format_on_save` in `conform.nvim`, you can simply remove or set the
+`format_on_save` option to `false` in your configuration. This will prevent
+automatic formatting when you save a file, allowing you to format manually using
+the `:Format` command or a custom keybinding.
+
+Here’s your updated configuration with `format_on_save` disabled:
+
+```lua
+{
+  "stevearc/conform.nvim",
+  config = function()
+    require("conform").setup({
+      formatters_by_ft = {
+        markdown = { "dprint" },
+        toml = { "dprint" },
+        typescript = { "biome" },
+        typescriptreact = { "biome" },
+        javascript = { "biome" },
+        javascriptreact = { "biome" },
+        json = { "biome" },
+        jsonc = { "biome" },
+        lua = { "stylua" },
+        rust = { "rustfmt" },
+        python = { "black" },
+        nu = { "topiary" },
+        wgsl = { "wgsl_analyzer" },
+      },
+      format_on_save = false, -- Disable format on save
+      formatters = {
+        biome = {
+          command = "biome",
+          args = function(self, ctx)
+            local biome_config = vim.fn.findfile("biome.json", ".;")
+            local config_path = biome_config ~= "" and vim.fn.fnamemodify(biome_config, ":h") or vim.fn.fnamemodify(ctx.filename, ":h")
+            return {
+              "format",
+              "--stdin-file-path",
+              ctx.filename,
+            }
+          end,
+          stdin = true,
+        },
+        dprint = {
+          command = "dprint",
+          args = function(self, ctx)
+            return { "fmt", "--stdin", ctx.filename }
+          end,
+          stdin = true,
+        },
+        stylua = {
+          command = "stylua",
+          args = { "--indent-type", "Spaces", "--indent-width", "2", "--search-parent-directories", "-" },
+          stdin = true,
+        },
+        rustfmt = {
+          command = "rustfmt",
+          args = { "--emit", "stdout" },
+          stdin = true,
+        },
+        black = {
+          command = "black",
+          args = { "-" },
+          stdin = true,
+        },
+        topiary = {
+          command = "topiary",
+          args = { "format", "--language", "nu" },
+          stdin = true,
+        },
+        wgsl_analyzer = {
+          command = "wgsl_analyzer",
+          args = { "format" },
+          stdin = true,
+        },
+      },
+    })
+  end,
+},
+```
+
+### Explanation
+
+- **format_on_save = false**: Explicitly disables automatic formatting when
+  saving a file. If you omit this option entirely, `format_on_save` is disabled
+  by default in `conform.nvim`, but setting it to `false` makes your intent
+  clear.
+
+### Manual Formatting
+
+With `format_on_save` disabled, you can format manually using the `:Format`
+command provided by `conform.nvim`. If you want to map this to a keybinding for
+convenience, you can add:
+
+```lua
+vim.keymap.set('n', '<Leader>f', ':Format<CR>', { noremap = true, silent = true, desc = 'Format current buffer' })
+```
+
+This maps `<Leader>f` to trigger formatting on demand.
+
+### Final Notes
+
+This configuration ensures that formatting only happens when you explicitly
+request it, giving you full control over when to apply formatters. If you have
+any further questions or need additional tweaks, let me know!
+
+# === USER ===
+
+i used to have a function called `:Format` that i would call to format the
+current buffer. that command seems to be gone. i assume that command was
+provided by `mhartington/formatter.nvim`. how do i get that command back with
+`conform.nvim`? or is there a different command to format the current buffer
+with `conform.nvim`?
+
+# === ASSISTANT ===
+
+You're correct that the `:Format` command was likely provided by
+`mhartington/formatter.nvim`, and after switching to `stevearc/conform.nvim`,
+that specific command might not be automatically available unless explicitly
+configured or used. However, `conform.nvim` does provide a way to format the
+current buffer manually, and it includes a command for this purpose.
+
+### Formatting with `conform.nvim`
+
+In `conform.nvim`, the command to format the current buffer is also `:Format` by
+default, just like in `formatter.nvim`. If it seems to be missing, it might be
+due to a configuration issue, a plugin conflict, or the plugin not being fully
+initialized. Let's ensure the command is available and working in your setup.
+
+### Confirming `:Format` Availability
+
+1. **Default Command**: `conform.nvim` registers the `:Format` command
+   automatically when the plugin is loaded. You can check if it’s available by
+   typing `:Format` in Neovim and seeing if it autocompletes or runs.
+2. **Check Plugin Loading**: Ensure `conform.nvim` is properly installed and
+   loaded by your plugin manager (e.g., `packer.nvim`, `lazy.nvim`). You can
+   verify this by running `:lua print(require('conform') ~= nil)`—it should
+   return `true` if the plugin is loaded.
+3. **Command Conflicts**: If another plugin or custom configuration overrides
+   the `:Format` command, it might not work as expected. Check for conflicts
+   with `:command Format` to see if it’s defined and by which plugin.
+
+### Updated Configuration with Explicit Command Setup
+
+To ensure the `:Format` command is available and to provide a fallback in case
+it’s not working as expected, you can explicitly set up a keybinding or confirm
+the command in your configuration. Here’s your updated configuration with a
+keybinding for formatting the current buffer using `conform.nvim`:
+
+```lua
+{
+  "stevearc/conform.nvim",
+  config = function()
+    require("conform").setup({
+      formatters_by_ft = {
+        markdown = { "dprint" },
+        toml = { "dprint" },
+        typescript = { "biome" },
+        typescriptreact = { "biome" },
+        javascript = { "biome" },
+        javascriptreact = { "biome" },
+        json = { "biome" },
+        jsonc = { "biome" },
+        lua = { "stylua" },
+        rust = { "rustfmt" },
+        python = { "black" },
+        nu = { "topiary" },
+        wgsl = { "wgsl_analyzer" },
+      },
+      format_on_save = false, -- Disable format on save
+      formatters = {
+        biome = {
+          command = "biome",
+          args = function(self, ctx)
+            local biome_config = vim.fn.findfile("biome.json", ".;")
+            local config_path = biome_config ~= "" and vim.fn.fnamemodify(biome_config, ":h") or vim.fn.fnamemodify(ctx.filename, ":h")
+            return {
+              "format",
+              "--stdin-file-path",
+              ctx.filename,
+            }
+          end,
+          stdin = true,
+        },
+        dprint = {
+          command = "dprint",
+          args = function(self, ctx)
+            return { "fmt", "--stdin", ctx.filename }
+          end,
+          stdin = true,
+        },
+        stylua = {
+          command = "stylua",
+          args = { "--indent-type", "Spaces", "--indent-width", "2", "--search-parent-directories", "-" },
+          stdin = true,
+        },
+        rustfmt = {
+          command = "rustfmt",
+          args = { "--emit", "stdout" },
+          stdin = true,
+        },
+        black = {
+          command = "black",
+          args = { "-" },
+          stdin = true,
+        },
+        topiary = {
+          command = "topiary",
+          args = { "format", "--language", "nu" },
+          stdin = true,
+        },
+        wgsl_analyzer = {
+          command = "wgsl_analyzer",
+          args = { "format" },
+          stdin = true,
+        },
+      },
+    })
+    -- Optionally, add a keybinding for manual formatting
+    vim.keymap.set('n', '<Leader>f', function()
+      require("conform").format({ bufnr = vim.api.nvim_get_current_buf(), lsp_fallback = true })
+    end, { noremap = true, silent = true, desc = 'Format current buffer' })
+  end,
+},
+```
+
+### Explanation
+
+- **Default `:Format` Command**: `conform.nvim` provides the `:Format` command
+  by default, which formats the current buffer using the configured formatters
+  for the filetype. If it’s not working, the keybinding above serves as a direct
+  way to invoke formatting.
+- **Keybinding for Formatting**: I've added a keybinding `<Leader>f` that calls
+  `require("conform").format()` with `lsp_fallback = true`, ensuring it attempts
+  to format using external tools first and falls back to LSP if needed. This
+  mirrors the behavior of the `:Format` command.
+- **Manual Formatting**: With `format_on_save = false`, formatting only happens
+  when you explicitly trigger it via `:Format` or the keybinding.
+
+### Troubleshooting If `:Format` Is Missing
+
+If the `:Format` command still doesn’t appear or work:
+
+1. **Check Plugin Installation**: Ensure `conform.nvim` is installed correctly.
+   Run `:PackerSync` (or equivalent for your plugin manager) to update plugins.
+2. **Verify Command Registration**: Run `:command` in Neovim to see if `Format`
+   is listed. If not, the plugin might not be loaded. Check with
+   `:lua
+   print(vim.inspect(require('conform')))` to confirm.
+3. **Manual Function Call**: If the command is missing, use the keybinding above
+   as a reliable way to format. You can also call
+   `:lua
+   require("conform").format()` directly to format the current buffer.
+4. **Plugin Conflicts**: If another plugin defines a conflicting `:Format`
+   command, you might need to unmap or rename it. Check with `:map` and
+   `:command` for overlaps.
+
+### Using `:Format` or Keybinding
+
+- **Command**: Try `:Format` directly. It should work as long as `conform.nvim`
+  is loaded.
+- **Keybinding**: Use `<Leader>f` (or change it to your preferred key) to format
+  the current buffer manually.
+
+### Final Notes
+
+The `:Format` command should be available with `conform.nvim`, just as it was
+with `formatter.nvim`. If it’s not appearing, the added keybinding ensures you
+can still format manually. If you encounter issues with the command or want to
+customize the formatting behavior further, let me know, and I’ll help debug or
+adjust the configuration!
+
+# === USER ===
+
+no. the `:Format` command is not available by default. reading the docs, i see
+you have to create this method to enable the `:Format` command:
+
+```lua
+vim.api.nvim_create_user_command("Format", function(args)
+  local range = nil
+  if args.count ~= -1 then
+    local end_line =
+      vim.api.nvim_buf_get_lines(0, args.line2 - 1, args.line2, true)[1]
+    range = {
+      start = { args.line1, 0 },
+      ["end"] = { args.line2, end_line:len() },
+    }
+  end
+  require("conform").format({
+    async = true,
+    lsp_format = "fallback",
+    range = range,
+  })
+end, { range = true })
+```
+
+---
+
+now, i'd like to move onto creating a spinner.
+
+in a previous plugin i created, i have a spinner. i would like to create a
+similar spinner for formatting. when formatting, the spinner should open up and
+say "Formatting..." while the formatting is happening. Normally, it will be gone
+in a flash. but for large files, it may take a while.
+
+here is my existing spinner code:
+
+```lua
+local spinner = {
+  frames = { "⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏" },
+  index = 1,
+  active = false,
+  buf = nil,
+  win = nil,
+  timer = nil,
+}
+
+-- Store job_id and session globally to allow stopping
+local current_job_id = nil
+local current_session = nil
+
+local function update_spinner()
+  if not spinner.active or not spinner.buf or not spinner.win then
+    return
+  end
+  spinner.index = spinner.index % #spinner.frames + 1
+  vim.api.nvim_buf_set_lines(spinner.buf, 0, -1, false, { "Computing... " .. spinner.frames[spinner.index] })
+end
+
+local function open_spinner_window()
+  local win = vim.api.nvim_get_current_win() -- Get the current window
+  local win_config = vim.api.nvim_win_get_config(win)
+  local width = win_config.width or vim.api.nvim_win_get_width(win)
+  local height = win_config.height or vim.api.nvim_win_get_height(win)
+
+  -- Calculate center position
+  local spinner_width = 15 -- Width of the spinner window
+  local spinner_height = 1 -- Height of the spinner window
+  local col = math.floor((width - spinner_width) / 2) -- Center horizontally
+  local row = math.floor((height - spinner_height) / 2) -- Center vertically
+
+  spinner.buf = vim.api.nvim_create_buf(false, true)
+  vim.api.nvim_buf_set_lines(spinner.buf, 0, -1, false, { "Computing... " .. spinner.frames[1] })
+  spinner.win = vim.api.nvim_open_win(spinner.buf, false, {
+    relative = "win", -- Position relative to the current window
+    win = win, -- Specify the current window
+    width = spinner_width,
+    height = spinner_height,
+    col = col, -- Centered column
+    row = row, -- Centered row
+    style = "minimal",
+    border = "single",
+  })
+end
+
+local function close_spinner_window()
+  if spinner.win then
+    vim.api.nvim_win_close(spinner.win, true)
+    spinner.win = nil
+  end
+  if spinner.buf then
+    vim.api.nvim_buf_delete(spinner.buf, { force = true })
+    spinner.buf = nil
+  end
+end
+```
+
+this code was designed to run at the top level of the lua file. i'm not sure if
+that's appropriate for this plugin. maybe it's possible to put the spinner state
+inside the startup method for `conform.nvim`.
+
+can you help me rewrite my `conform.nvim` config to use the spinner while
+formatting?
+
+here is my current `conform.nvim` config:
+
+```lua
+config = function()
+  require("conform").setup({
+    formatters_by_ft = {
+      markdown = { "dprint" },
+      toml = { "dprint" },
+      typescript = { "biome" },
+      typescriptreact = { "biome" },
+      javascript = { "biome" },
+      javascriptreact = { "biome" },
+      json = { "biome" },
+      jsonc = { "biome" },
+      lua = { "stylua" },
+      rust = { "rustfmt" },
+      python = { "black" },
+      nu = { "topiary" },
+      wgsl = { "wgsl_analyzer" },
+    },
+    format_on_save = false,
+    -- format_on_save = {
+    --   timeout_ms = 500,
+    --   lsp_fallback = true,
+    -- },
+    formatters = {
+      biome = {
+        command = "biome",
+        args = function(self, ctx)
+          local biome_config = vim.fn.findfile("biome.json", ".;")
+          local config_path = biome_config ~= ""
+              and vim.fn.fnamemodify(biome_config, ":h")
+            or vim.fn.fnamemodify(ctx.filename, ":h")
+          return {
+            "format",
+            "--stdin-file-path",
+            ctx.filename,
+          }
+        end,
+        stdin = true,
+      },
+      dprint = {
+        command = "dprint",
+        args = function(self, ctx)
+          return { "fmt", "--stdin", ctx.filename }
+        end,
+        stdin = true,
+      },
+      stylua = {
+        command = "stylua",
+        args = {
+          "--indent-type",
+          "Spaces",
+          "--indent-width",
+          "2",
+          "--search-parent-directories",
+          "-",
+        },
+        stdin = true,
+      },
+      rustfmt = {
+        command = "rustfmt",
+        args = { "--emit", "stdout" },
+        stdin = true,
+      },
+      black = {
+        command = "black",
+        args = { "-" },
+        stdin = true,
+      },
+      topiary = {
+        command = "topiary",
+        args = { "format", "--language", "nu" },
+        stdin = true,
+      },
+      wgsl_analyzer = {
+        command = "wgsl_analyzer",
+        args = { "format" },
+        stdin = true,
+      },
+    },
+  })
+
+  vim.api.nvim_create_user_command("Format", function(args)
+    local range = nil
+    if args.count ~= -1 then
+      local end_line =
+        vim.api.nvim_buf_get_lines(0, args.line2 - 1, args.line2, true)[1]
+      range = {
+        start = { args.line1, 0 },
+        ["end"] = { args.line2, end_line:len() },
+      }
+    end
+    require("conform").format({
+      async = true,
+      lsp_format = "fallback",
+      range = range,
+    })
+  end, { range = true })
+end,
+```
+
+# === ASSISTANT ===
+
+I'm glad to help with both confirming the `:Format` command setup and
+integrating a spinner for formatting operations in `conform.nvim`. You're
+correct that the `:Format` command is not automatically created by
+`conform.nvim` unless you define it as a user command, as shown in your
+provided code snippet. I'll first ensure the command is properly set up, and
+then I'll help you adapt your existing spinner code to work with `conform.nvim`
+formatting operations.
+
+### Step 1: Confirming `:Format` Command
+
+You've already correctly set up the `:Format` command using
+`vim.api.nvim_create_user_command`, which is the recommended way to enable it
+with `conform.nvim`. This command allows manual formatting of the current
+buffer, including support for ranges (e.g., visual selections). Since it's
+already in your config, there's no issue here, and it should work as expected.
+
+### Step 2: Integrating a Spinner for Formatting
+
+Your existing spinner code is a great starting point. It creates a floating
+window with an animated spinner to indicate progress, which is perfect for
+showing feedback during formatting, especially for large files where formatting
+might take a noticeable amount of time. The challenge is integrating this
+spinner with `conform.nvim`’s asynchronous formatting process, as we need to
+start the spinner before formatting begins and stop it when formatting
+completes.
+
+Since `conform.nvim` does not provide built-in hooks for pre- and
+post-formatting events directly in its API (as of the latest version), we’ll
+wrap the `format()` function to manage the spinner. We can do this by
+overriding the `:Format` command or creating a custom wrapper function that
+handles the spinner lifecycle around the formatting operation.
+
+#### Adapting Spinner Code for `conform.nvim`
+
+Your spinner code was designed to run at the top level of a Lua file, but for a
+plugin configuration like `conform.nvim`, it’s better to encapsulate the spinner
+state and logic within the plugin’s setup or a local scope to avoid global
+namespace pollution. I’ll adapt your spinner code to work within the
+`conform.nvim` configuration and tie it to the formatting process.
+
+Here’s your updated configuration with the spinner integrated:
+
+```lua
+{
+  "stevearc/conform.nvim",
+  config = function()
+    local conform = require("conform")
+
+    -- Spinner setup
+    local spinner = {
+      frames = { "⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏" },
+      index = 1,
+      active = false,
+      buf = nil,
+      win = nil,
+      timer = nil,
+    }
+
+    local function update_spinner()
+      if not spinner.active or not spinner.buf or not spinner.win then
+        return
+      end
+      spinner.index = spinner.index % #spinner.frames + 1
+      vim.api.nvim_buf_set_lines(spinner.buf, 0, -1, false, { "Formatting... " .. spinner.frames[spinner.index] })
+    end
+
+    local function open_spinner_window()
+      spinner.active = true
+      local win = vim.api.nvim_get_current_win()
+      local win_config = vim.api.nvim_win_get_config(win)
+      local width = win_config.width or vim.api.nvim_win_get_width(win)
+      local height = win_config.height or vim.api.nvim_win_get_height(win)
+
+      -- Calculate center position
+      local spinner_width = 15
+      local spinner_height = 1
+      local col = math.floor((width - spinner_width) / 2)
+      local row = math.floor((height - spinner_height) / 2)
+
+      spinner.buf = vim.api.nvim_create_buf(false, true)
+      vim.api.nvim_buf_set_lines(spinner.buf, 0, -1, false, { "Formatting... " .. spinner.frames[1] })
+      spinner.win = vim.api.nvim_open_win(spinner.buf, false, {
+        relative = "win",
+        win = win,
+        width = spinner_width,
+        height = spinner_height,
+        col = col,
+        row = row,
+        style = "minimal",
+        border = "single",
+      })
+
+      -- Start spinner animation
+      spinner.timer = vim.loop.new_timer()
+      spinner.timer:start(0, 80, vim.schedule_wrap(update_spinner))
+    end
+
+    local function close_spinner_window()
+      spinner.active = false
+      if spinner.timer then
+        spinner.timer:stop()
+        spinner.timer:close()
+        spinner.timer = nil
+      end
+      if spinner.win then
+        vim.api.nvim_win_close(spinner.win, true)
+        spinner.win = nil
+      end
+      if spinner.buf then
+        vim.api.nvim_buf_delete(spinner.buf, { force = true })
+        spinner.buf = nil
+      end
+    end
+
+    -- Custom format function with spinner
+    local function format_with_spinner(opts)
+      open_spinner_window()
+      conform.format(vim.tbl_extend("force", opts or {}, {
+        async = true,
+        lsp_format = "fallback",
+        callback = function(err)
+          close_spinner_window()
+          if err then
+            vim.notify("Formatting failed: " .. tostring(err), vim.log.levels.ERROR, { title = "Conform" })
+          end
+        end,
+      }))
+    end
+
+    -- Setup conform.nvim
+    conform.setup({
+      formatters_by_ft = {
+        markdown = { "dprint" },
+        toml = { "dprint" },
+        typescript = { "biome" },
+        typescriptreact = { "biome" },
+        javascript = { "biome" },
+        javascriptreact = { "biome" },
+        json = { "biome" },
+        jsonc = { "biome" },
+        lua = { "stylua" },
+        rust = { "rustfmt" },
+        python = { "black" },
+        nu = { "topiary" },
+        wgsl = { "wgsl_analyzer" },
+      },
+      format_on_save = false,
+      formatters = {
+        biome = {
+          command = "biome",
+          args = function(self, ctx)
+            local biome_config = vim.fn.findfile("biome.json", ".;")
+            local config_path = biome_config ~= "" and vim.fn.fnamemodify(biome_config, ":h") or vim.fn.fnamemodify(ctx.filename, ":h")
+            return {
+              "format",
+              "--stdin-file-path",
+              ctx.filename,
+            }
+          end,
+          stdin = true,
+        },
+        dprint = {
+          command = "dprint",
+          args = function(self, ctx)
+            return { "fmt", "--stdin", ctx.filename }
+          end,
+          stdin = true,
+        },
+        stylua = {
+          command = "stylua",
+          args = { "--indent-type", "Spaces", "--indent-width", "2", "--search-parent-directories", "-" },
+          stdin = true,
+        },
+        rustfmt = {
+          command = "rustfmt",
+          args = { "--emit", "stdout" },
+          stdin = true,
+        },
+        black = {
+          command = "black",
+          args = { "-" },
+          stdin = true,
+        },
+        topiary = {
+          command = "topiary",
+          args = { "format", "--language", "nu" },
+          stdin = true,
+        },
+        wgsl_analyzer = {
+          command = "wgsl_analyzer",
+          args = { "format" },
+          stdin = true,
+        },
+      },
+    })
+
+    -- Create user command for formatting with spinner
+    vim.api.nvim_create_user_command("Format", function(args)
+      local range = nil
+      if args.count ~= -1 then
+        local end_line = vim.api.nvim_buf_get_lines(0, args.line2 - 1, args.line2, true)[1]
+        range = {
+          start = { args.line1, 0 },
+          ["end"] = { args.line2, end_line:len() },
+        }
+      end
+      format_with_spinner({ range = range })
+    end, { range = true })
+
+    -- Optional keybinding for formatting with spinner
+    vim.keymap.set('n', '<Leader>f', function()
+      format_with_spinner({ bufnr = vim.api.nvim_get_current_buf() })
+    end, { noremap = true, silent = true, desc = 'Format current buffer' })
+  end,
+},
+```
+
+### Explanation of Changes
+
+#### Spinner Integration
+
+1. **Spinner State and Functions**:
+   - I’ve kept your spinner code mostly intact, including the animation frames
+     and floating window setup. It’s now encapsulated within the `conform.nvim`
+     configuration function to avoid global scope pollution.
+   - `open_spinner_window()`: Opens a centered floating window with the
+     "Formatting..." message and starts a timer for animation (updated every
+     80ms for smooth spinning).
+   - `close_spinner_window()`: Closes the window, deletes the buffer, and stops
+     the timer when formatting completes.
+   - `update_spinner()`: Updates the spinner frame in the buffer for animation.
+
+2. **Custom `format_with_spinner` Function**:
+   - This wrapper function starts the spinner, calls `conform.format()` with
+     `async = true` for asynchronous formatting, and stops the spinner via a
+     `callback` option when formatting completes or fails.
+   - It also handles errors by showing a notification if formatting fails.
+
+3. **Updated `:Format` Command**:
+   - The `:Format` user command now uses `format_with_spinner()` instead of
+     calling `conform.format()` directly, ensuring the spinner is shown during
+     formatting.
+   - It still supports ranges (e.g., visual selections) as in your original
+     setup.
+
+4. **Optional Keybinding**:
+   - Added a keybinding `<Leader>f` that also uses `format_with_spinner()` for
+     manual formatting with the spinner.
+
+#### Why This Works
+
+- **Asynchronous Formatting**: Since `conform.format()` is called with
+  `async = true`, the formatting operation runs in the background, allowing the
+  spinner to animate without blocking the UI.
+- **Spinner Lifecycle**: The spinner starts before formatting and stops via the
+  `callback` when the operation completes, ensuring it’s visible only during the
+  formatting process. For small files, it might flash briefly; for large files,
+  it will remain visible until formatting is done.
+
+### Testing the Setup
+
+1. Apply the updated configuration in your plugin manager and reload Neovim.
+2. Open a file (e.g., a large Markdown or Python file) and run `:Format` or
+   press `<Leader>f`.
+3. Verify that a spinner window appears with "Formatting..." and animates during
+   the operation, then disappears when formatting completes.
+4. Test with both small and large files to confirm the spinner behaves as
+   expected (brief for small files, persistent for large ones).
+
+### Troubleshooting
+
+- **Spinner Not Showing**: If the spinner doesn’t appear, ensure
+  `open_spinner_window()` is called before `conform.format()` by checking the
+  `format_with_spinner()` function execution. Add a debug `print("Spinner
+  opened")` if needed.
+- **Spinner Not Closing**: If the spinner persists after formatting, verify that
+  the `callback` in `format_with_spinner()` is triggered by adding a debug
+  `print("Formatting done")`.
+- **Formatting Errors**: If formatting fails silently, check `:messages` or add
+  error logging as shown in the config.
+
+### Final Notes
+
+This configuration successfully integrates your spinner with `conform.nvim`’s
+asynchronous formatting, providing visual feedback during the process. The
+spinner will be a brief flash for small files and a helpful indicator for large
+files. If you encounter any issues or want to tweak the spinner’s appearance
+(e.g., change the text, position, or animation speed), let me know, and I’ll
+help adjust it further!
 
 # === USER ===
 
