@@ -555,198 +555,103 @@ require("lazy").setup({
   },
 
   {
-    "mhartington/formatter.nvim",
+    "stevearc/conform.nvim",
     config = function()
-      require("formatter").setup({
-        filetype = {
-          nu = {
-            function()
-              return {
-                exe = "topiary",
-                args = { "format", "--language", "nu" },
-                stdin = true,
-              }
-            end,
-          },
-          markdown = {
-            function()
-              return {
-                exe = "dprint",
-                args = {
-                  "fmt",
-                  "--stdin",
-                  vim.api.nvim_buf_get_name(0),
-                },
-                stdin = true,
-              }
-            end,
-          },
-          toml = {
-            function()
-              return {
-                exe = "dprint",
-                args = {
-                  "fmt",
-                  "--stdin",
-                  vim.api.nvim_buf_get_name(0),
-                },
-                stdin = true,
-              }
-            end,
-          },
-          typescript = {
-            function()
+      require("conform").setup({
+        formatters_by_ft = {
+          markdown = { "dprint" },
+          toml = { "dprint" },
+          typescript = { "biome" },
+          typescriptreact = { "biome" },
+          javascript = { "biome" },
+          javascriptreact = { "biome" },
+          json = { "biome" },
+          jsonc = { "biome" },
+          lua = { "stylua" },
+          rust = { "rustfmt" },
+          python = { "black" },
+          nu = { "topiary" },
+          wgsl = { "wgsl_analyzer" },
+        },
+        format_on_save = false,
+        -- format_on_save = {
+        --   timeout_ms = 500,
+        --   lsp_fallback = true,
+        -- },
+        formatters = {
+          biome = {
+            command = "biome",
+            args = function(self, ctx)
               local biome_config = vim.fn.findfile("biome.json", ".;")
               local config_path = biome_config ~= ""
                   and vim.fn.fnamemodify(biome_config, ":h")
-                or vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":h")
+                or vim.fn.fnamemodify(ctx.filename, ":h")
               return {
-                exe = "biome",
-                args = {
-                  "format",
-                  "--stdin-file-path",
-                  string.format('"%s"', vim.api.nvim_buf_get_name(0)),
-                  "--write",
-                },
-                stdin = true,
+                "format",
+                "--stdin-file-path",
+                ctx.filename,
               }
             end,
+            stdin = true,
           },
-          typescriptreact = {
-            function()
-              local biome_config = vim.fn.findfile("biome.json", ".;")
-              local config_path = biome_config ~= ""
-                  and vim.fn.fnamemodify(biome_config, ":h")
-                or vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":h")
-              return {
-                exe = "biome",
-                args = {
-                  "format",
-                  "--stdin-file-path",
-                  string.format('"%s"', vim.api.nvim_buf_get_name(0)),
-                  "--write",
-                },
-                stdin = true,
-              }
+          dprint = {
+            command = "dprint",
+            args = function(self, ctx)
+              return { "fmt", "--stdin", ctx.filename }
             end,
+            stdin = true,
           },
-          json = {
-            function()
-              local biome_config = vim.fn.findfile("biome.json", ".;")
-              local config_path = biome_config ~= ""
-                  and vim.fn.fnamemodify(biome_config, ":h")
-                or vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":h")
-              return {
-                exe = "biome",
-                args = {
-                  "format",
-                  "--stdin-file-path",
-                  string.format('"%s"', vim.api.nvim_buf_get_name(0)),
-                  "--write",
-                },
-                stdin = true,
-              }
-            end,
+          stylua = {
+            command = "stylua",
+            args = {
+              "--indent-type",
+              "Spaces",
+              "--indent-width",
+              "2",
+              "--search-parent-directories",
+              "-",
+            },
+            stdin = true,
           },
-          jsonc = {
-            function()
-              local biome_config = vim.fn.findfile("biome.json", ".;")
-              local config_path = biome_config ~= ""
-                  and vim.fn.fnamemodify(biome_config, ":h")
-                or vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":h")
-              return {
-                exe = "biome",
-                args = {
-                  "format",
-                  "--stdin-file-path",
-                  string.format('"%s"', vim.api.nvim_buf_get_name(0)),
-                  "--write",
-                },
-                stdin = true,
-              }
-            end,
+          rustfmt = {
+            command = "rustfmt",
+            args = { "--emit", "stdout" },
+            stdin = true,
           },
-          javascript = {
-            function()
-              local biome_config = vim.fn.findfile("biome.json", ".;")
-              local config_path = biome_config ~= ""
-                  and vim.fn.fnamemodify(biome_config, ":h")
-                or vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":h")
-              return {
-                exe = "biome",
-                args = {
-                  "format",
-                  "--stdin-file-path",
-                  string.format('"%s"', vim.api.nvim_buf_get_name(0)),
-                  "--write",
-                },
-                stdin = true,
-              }
-            end,
+          black = {
+            command = "black",
+            args = { "-" },
+            stdin = true,
           },
-          javascriptreact = {
-            function()
-              local biome_config = vim.fn.findfile("biome.json", ".;")
-              local config_path = biome_config ~= ""
-                  and vim.fn.fnamemodify(biome_config, ":h")
-                or vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":h")
-              return {
-                exe = "biome",
-                args = {
-                  "format",
-                  "--stdin-file-path",
-                  string.format('"%s"', vim.api.nvim_buf_get_name(0)),
-                  "--write",
-                },
-                stdin = true,
-              }
-            end,
+          topiary = {
+            command = "topiary",
+            args = { "format", "--language", "nu" },
+            stdin = true,
           },
-          lua = {
-            function()
-              return {
-                exe = "stylua",
-                args = {
-                  "--indent-type",
-                  "Spaces",
-                  "--indent-width",
-                  "2",
-                  "--search-parent-directories",
-                  "-",
-                },
-                stdin = true,
-              }
-            end,
-          },
-          rust = {
-            function()
-              return {
-                exe = "rustfmt",
-                args = { "--emit", "stdout" },
-                stdin = true,
-              }
-            end,
-          },
-          wgsl = {
-            function()
-              return {
-                exe = "wgsl_analyzer",
-                args = { "format" },
-                stdin = true,
-              }
-            end,
-          },
-          python = {
-            function()
-              return {
-                exe = "black",
-                args = { "-" },
-                stdin = true,
-              }
-            end,
+          wgsl_analyzer = {
+            command = "wgsl_analyzer",
+            args = { "format" },
+            stdin = true,
           },
         },
       })
+
+      vim.api.nvim_create_user_command("Format", function(args)
+        local range = nil
+        if args.count ~= -1 then
+          local end_line =
+            vim.api.nvim_buf_get_lines(0, args.line2 - 1, args.line2, true)[1]
+          range = {
+            start = { args.line1, 0 },
+            ["end"] = { args.line2, end_line:len() },
+          }
+        end
+        require("conform").format({
+          async = true,
+          lsp_format = "fallback",
+          range = range,
+        })
+      end, { range = true })
     end,
   },
 
