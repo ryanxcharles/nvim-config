@@ -1118,7 +1118,7 @@ require("lazy").setup({
     "ryanxcharles/vim-autoclose",
   },
 
-  -- ChatVim: public install
+  -- Chatvim: public install
   -- {
   --   "chatvim/chatvim.nvim",
   --   build = "npm install",
@@ -1127,7 +1127,7 @@ require("lazy").setup({
   --   end,
   -- },
 
-  -- ChatVim: local install
+  -- Chatvim: local install
   {
     dir = "~/dev/chatvim.nvim",
     name = "chatvim.nvim",
@@ -1665,14 +1665,15 @@ vim.keymap.set("n", "zt", "zt10<C-y>", opts)
 -- zb: scroll so current line is 10 lines from bottom
 vim.keymap.set("n", "zb", "zb10<C-e>", opts)
 
--- ChatVim (chatvim.nvim) keybindings
-vim.api.nvim_set_keymap("n", "<Leader>cvc", ":ChatVimComplete<CR>", opts)
-vim.api.nvim_set_keymap("n", "<Leader>cvs", ":ChatVimStop<CR>", opts)
-vim.api.nvim_set_keymap("n", "<Leader>cvnn", ":ChatVimNew<CR>", opts)
-vim.api.nvim_set_keymap("n", "<Leader>cvnl", ":ChatVimNew left<CR>", opts)
-vim.api.nvim_set_keymap("n", "<Leader>cvnr", ":ChatVimNew right<CR>", opts)
-vim.api.nvim_set_keymap("n", "<Leader>cvnb", ":ChatVimNew bottom<CR>", opts)
-vim.api.nvim_set_keymap("n", "<Leader>cvnt", ":ChatVimNew top<CR>", opts)
+-- Chatvim (chatvim.nvim) keybindings
+-- let opts = { noremap = true, silent = true }
+vim.api.nvim_set_keymap("n", "<Leader>cvc", ":ChatvimComplete<CR>", opts)
+vim.api.nvim_set_keymap("n", "<Leader>cvs", ":ChatvimStop<CR>", opts)
+vim.api.nvim_set_keymap("n", "<Leader>cvnn", ":ChatvimNew<CR>", opts)
+vim.api.nvim_set_keymap("n", "<Leader>cvnl", ":ChatvimNew left<CR>", opts)
+vim.api.nvim_set_keymap("n", "<Leader>cvnr", ":ChatvimNew right<CR>", opts)
+vim.api.nvim_set_keymap("n", "<Leader>cvnb", ":ChatvimNew bottom<CR>", opts)
+vim.api.nvim_set_keymap("n", "<Leader>cvnt", ":ChatvimNew top<CR>", opts)
 
 -- ## Colors
 
