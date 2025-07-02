@@ -1140,6 +1140,8 @@ require("lazy").setup({
 -- ## Globals
 local opts = { noremap = true, silent = true }
 
+vim.opt.shell = "/opt/homebrew/bin/nu"
+
 -- Show line numbers by default
 vim.opt.number = true
 vim.opt.relativenumber = true
@@ -1666,6 +1668,11 @@ vim.keymap.set("n", "zb", "zb10<C-e>", opts)
 -- ChatVim (chatvim.nvim) keybindings
 vim.api.nvim_set_keymap("n", "<Leader>cvc", ":ChatVimComplete<CR>", opts)
 vim.api.nvim_set_keymap("n", "<Leader>cvs", ":ChatVimStop<CR>", opts)
+vim.api.nvim_set_keymap("n", "<Leader>cvnn", ":ChatVimNew<CR>", opts)
+vim.api.nvim_set_keymap("n", "<Leader>cvnl", ":ChatVimNew left<CR>", opts)
+vim.api.nvim_set_keymap("n", "<Leader>cvnr", ":ChatVimNew right<CR>", opts)
+vim.api.nvim_set_keymap("n", "<Leader>cvnb", ":ChatVimNew bottom<CR>", opts)
+vim.api.nvim_set_keymap("n", "<Leader>cvnt", ":ChatVimNew top<CR>", opts)
 
 -- ## Colors
 
