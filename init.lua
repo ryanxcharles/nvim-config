@@ -295,6 +295,18 @@ require("lazy").setup({
     end,
   },
 
+  -- Better LSP integration - better windows, better info popups, info at top
+  {
+    "nvimdev/lspsaga.nvim",
+    dependencies = {
+      "nvim-treesitter/nvim-treesitter", -- optional
+      "nvim-tree/nvim-web-devicons", -- optional
+    },
+    config = function()
+      require("lspsaga").setup({})
+    end,
+  },
+
   -- Tailwind CSS colorizer
   {
     "roobert/tailwindcss-colorizer-cmp.nvim",
@@ -613,7 +625,8 @@ require("lazy").setup({
           biome = {
             command = "biome",
             args = function(self, ctx)
-              local config_path = find_file_in_file_parents("biome.json", ctx.filename)
+              local config_path =
+                find_file_in_file_parents("biome.json", ctx.filename)
               return {
                 "format",
                 "--config-path",
