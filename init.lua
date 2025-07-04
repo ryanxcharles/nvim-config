@@ -1478,50 +1478,6 @@ vim.api.nvim_set_keymap(
 -- Telscope search inside files with ripgrep (rg)
 vim.api.nvim_set_keymap("n", "<Leader>fg", ":Telescope live_grep<CR>", opts)
 
--- LSP integration with Telescope for TypeScript and other languages
--- Space + fs: Search document symbols (like variables, functions, etc.).
-vim.api.nvim_set_keymap(
-  "n",
-  "<Leader>fs",
-  "<cmd>Telescope lsp_document_symbols<CR>",
-  opts
-)
--- Space + fr: Find all references to a symbol.
-vim.api.nvim_set_keymap(
-  "n",
-  "<Leader>fr",
-  "<cmd>Telescope lsp_references<CR>",
-  opts
-)
--- Space + fd: Search through diagnostics (errors, warnings).
-vim.api.nvim_set_keymap(
-  "n",
-  "<Leader>fd",
-  "<cmd>Telescope diagnostics<CR>",
-  opts
-)
--- Show all diagnostics on the current line in a floating window
-vim.api.nvim_set_keymap(
-  "n",
-  "<Leader>ds",
-  "<cmd>lua vim.diagnostic.open_float(nil, { focusable = false })<CR>",
-  opts
-)
--- Go to the next diagnostic (error, warning, etc.)
-vim.api.nvim_set_keymap(
-  "n",
-  "<Leader>dn",
-  ":lua vim.diagnostic.goto_next()<CR>",
-  opts
-)
--- Go to the previous diagnostic (error, warning, etc.)
-vim.api.nvim_set_keymap(
-  "n",
-  "<Leader>dN",
-  ":lua vim.diagnostic.goto_prev()<CR>",
-  opts
-)
-
 -- Set custom keybindings for cycling through Copilot suggestions
 vim.api.nvim_set_keymap("i", "<C-n>", "copilot#Next()", opts)
 vim.api.nvim_set_keymap("i", "<C-p>", "copilot#Previous()", opts)
@@ -1630,8 +1586,66 @@ vim.api.nvim_set_keymap(
 
 -- LSP-related keybindings
 
+-- LSP integration with Telescope for TypeScript and other languages
+-- Space + fs: Search document symbols (like variables, functions, etc.).
+vim.api.nvim_set_keymap(
+  "n",
+  "<Leader>fs",
+  "<cmd>Telescope lsp_document_symbols<CR>",
+  opts
+)
+-- Space + fr: Find all references to a symbol.
+vim.api.nvim_set_keymap(
+  "n",
+  "<Leader>fr",
+  "<cmd>Telescope lsp_references<CR>",
+  opts
+)
+-- Space + fd: Search through diagnostics (errors, warnings).
+vim.api.nvim_set_keymap(
+  "n",
+  "<Leader>fd",
+  "<cmd>Telescope diagnostics<CR>",
+  opts
+)
+
+-- Show all diagnostics on the current line in a floating window
+-- vim.api.nvim_set_keymap(
+--   "n",
+--   "<Leader>ds",
+--   "<cmd>lua vim.diagnostic.open_float(nil, { focusable = true })<CR>",
+--   opts
+-- )
+vim.keymap.set(
+  "n",
+  "<leader>ds",
+  "<cmd>Lspsaga show_cursor_diagnostics<CR>",
+  { noremap = true, silent = true, desc = "Show diagnostics under cursor" }
+)
+
+-- Go to the next diagnostic (error, warning, etc.)
+vim.api.nvim_set_keymap(
+  "n",
+  "<Leader>dn",
+  ":lua vim.diagnostic.goto_next()<CR>",
+  opts
+)
+-- Go to the previous diagnostic (error, warning, etc.)
+vim.api.nvim_set_keymap(
+  "n",
+  "<Leader>dN",
+  ":lua vim.diagnostic.goto_prev()<CR>",
+  opts
+)
+
 -- Hover documentation
-vim.api.nvim_set_keymap("n", "K", "<cmd>lua vim.lsp.buf.hover()<CR>", opts)
+-- vim.api.nvim_set_keymap("n", "K", "<cmd>lua vim.lsp.buf.hover()<CR>", opts)
+vim.keymap.set(
+  "n",
+  "K",
+  "<cmd>Lspsaga hover_doc<CR>",
+  { noremap = true, silent = true, desc = "Show hover documentation" }
+)
 
 -- Find references
 vim.api.nvim_set_keymap(
