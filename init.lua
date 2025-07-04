@@ -1008,34 +1008,34 @@ require("lazy").setup({
         server = {
           on_attach = function(client, bufnr)
             -- Keybindings for LSP features in Rust files
-            vim.api.nvim_buf_set_keymap(
-              bufnr,
-              "n",
-              "gd",
-              "<cmd>lua vim.lsp.buf.definition()<CR>",
-              opts
-            )
-            vim.api.nvim_buf_set_keymap(
-              bufnr,
-              "n",
-              "K",
-              "<cmd>lua vim.lsp.buf.hover()<CR>",
-              opts
-            )
-            vim.api.nvim_buf_set_keymap(
-              bufnr,
-              "n",
-              "<Leader>ca",
-              "<cmd>lua vim.lsp.buf.code_action()<CR>",
-              opts
-            )
-            vim.api.nvim_buf_set_keymap(
-              bufnr,
-              "n",
-              "<Leader>rn",
-              "<cmd>lua vim.lsp.buf.rename()<CR>",
-              opts
-            )
+            -- vim.api.nvim_buf_set_keymap(
+            --   bufnr,
+            --   "n",
+            --   "gd",
+            --   "<cmd>lua vim.lsp.buf.definition()<CR>",
+            --   opts
+            -- )
+            -- vim.api.nvim_buf_set_keymap(
+            --   bufnr,
+            --   "n",
+            --   "K",
+            --   "<cmd>lua vim.lsp.buf.hover()<CR>",
+            --   opts
+            -- )
+            -- vim.api.nvim_buf_set_keymap(
+            --   bufnr,
+            --   "n",
+            --   "<Leader>ca",
+            --   "<cmd>lua vim.lsp.buf.code_action()<CR>",
+            --   opts
+            -- )
+            -- vim.api.nvim_buf_set_keymap(
+            --   bufnr,
+            --   "n",
+            --   "<Leader>rn",
+            --   "<cmd>lua vim.lsp.buf.rename()<CR>",
+            --   opts
+            -- )
           end,
           settings = {
             ["rust-analyzer"] = {
@@ -1610,15 +1610,15 @@ vim.api.nvim_set_keymap(
 )
 
 -- Show all diagnostics on the current line in a floating window
--- vim.api.nvim_set_keymap(
---   "n",
---   "<Leader>ds",
---   "<cmd>lua vim.diagnostic.open_float(nil, { focusable = true })<CR>",
---   opts
--- )
+vim.api.nvim_set_keymap(
+  "n",
+  "<Leader>ds",
+  "<cmd>lua vim.diagnostic.open_float(nil, { focusable = true })<CR>",
+  opts
+)
 vim.keymap.set(
   "n",
-  "<leader>ds",
+  "<Leader>dd",
   "<cmd>Lspsaga show_cursor_diagnostics<CR>",
   { noremap = true, silent = true, desc = "Show diagnostics under cursor" }
 )
