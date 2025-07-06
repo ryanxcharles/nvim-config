@@ -86,26 +86,25 @@ require("lazy").setup({
         --   )
         -- end,
       })
-      -- lspconfig.nushell = {
-      --   default_config = {
-      --     cmd = { "nu", "--lsp" },
-      --     filetypes = { "nu" },
-      --     root_dir = function(fname)
-      --       return lspconfig.util.find_git_ancestor(fname) or vim.fn.getcwd()
-      --     end,
-      --     settings = {},
-      --   },
-      -- }
-      -- -- Setup Nushell LSP
-      -- lspconfig.nushell.setup {
-      --   on_attach = function(client, bufnr)
-      --     print("Nushell LSP attached to buffer " .. bufnr)
-      --     local opts = { buffer = bufnr, noremap = true, silent = true }
-      --     vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
-      --     vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
-      --     vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, opts)
-      --   end,
-      -- }
+
+      lspconfig.texlab.setup({
+        settings = {
+          texlab = {
+            build = {
+              executable = "latexmk",
+              args = { "-pdf", "-interaction=nonstopmode", "-synctex=1", "%f" },
+              onSave = false, -- VimTeX already does on-save builds
+            },
+            forwardSearch = {
+              executable = "zathura",
+              args = { "--synctex-forward", "%l:1:%f", "%p" },
+            },
+            diagnostics = {
+              ignoredPatterns = { "Overfull", "Underfull" },
+            },
+          },
+        },
+      })
 
       -- lua: Set up the Lua Language Server first (because lua is used by nvim -
       -- seems logical)
@@ -573,14 +572,24 @@ require("lazy").setup({
     "lervag/vimtex",
     init = function()
       -- general options have to be set *before* the plug-in is loaded
-      vim.g.vimtex_view_method = "zathura"   -- or "skim", "sioyek", "sumatrapdf" …
-      vim.g.vimtex_mappings_prefix = ","     -- personal preference
-      vim.g.vimtex_quickfix_mode = 0         -- don’t open quickfix automatically
+      vim.g.vimtex_view_method = "zathura" -- or "skim", "sioyek", "sumatrapdf" …
+      vim.g.vimtex_mappings_prefix = "," -- personal preference
+      vim.g.vimtex_quickfix_mode = 0 -- don’t open quickfix automatically
     end,
     config = function()
       -- optional extra key-maps
-      vim.keymap.set("n", "<leader>ll", "<plug>(vimtex-compile)", {desc = "VimTeX compile"})
-      vim.keymap.set("n", "<leader>lv", "<plug>(vimtex-view)",    {desc = "VimTeX view PDF"})
+      vim.keymap.set(
+        "n",
+        "<leader>ll",
+        "<plug>(vimtex-compile)",
+        { desc = "VimTeX compile" }
+      )
+      vim.keymap.set(
+        "n",
+        "<leader>lv",
+        "<plug>(vimtex-view)",
+        { desc = "VimTeX view PDF" }
+      )
     end,
     ft = { "tex", "plaintex", "latex" },
   },

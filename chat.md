@@ -6826,3 +6826,32 @@ search, custom snippet packs, bibliography tools, etc.!
 # === USER ===
 
 
+let's concentrate on lsp config. you suggest this setting:
+
+```lua
+  {
+    "neovim/nvim-lspconfig",
+    opts = {
+      servers = {
+        texlab = {
+          settings = {
+            texlab = {
+              build = {
+                executable = "latexmk",
+                args       = { "-pdf", "-interaction=nonstopmode", "-synctex=1", "%f" },
+                onSave     = false,     -- VimTeX already does on-save builds
+              },
+              forwardSearch = {
+                executable = "zathura",
+                args = { "--synctex-forward", "%l:1:%f", "%p" },
+              },
+              diagnostics = { ignoredPatterns = { "Overfull", "Underfull" } },
+            },
+          },
+        },
+      },
+    },
+  },
+```
+
+this looks different than all the other lspconfig settings i have. typically, they have a language and say something like `lspconfig.mylang.setup({ ... })`. why is this different? can we make it the same as the others? or must we use this `opts` setting?
