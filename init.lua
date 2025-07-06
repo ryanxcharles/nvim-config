@@ -404,7 +404,7 @@ require("lazy").setup({
   {
     "CopilotC-Nvim/CopilotChat.nvim",
     dependencies = {
-      { "github/copilot.vim" }, -- or zbirenbaum/copilot.lua
+      { "github/copilot.vim" },
       -- { "zbirenbaum/copilot.lua" },
       { "nvim-lua/plenary.nvim", branch = "master" }, -- for curl, log and async functions
     },
@@ -452,7 +452,7 @@ require("lazy").setup({
         -- Enable Treesitter-based syntax highlighting
         highlight = {
           enable = true, -- Enable Treesitter highlighting
-          additional_vim_regex_highlighting = false, -- Disable Vim's regex-based highlighting
+          additional_vim_regex_highlighting = { "markdown" },
         },
 
         -- You can enable more Treesitter features as needed (optional)
@@ -713,7 +713,7 @@ require("lazy").setup({
           "typescriptreact",
           "lua",
           "tsx",
-          -- "nu",
+          "nu",
         },
         user_default_options = {
           RGB = true, -- #RGB hex codes
