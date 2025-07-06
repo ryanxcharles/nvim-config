@@ -453,6 +453,7 @@ require("lazy").setup({
         highlight = {
           enable = true, -- Enable Treesitter highlighting
           additional_vim_regex_highlighting = { "markdown" },
+          -- additional_vim_regex_highlighting = false,
         },
 
         -- You can enable more Treesitter features as needed (optional)
