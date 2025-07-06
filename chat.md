@@ -6855,3 +6855,68 @@ let's concentrate on lsp config. you suggest this setting:
 ```
 
 this looks different than all the other lspconfig settings i have. typically, they have a language and say something like `lspconfig.mylang.setup({ ... })`. why is this different? can we make it the same as the others? or must we use this `opts` setting?
+
+# === ASSISTANT ===
+
+The two snippets do exactly the same thing – they just come from two different
+styles of writing a **lazy.nvim** plug-in spec.
+
+•  `opts = { servers = { … } }` is the *LazyVim / lazy.nvim “preset”* style.  
+  Lazy (or LazyVim) has helper code that:
+
+  1.  calls `require("lspconfig")[server].setup()` for every server listed
+      under `servers`, and  
+  2.  merges your table into the default options.
+
+  It is short and convenient if you have many LSPs that you configure in a
+  single place.
+
+•  `local lspconfig = require("lspconfig") … lspconfig.texlab.setup{ … }`
+  is the *plain* (vanilla) **nvim-lspconfig** style.  
+  You call `setup()` yourself for every server you want.
+
+If the rest of your configuration already uses the explicit
+`lspconfig.xxx.setup()` pattern you can (and probably should) keep texlab the
+same way.  Nothing about texlab requires the `opts` helper.
+
+Below is the texlab block rewritten in the “explicit” form:
+
+```lua
+-- somewhere in your config / inside a plug-in's config() function
+local lspconfig = require("lspconfig")
+
+lspconfig.texlab.setup({
+  settings = {
+    texlab = {
+      build = {
+        executable = "latexmk",
+        args       = { "-pdf", "-interaction=nonstopmode", "-synctex=1", "%f" },
+        onSave     = false,     -- VimTeX already does on-save builds
+      },
+      forwardSearch = {
+        executable = "zathura",
+        args = { "--synctex-forward", "%l:1:%f", "%p" },
+      },
+      diagnostics = {
+        ignoredPatterns = { "Overfull", "Underfull" },
+      },
+    },
+  },
+})
+```
+
+Put that next to your other `lspconfig.<lang>.setup()` calls (or inside the same
+`config = function()` block where you configure the rest of your LSPs).  No
+`opts` table is needed unless you are following the LazyVim preset style for
+*all* languages.
+
+So:
+
+•  Use the **preset/opts** style if you already rely on LazyVim’s automatic LSP
+   management.  
+•  Otherwise, stick to the **explicit** `lspconfig.texlab.setup{…}` call shown
+   above – it is fully equivalent and integrates with your existing pattern.
+
+# === USER ===
+
+

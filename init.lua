@@ -294,6 +294,35 @@ require("lazy").setup({
     end,
   },
 
+  -- Autocompletion for LaTeX symbols
+  {
+    -- a tiny source that adds \alpha, \beta …  (optional)
+    "kdheepak/cmp-latex-symbols",
+    dependencies = { "hrsh7th/nvim-cmp" },
+    config = function()
+      local cmp = require("cmp")
+      cmp.setup.filetype({ "tex", "plaintex", "latex" }, {
+        sources = cmp.config.sources({
+          { name = "latex_symbols" }, -- math symbols
+          { name = "luasnip" },
+          { name = "buffer" },
+          { name = "path" },
+        }),
+      })
+    end,
+  },
+
+  -- Snippets for LaTeX
+  {
+    -- LaTeX snippets for LuaSnip (optional – pick any collection you like)
+    "iurimateus/luasnip-latex-snippets.nvim",
+    dependencies = { "L3MON4D3/LuaSnip" },
+    ft = { "tex", "plaintex", "latex" },
+    config = function()
+      require("luasnip-latex-snippets").setup()
+    end,
+  },
+
   -- Better LSP integration - better windows, better info popups, info at top
   {
     "nvimdev/lspsaga.nvim",
@@ -643,6 +672,7 @@ require("lazy").setup({
           python = { "black" },
           nu = { "topiary" },
           wgsl = { "wgsl_analyzer" },
+          tex = { "latexindent" },
         },
         format_on_save = false,
         -- format_on_save = {
@@ -650,6 +680,11 @@ require("lazy").setup({
         --   lsp_fallback = true,
         -- },
         formatters = {
+          latexindent = {
+            command = "latexindent",
+            args = { "-" }, -- reads from stdin / writes to stdout
+            stdin = true,
+          },
           biome = {
             command = "biome",
             args = function(self, ctx)
