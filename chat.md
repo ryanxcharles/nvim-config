@@ -6623,4 +6623,206 @@ highlighter for problematic files.
 
 # === USER ===
 
-testing how slow is the input. i don't really detect an issue.
+i have decided to start using latex. i am creating a new cv in latex and i need your help. i want to use neovim to create and edit my latex documents. what neovim plugins do you recommend installing or latex, and how do i integrate this into my existing setup, such as with treesitter, and other plugins i may already have that are relevant to latex?
+
+# === ASSISTANT ===
+
+Below is a “modern-Lua-Neovim” LaTeX tool-chain that plays nicely with the
+plug-ins you are already using (Tree-sitter, `lspconfig`, `nvim-cmp`, `conform`,
+etc.).  All code samples are written for **lazy.nvim**, but they translate
+1-to-1 to *packer* or *mini.nvim*.
+
+────────────────────────────────────────
+1.  What you actually need
+────────────────────────────────────────
+
+1.  Syntax / motions / compile & preview → **vimtex**
+2.  Highlighting / folding → add **latex** (& *bibtex*) parsers to
+    **nvim-treesitter**
+3.  LSP (diagnostics, code-completion, references, …) → **texlab** via
+    **nvim-lspconfig**
+4.  Completion & snippets → your existing **nvim-cmp** + **luasnip**
+    (optional extra sources for math symbols)
+5.  Formatter → `latexindent` wired through **conform.nvim** or **null-ls**
+6.  (optional) live progress / pretty notifications → `fidget.nvim`
+
+────────────────────────────────────────
+2.  Plug-in list with minimal setup
+────────────────────────────────────────
+
+```lua
+-- in lazy.nvim spec
+return {
+
+  ---------------------------------------------------------------------------
+  -- 1. VimTeX – the centre of the tool-chain
+  ---------------------------------------------------------------------------
+  {
+    "lervag/vimtex",
+    init = function()
+      -- general options have to be set *before* the plug-in is loaded
+      vim.g.vimtex_view_method = "zathura"   -- or "skim", "sioyek", "sumatrapdf" …
+      vim.g.vimtex_mappings_prefix = ","     -- personal preference
+      vim.g.vimtex_quickfix_mode = 0         -- don’t open quickfix automatically
+    end,
+    config = function()
+      -- optional extra key-maps
+      vim.keymap.set("n", "<leader>ll", "<plug>(vimtex-compile)", {desc = "VimTeX compile"})
+      vim.keymap.set("n", "<leader>lv", "<plug>(vimtex-view)",    {desc = "VimTeX view PDF"})
+    end,
+    ft = { "tex", "plaintex", "latex" },
+  },
+
+  ---------------------------------------------------------------------------
+  -- 2. Tree-sitter parsers (you already have nvim-treesitter itself)
+  ---------------------------------------------------------------------------
+  {
+    "nvim-treesitter/nvim-treesitter",
+    opts = {
+      ensure_installed = {
+        "latex",        -- main grammar
+        "bibtex",       -- *.bib highlights
+      },
+      highlight = { enable = true },
+      indent     = { enable = true },
+    },
+  },
+
+  ---------------------------------------------------------------------------
+  -- 3. LSP – texlab
+  ---------------------------------------------------------------------------
+  {
+    "neovim/nvim-lspconfig",
+    opts = {
+      servers = {
+        texlab = {
+          settings = {
+            texlab = {
+              build = {
+                executable = "latexmk",
+                args       = { "-pdf", "-interaction=nonstopmode", "-synctex=1", "%f" },
+                onSave     = false,     -- VimTeX already does on-save builds
+              },
+              forwardSearch = {
+                executable = "zathura",
+                args = { "--synctex-forward", "%l:1:%f", "%p" },
+              },
+              diagnostics = { ignoredPatterns = { "Overfull", "Underfull" } },
+            },
+          },
+        },
+      },
+    },
+  },
+
+  ---------------------------------------------------------------------------
+  -- 4. Completion & snippets
+  ---------------------------------------------------------------------------
+  {
+    -- a tiny source that adds \alpha, \beta …  (optional)
+    "kdheepak/cmp-latex-symbols",
+    dependencies = { "hrsh7th/nvim-cmp" },
+    config = function()
+      local cmp = require("cmp")
+      cmp.setup.filetype({ "tex", "plaintex", "latex" }, {
+        sources = cmp.config.sources({
+          { name = "latex_symbols" },   -- math symbols
+          { name = "luasnip" },
+          { name = "buffer" },
+          { name = "path" },
+        }),
+      })
+    end,
+  },
+
+  {
+    -- LaTeX snippets for LuaSnip (optional – pick any collection you like)
+    "iurimateus/luasnip-latex-snippets.nvim",
+    dependencies = { "L3MON4D3/LuaSnip" },
+    ft = { "tex", "plaintex", "latex" },
+    config = function() require("luasnip-latex-snippets").setup() end,
+  },
+
+  ---------------------------------------------------------------------------
+  -- 5. Formatter (latexindent) via conform.nvim
+  ---------------------------------------------------------------------------
+  {
+    "stevearc/conform.nvim",
+    opts = {
+      formatters_by_ft = {
+        tex = { "latexindent" },
+      },
+      formatters = {
+        latexindent = {
+          command = "latexindent",
+          args = { "-" },   -- reads from stdin / writes to stdout
+          stdin = true,
+        },
+      },
+    },
+  },
+
+  ---------------------------------------------------------------------------
+  -- 6. (Optional) progress notifications
+  ---------------------------------------------------------------------------
+  { "j-hui/fidget.nvim", tag = "legacy", opts = {} },
+}
+```
+
+────────────────────────────────────────
+3.  Small quality-of-life tweaks
+────────────────────────────────────────
+
+```lua
+-- conceal some LaTeX markup (powered by vimtex)
+vim.g.tex_conceal = "abdmg"   -- math symbols, greek letters, etc.
+
+-- quicker motions inside .tex files (provided by vimtex)
+-- [m / ]m  – previous / next section
+-- [n / ]n  – previous / next environment
+-- gcc      – comment environment (needs comment.nvim)
+
+-- make `K` show package doc instead of LSP hover inside TeX buffers
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "tex",
+  callback = function()
+    vim.keymap.set("n", "K", "<plug>(vimtex-doc-package)", {buffer = true})
+  end,
+})
+
+-- if you keep Treesitter folding globally but want TeX to fold by sections:
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "tex",
+  callback = function()
+    vim.opt_local.foldmethod = "expr"
+    vim.opt_local.foldexpr   = "vimtex#fold#level(v:lnum)"
+  end,
+})
+```
+
+────────────────────────────────────────
+4.  Workflow summary
+────────────────────────────────────────
+
+•  **Edit** `.tex`, `.sty`, `.bib` files – Treesitter gives you colours & smart
+   text-objects, LuaSnip gives you snippets, `cmp-latex-symbols` completes
+   `\alpha` → α.
+
+•  **Compile / view** – `\ll` (or your `<leader>ll`) runs *latexmk* through
+   VimTeX; `\lv` opens the PDF viewer with sync-tex jump.
+
+•  **Diagnostics** – texlab populates quickfix list; `vim.diagnostic` or
+   `lspsaga` shows messages inline.
+
+•  **Formatting** – `:Format` (or any conform-key) pipes the buffer through
+   *latexindent*.
+
+Everything above is non-intrusive: if you remove the LaTeX files the rest of
+your Neovim setup keeps working exactly the same.
+
+Enjoy your new TeX workflow, and feel free to ask if you need help with forward
+search, custom snippet packs, bibliography tools, etc.!
+
+# === USER ===
+
+
