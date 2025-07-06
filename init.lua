@@ -447,6 +447,8 @@ require("lazy").setup({
           "yaml",
           -- "zsh",
           "bash",
+          "latex",
+          "bibtex",
         }, -- Add more languages as needed
 
         -- Enable Treesitter-based syntax highlighting
