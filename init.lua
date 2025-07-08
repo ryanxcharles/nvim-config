@@ -1760,10 +1760,10 @@ vim.keymap.set("n", "zb", "zb10<C-e>", opts)
 vim.api.nvim_set_keymap("n", "<Leader>cvc", ":ChatvimComplete<CR>", opts)
 vim.api.nvim_set_keymap("n", "<Leader>cvs", ":ChatvimStop<CR>", opts)
 vim.api.nvim_set_keymap("n", "<Leader>cvnn", ":ChatvimNew<CR>", opts)
-vim.api.nvim_set_keymap("n", "<Leader>cvnl", ":ChatvimNew left<CR>", opts)
-vim.api.nvim_set_keymap("n", "<Leader>cvnr", ":ChatvimNew right<CR>", opts)
-vim.api.nvim_set_keymap("n", "<Leader>cvnb", ":ChatvimNew bottom<CR>", opts)
-vim.api.nvim_set_keymap("n", "<Leader>cvnt", ":ChatvimNew top<CR>", opts)
+vim.api.nvim_set_keymap("n", "<Leader>cvnl", ":ChatvimNewLeft<CR>", opts)
+vim.api.nvim_set_keymap("n", "<Leader>cvnr", ":ChatvimNewRight<CR>", opts)
+vim.api.nvim_set_keymap("n", "<Leader>cvnb", ":ChatvimNewBottom<CR>", opts)
+vim.api.nvim_set_keymap("n", "<Leader>cvnt", ":ChatvimNewTop<CR>", opts)
 
 -- ## Colors
 
