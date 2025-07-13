@@ -424,6 +424,7 @@ require("lazy").setup({
       vim.g.copilot_filetypes = {
         ["*"] = true, -- Enable for all filetypes
         env = false, -- Disable for .env files
+        nu = false, -- Disable for Nushell files
       }
     end,
   },
@@ -1754,17 +1755,6 @@ vim.api.nvim_set_keymap(
 vim.keymap.set("n", "zt", "zt10<C-y>", opts)
 -- zb: scroll so current line is 10 lines from bottom
 vim.keymap.set("n", "zb", "zb10<C-e>", opts)
-
--- Chatvim (chatvim.nvim) keybindings
--- let opts = { noremap = true, silent = true }
-vim.api.nvim_set_keymap("n", "<Leader>cvc", ":ChatvimComplete<CR>", opts)
-vim.api.nvim_set_keymap("n", "<Leader>cvs", ":ChatvimStop<CR>", opts)
-vim.api.nvim_set_keymap("n", "<Leader>cvw", ":ChatvimWrite<CR>", opts)
-vim.api.nvim_set_keymap("n", "<Leader>cvnn", ":ChatvimNew<CR>", opts)
-vim.api.nvim_set_keymap("n", "<Leader>cvnl", ":ChatvimNewLeft<CR>", opts)
-vim.api.nvim_set_keymap("n", "<Leader>cvnr", ":ChatvimNewRight<CR>", opts)
-vim.api.nvim_set_keymap("n", "<Leader>cvnb", ":ChatvimNewBottom<CR>", opts)
-vim.api.nvim_set_keymap("n", "<Leader>cvnt", ":ChatvimNewTop<CR>", opts)
 
 -- ## Colors
 
