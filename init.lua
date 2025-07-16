@@ -662,12 +662,12 @@ require("lazy").setup({
         formatters_by_ft = {
           markdown = { "dprint" },
           toml = { "dprint" },
-          typescript = { "biome" },
-          typescriptreact = { "biome" },
-          javascript = { "biome" },
-          javascriptreact = { "biome" },
-          json = { "biome" },
-          jsonc = { "biome" },
+          typescript = { "prettier" },
+          typescriptreact = { "prettier" },
+          javascript = { "prettier" },
+          javascriptreact = { "prettier" },
+          json = { "prettier" },
+          jsonc = { "prettier" },
           lua = { "stylua" },
           rust = { "rustfmt" },
           python = { "black" },
@@ -1290,14 +1290,13 @@ vim.api.nvim_create_autocmd("FileType", {
   end,
 })
 
--- Create a custom command :Fix to run biome lint with --fix and --unsafe options
--- This is useful for sorting tailwind classes
+-- Create a custom command :Fix to sort tailwind classes (and format the file)
 vim.api.nvim_create_user_command("Fix", function()
   local current_file = vim.api.nvim_buf_get_name(0)
   local file_dir = vim.fn.fnamemodify(current_file, ":h")
 
   vim.cmd("lcd " .. vim.fn.fnameescape(file_dir))
-  vim.cmd("!biome lint --fix --unsafe " .. vim.fn.shellescape(current_file))
+  vim.cmd("!pnpm prettier -w " .. vim.fn.shellescape(current_file))
   vim.cmd("lcd -")
 end, {})
 
@@ -1750,6 +1749,17 @@ vim.api.nvim_set_keymap(
   '<cmd>lua vim.lsp.buf.code_action({ context = { only = { "source.organizeImports" } }, apply = true })<CR>',
   opts
 )
+
+-- Chatvim keybindings
+-- local opts = { noremap = true, silent = true }
+vim.api.nvim_set_keymap("n", "<Leader>cvc", ":ChatvimComplete<CR>", opts)
+vim.api.nvim_set_keymap("n", "<Leader>cvs", ":ChatvimStop<CR>", opts)
+vim.api.nvim_set_keymap("n", "<Leader>cvw", ":ChatvimWrite<CR>", opts)
+vim.api.nvim_set_keymap("n", "<Leader>cvnn", ":ChatvimNew<CR>", opts)
+vim.api.nvim_set_keymap("n", "<Leader>cvnl", ":ChatvimNewLeft<CR>", opts)
+vim.api.nvim_set_keymap("n", "<Leader>cvnr", ":ChatvimNewRight<CR>", opts)
+vim.api.nvim_set_keymap("n", "<Leader>cvnb", ":ChatvimNewBottom<CR>", opts)
+vim.api.nvim_set_keymap("n", "<Leader>cvnt", ":ChatvimNewTop<CR>", opts)
 
 -- zt: scroll so current line is 10 lines from top
 vim.keymap.set("n", "zt", "zt10<C-y>", opts)
