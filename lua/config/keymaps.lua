@@ -19,8 +19,8 @@ vim.api.nvim_set_keymap("n", ";j", ":wincmd j<CR>", opts)
 -- vim.api.nvim_set_keymap("n", "<Leader>n", ":tabnew<CR>", { silent = true })
 -- vim.api.nvim_set_keymap("n", "<Leader>N", ":tabnew<CR><Leader>e", { silent = true })
 -- vim.api.nvim_set_keymap("n", "<Leader>q", ":q<CR>", opts)
-vim.api.nvim_set_keymap("n", "<Leader>V", ":vsp<CR>:wincmd l<CR>", opts)
-vim.api.nvim_set_keymap("n", "<Leader>v", ":vsp<CR>", opts)
+-- vim.api.nvim_set_keymap("n", "<Leader>V", ":vsp<CR>:wincmd l<CR>", opts)
+-- vim.api.nvim_set_keymap("n", "<Leader>v", ":vsp<CR>", opts)
 
 -- Keybindings for resession
 vim.api.nvim_set_keymap("n", "<Leader>sr", ":lua require('resession').save()<CR>", opts)
