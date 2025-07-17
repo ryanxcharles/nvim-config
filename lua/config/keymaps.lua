@@ -48,3 +48,11 @@ end
 
 vim.api.nvim_create_user_command("CloseHiddenBuffers", CloseHiddenBuffers, {})
 vim.api.nvim_set_keymap("n", "<Leader>chb", ":CloseHiddenBuffers<CR>", {})
+
+-- Neo-tree keybindings
+-- Keybinding to open Neo-tree buffer list in a floating window (on-demand)
+vim.api.nvim_set_keymap("n", "<Leader>rB", ":Neotree buffers position=float<CR>", opts)
+-- Keybinding to open Neo-tree file list in a floating window (on-demand)
+vim.api.nvim_set_keymap("n", "<Leader>rF", ":Neotree filesystem position=float<CR>", opts)
+-- Keybinding to open Neo-tree reveal current file in a floating window (on-demand)
+vim.api.nvim_set_keymap("n", "<Leader>rR", ":Neotree reveal position=float<CR>", opts)
