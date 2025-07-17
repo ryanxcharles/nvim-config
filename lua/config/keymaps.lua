@@ -42,7 +42,7 @@ vim.api.nvim_set_keymap(
   opts
 )
 
--- close hidden buffers. useful for aggs, argdo, ...
+-- close hidden buffers.
 function CloseHiddenBuffers()
   local visible_buffers = {}
   -- Get all buffers visible in the current tabs and windows
@@ -61,7 +61,5 @@ function CloseHiddenBuffers()
   end
 end
 
--- Create a command to call the function
 vim.api.nvim_create_user_command("CloseHiddenBuffers", CloseHiddenBuffers, {})
-
 vim.api.nvim_set_keymap("n", "<Leader>chb", ":CloseHiddenBuffers<CR>", {})
