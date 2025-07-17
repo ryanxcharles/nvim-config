@@ -31,12 +31,15 @@ return {
     })
     -- Neo-tree keybindings
     local opts = { noremap = true, silent = true }
+    vim.api.nvim_set_keymap("n", "<Leader>rB", ":Neotree buffers position=left<CR>", opts)
+    vim.api.nvim_set_keymap("n", "<Leader>rF", ":Neotree filesystem position=left<CR>", opts)
+    vim.api.nvim_set_keymap("n", "<Leader>rR", ":Neotree reveal position=left<CR>", opts)
     vim.api.nvim_set_keymap("n", "<Leader>rb", ":Neotree buffers position=float<CR>", opts)
     vim.api.nvim_set_keymap("n", "<Leader>rf", ":Neotree filesystem position=float<CR>", opts)
     vim.api.nvim_set_keymap("n", "<Leader>rr", ":Neotree reveal position=float<CR>", opts)
-    vim.api.nvim_set_keymap("n", "<Leader>e", ":Neotree filesystem position=left<CR>", opts)
+    vim.api.nvim_set_keymap("n", "<Leader>e", ":Neotree filesystem position=float<CR>", opts)
     vim.api.nvim_set_keymap("n", "<Leader>E", ":Neotree filesystem position=left<CR>", opts)
-    vim.api.nvim_set_keymap("n", "<Leader>fe", ":Neotree filesystem position=left<CR>", opts)
+    vim.api.nvim_set_keymap("n", "<Leader>fe", ":Neotree filesystem position=float<CR>", opts)
     vim.api.nvim_set_keymap("n", "<Leader>fE", ":Neotree filesystem position=left<CR>", opts)
   end,
 }
