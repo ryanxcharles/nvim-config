@@ -23,10 +23,9 @@ vim.api.nvim_set_keymap("n", "<Leader>V", ":vsp<CR>:wincmd l<CR>", opts)
 vim.api.nvim_set_keymap("n", "<Leader>v", ":vsp<CR>", opts)
 
 -- Keybindings for resession
-vim.api.nvim_set_keymap("n", "<Leader>ss", ":lua require('resession').save()<CR>", opts)
+vim.api.nvim_set_keymap("n", "<Leader>sr", ":lua require('resession').save()<CR>", opts)
 vim.api.nvim_set_keymap("n", "<Leader>sl", ":lua require('resession').load()<CR>", opts)
 vim.api.nvim_set_keymap("n", "<Leader>sd", ":lua require('resession').delete()<CR>", opts)
-vim.api.nvim_set_keymap("n", "<Leader>sc", ":lua require('resession').autosave_toggle()<CR>", opts)
 
 -- Scroll down by 25% of the window height
 vim.api.nvim_set_keymap(
