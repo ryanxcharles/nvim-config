@@ -176,9 +176,7 @@ require("lazy").setup({
 
         -- Ensure the server uses the right config for each project directory
         root_dir = function(fname)
-          return lspconfig.util.root_pattern("package.json", "tsconfig.json")(
-            fname
-          )
+          return lspconfig.util.root_pattern("package.json", "tsconfig.json")(fname)
         end,
 
         -- single-file must be disabled to not conflict with Deno
@@ -249,11 +247,7 @@ require("lazy").setup({
       lspconfig.wgsl_analyzer.setup({})
 
       lspconfig.pyright.setup({
-        root_dir = lspconfig.util.root_pattern(
-          "pyproject.toml",
-          "setup.py",
-          "requirements.txt"
-        ),
+        root_dir = lspconfig.util.root_pattern("pyproject.toml", "setup.py", "requirements.txt"),
         on_new_config = function(new_config, root_dir)
           -- Dynamically set pythonPath based on the root_dir
           local python_path = nil
@@ -271,9 +265,7 @@ require("lazy").setup({
           end
           -- Fallback to system Python if no venv is found
           if not python_path then
-            python_path = vim.fn.exepath("python3")
-              or vim.fn.exepath("python")
-              or "python"
+            python_path = vim.fn.exepath("python3") or vim.fn.exepath("python") or "python"
           end
           -- Update the settings with the computed pythonPath
           new_config.settings.python.pythonPath = python_path
@@ -608,18 +600,8 @@ require("lazy").setup({
     end,
     config = function()
       -- optional extra key-maps
-      vim.keymap.set(
-        "n",
-        "<leader>ll",
-        "<plug>(vimtex-compile)",
-        { desc = "VimTeX compile" }
-      )
-      vim.keymap.set(
-        "n",
-        "<leader>lv",
-        "<plug>(vimtex-view)",
-        { desc = "VimTeX view PDF" }
-      )
+      vim.keymap.set("n", "<leader>ll", "<plug>(vimtex-compile)", { desc = "VimTeX compile" })
+      vim.keymap.set("n", "<leader>lv", "<plug>(vimtex-view)", { desc = "VimTeX view PDF" })
     end,
     ft = { "tex", "plaintex", "latex" },
   },
@@ -689,8 +671,7 @@ require("lazy").setup({
           biome = {
             command = "biome",
             args = function(self, ctx)
-              local config_path =
-                find_file_in_file_parents("biome.json", ctx.filename)
+              local config_path = find_file_in_file_parents("biome.json", ctx.filename)
               return {
                 "format",
                 "--config-path",
@@ -746,8 +727,7 @@ require("lazy").setup({
       vim.api.nvim_create_user_command("Format", function(args)
         local range = nil
         if args.count ~= -1 then
-          local end_line =
-            vim.api.nvim_buf_get_lines(0, args.line2 - 1, args.line2, true)[1]
+          local end_line = vim.api.nvim_buf_get_lines(0, args.line2 - 1, args.line2, true)[1]
           range = {
             start = { args.line1, 0 },
             ["end"] = { args.line2, end_line:len() },
@@ -1382,10 +1362,7 @@ vim.api.nvim_create_user_command("LspRenameFile", function(opts)
         },
       }, function(err, result, ctx, config)
         if err then
-          vim.notify(
-            "Error executing command: " .. vim.inspect(err),
-            vim.log.levels.ERROR
-          )
+          vim.notify("Error executing command: " .. vim.inspect(err), vim.log.levels.ERROR)
         else
           vim.notify("File renamed. Remember to :wa !", vim.log.levels.INFO)
         end
@@ -1465,12 +1442,7 @@ vim.api.nvim_set_keymap("n", "<Leader>w", ":w<CR>", opts)
 vim.api.nvim_set_keymap("n", "<Leader>h", "gT", opts)
 vim.api.nvim_set_keymap("n", "<Leader>l", "gt", opts)
 vim.api.nvim_set_keymap("n", "<Leader>n", ":tabnew<CR>", { silent = true })
-vim.api.nvim_set_keymap(
-  "n",
-  "<Leader>N",
-  ":tabnew<CR><Leader>e",
-  { silent = true }
-)
+vim.api.nvim_set_keymap("n", "<Leader>N", ":tabnew<CR><Leader>e", { silent = true })
 vim.api.nvim_set_keymap("n", "<Leader>q", ":q<CR>", opts)
 vim.api.nvim_set_keymap("n", "<Leader>V", ":vsp<CR>:wincmd l<CR>", opts)
 vim.api.nvim_set_keymap("n", "<Leader>v", ":vsp<CR>", opts)
@@ -1524,12 +1496,7 @@ vim.api.nvim_set_keymap("n", "<Leader>.", "<C-l>", opts)
 -- vim.api.nvim_set_keymap('n', '<Leader>ff', ":Telescope find_files<CR>", opts)
 
 -- Key binding to use Telescope to search files, including respecting .gitignore
-vim.api.nvim_set_keymap(
-  "n",
-  "<Leader>e",
-  ":lua require('telescope.builtin').find_files({ hidden = true })<CR>",
-  opts
-)
+vim.api.nvim_set_keymap("n", "<Leader>e", ":lua require('telescope.builtin').find_files({ hidden = true })<CR>", opts)
 -- alternate to search git files, e.g. current git repo, instead of cwd/pwd
 -- vim.api.nvim_set_keymap(
 --   "n",
@@ -1548,137 +1515,47 @@ vim.api.nvim_set_keymap("i", "<C-p>", "copilot#Previous()", opts)
 -- Keybinding to toggle Neo-tree
 vim.api.nvim_set_keymap("n", "<Leader>tt", ":Neotree toggle<CR>", opts)
 -- Neo-tree files
-vim.api.nvim_set_keymap(
-  "n",
-  "<Leader>tf",
-  ":Neotree filesystem position=left<CR>",
-  opts
-)
+vim.api.nvim_set_keymap("n", "<Leader>tf", ":Neotree filesystem position=left<CR>", opts)
 -- Neo-tree reveal current file
-vim.api.nvim_set_keymap(
-  "n",
-  "<Leader>tr",
-  ":Neotree reveal position=left<CR>",
-  opts
-)
+vim.api.nvim_set_keymap("n", "<Leader>tr", ":Neotree reveal position=left<CR>", opts)
 -- Neo-tree buffers
-vim.api.nvim_set_keymap(
-  "n",
-  "<Leader>tb",
-  ":Neotree buffers position=left<CR>",
-  opts
-)
+vim.api.nvim_set_keymap("n", "<Leader>tb", ":Neotree buffers position=left<CR>", opts)
 -- Neo-tree git status
 vim.api.nvim_set_keymap("n", "<Leader>tg", ":Neotree git_status<CR>", opts)
 -- Keybinding to open Neo-tree buffer list in a floating window (on-demand)
-vim.api.nvim_set_keymap(
-  "n",
-  "<Leader>tB",
-  ":Neotree buffers position=float<CR>",
-  opts
-)
+vim.api.nvim_set_keymap("n", "<Leader>tB", ":Neotree buffers position=float<CR>", opts)
 -- Keybinding to open Neo-tree file list in a floating window (on-demand)
-vim.api.nvim_set_keymap(
-  "n",
-  "<Leader>tF",
-  ":Neotree filesystem position=float<CR>",
-  opts
-)
+vim.api.nvim_set_keymap("n", "<Leader>tF", ":Neotree filesystem position=float<CR>", opts)
 -- Keybinding to open Neo-tree reveal current file in a floating window (on-demand)
-vim.api.nvim_set_keymap(
-  "n",
-  "<Leader>tR",
-  ":Neotree reveal position=float<CR>",
-  opts
-)
+vim.api.nvim_set_keymap("n", "<Leader>tR", ":Neotree reveal position=float<CR>", opts)
 -- Keybinding to open Neo-tree buffer list in current window (on-demand)
-vim.api.nvim_set_keymap(
-  "n",
-  "<Leader>tcb",
-  ":Neotree buffers position=current<CR>",
-  opts
-)
+vim.api.nvim_set_keymap("n", "<Leader>tcb", ":Neotree buffers position=current<CR>", opts)
 -- Keybinding to open Neo-tree file list in current window (on-demand)
-vim.api.nvim_set_keymap(
-  "n",
-  "<Leader>tcf",
-  ":Neotree filesystem position=current<CR>",
-  opts
-)
+vim.api.nvim_set_keymap("n", "<Leader>tcf", ":Neotree filesystem position=current<CR>", opts)
 -- Keybinding to open Neo-tree reveal current file in current window (on-demand)
-vim.api.nvim_set_keymap(
-  "n",
-  "<Leader>tcr",
-  ":Neotree reveal position=current<CR>",
-  opts
-)
+vim.api.nvim_set_keymap("n", "<Leader>tcr", ":Neotree reveal position=current<CR>", opts)
 
 -- Keybindings for resession
-vim.api.nvim_set_keymap(
-  "n",
-  "<Leader>ss",
-  ":lua require('resession').save()<CR>",
-  opts
-)
-vim.api.nvim_set_keymap(
-  "n",
-  "<Leader>sl",
-  ":lua require('resession').load()<CR>",
-  opts
-)
-vim.api.nvim_set_keymap(
-  "n",
-  "<Leader>sd",
-  ":lua require('resession').delete()<CR>",
-  opts
-)
-vim.api.nvim_set_keymap(
-  "n",
-  "<Leader>sc",
-  ":lua require('resession').autosave_toggle()<CR>",
-  opts
-)
+vim.api.nvim_set_keymap("n", "<Leader>ss", ":lua require('resession').save()<CR>", opts)
+vim.api.nvim_set_keymap("n", "<Leader>sl", ":lua require('resession').load()<CR>", opts)
+vim.api.nvim_set_keymap("n", "<Leader>sd", ":lua require('resession').delete()<CR>", opts)
+vim.api.nvim_set_keymap("n", "<Leader>sc", ":lua require('resession').autosave_toggle()<CR>", opts)
 
 -- Go to definition
-vim.api.nvim_set_keymap(
-  "n",
-  "gd",
-  "<cmd>lua vim.lsp.buf.definition()<CR>",
-  opts
-)
+vim.api.nvim_set_keymap("n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>", opts)
 
 -- LSP-related keybindings
 
 -- LSP integration with Telescope for TypeScript and other languages
 -- Space + fs: Search document symbols (like variables, functions, etc.).
-vim.api.nvim_set_keymap(
-  "n",
-  "<Leader>fs",
-  "<cmd>Telescope lsp_document_symbols<CR>",
-  opts
-)
+vim.api.nvim_set_keymap("n", "<Leader>fs", "<cmd>Telescope lsp_document_symbols<CR>", opts)
 -- Space + fr: Find all references to a symbol.
-vim.api.nvim_set_keymap(
-  "n",
-  "<Leader>fr",
-  "<cmd>Telescope lsp_references<CR>",
-  opts
-)
+vim.api.nvim_set_keymap("n", "<Leader>fr", "<cmd>Telescope lsp_references<CR>", opts)
 -- Space + fd: Search through diagnostics (errors, warnings).
-vim.api.nvim_set_keymap(
-  "n",
-  "<Leader>fd",
-  "<cmd>Telescope diagnostics<CR>",
-  opts
-)
+vim.api.nvim_set_keymap("n", "<Leader>fd", "<cmd>Telescope diagnostics<CR>", opts)
 
 -- Show all diagnostics on the current line in a floating window
-vim.api.nvim_set_keymap(
-  "n",
-  "<Leader>ds",
-  "<cmd>lua vim.diagnostic.open_float(nil, { focusable = true })<CR>",
-  opts
-)
+vim.api.nvim_set_keymap("n", "<Leader>ds", "<cmd>lua vim.diagnostic.open_float(nil, { focusable = true })<CR>", opts)
 vim.keymap.set(
   "n",
   "<Leader>dd",
@@ -1687,19 +1564,9 @@ vim.keymap.set(
 )
 
 -- Go to the next diagnostic (error, warning, etc.)
-vim.api.nvim_set_keymap(
-  "n",
-  "<Leader>dn",
-  ":lua vim.diagnostic.goto_next()<CR>",
-  opts
-)
+vim.api.nvim_set_keymap("n", "<Leader>dn", ":lua vim.diagnostic.goto_next()<CR>", opts)
 -- Go to the previous diagnostic (error, warning, etc.)
-vim.api.nvim_set_keymap(
-  "n",
-  "<Leader>dN",
-  ":lua vim.diagnostic.goto_prev()<CR>",
-  opts
-)
+vim.api.nvim_set_keymap("n", "<Leader>dN", ":lua vim.diagnostic.goto_prev()<CR>", opts)
 
 -- Hover documentation
 -- vim.api.nvim_set_keymap("n", "K", "<cmd>lua vim.lsp.buf.hover()<CR>", opts)
@@ -1711,36 +1578,16 @@ vim.keymap.set(
 )
 
 -- Find references
-vim.api.nvim_set_keymap(
-  "n",
-  "gr",
-  "<cmd>lua vim.lsp.buf.references()<CR>",
-  opts
-)
+vim.api.nvim_set_keymap("n", "gr", "<cmd>lua vim.lsp.buf.references()<CR>", opts)
 
 -- Go to implementation
-vim.api.nvim_set_keymap(
-  "n",
-  "gi",
-  "<cmd>lua vim.lsp.buf.implementation()<CR>",
-  opts
-)
+vim.api.nvim_set_keymap("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<CR>", opts)
 
 -- Rename symbol
-vim.api.nvim_set_keymap(
-  "n",
-  "<Leader>rn",
-  "<cmd>lua vim.lsp.buf.rename()<CR>",
-  opts
-)
+vim.api.nvim_set_keymap("n", "<Leader>rn", "<cmd>lua vim.lsp.buf.rename()<CR>", opts)
 
 -- Code actions
-vim.api.nvim_set_keymap(
-  "n",
-  "<Leader>ca",
-  "<cmd>lua vim.lsp.buf.code_action()<CR>",
-  opts
-)
+vim.api.nvim_set_keymap("n", "<Leader>ca", "<cmd>lua vim.lsp.buf.code_action()<CR>", opts)
 
 -- Shortcut to organize imports
 vim.api.nvim_set_keymap(
@@ -1773,9 +1620,7 @@ vim.opt.termguicolors = true
 
 -- TODO: test todo highlighting
 -- Define a highlight group for TODO comments
-vim.api.nvim_command(
-  "highlight TodoComment guifg=#FA8603 guibg=#1e1e2e gui=bold"
-) -- Orange color with bold
+vim.api.nvim_command("highlight TodoComment guifg=#FA8603 guibg=#1e1e2e gui=bold") -- Orange color with bold
 -- Automatically highlight TODO comments when entering a buffer
 vim.api.nvim_create_autocmd({ "BufEnter", "BufReadPost" }, {
   group = vim.api.nvim_create_augroup("TodoHighlight", { clear = true }),
@@ -1806,11 +1651,7 @@ vim.api.nvim_create_autocmd({ "WinEnter", "BufEnter" }, {
 
 -- b = { fg = "#ffffff", bg = "#0087ff" },
 -- Define custom highlight groups for tabs with a bright blue background
-vim.api.nvim_set_hl(
-  0,
-  "TabLineSel",
-  { fg = "#ffffff", bg = "#5f87af", bold = false }
-) -- Selected tab
+vim.api.nvim_set_hl(0, "TabLineSel", { fg = "#ffffff", bg = "#5f87af", bold = false }) -- Selected tab
 vim.api.nvim_set_hl(
   0,
   "TabLine",
@@ -1842,20 +1683,17 @@ vim.opt.signcolumn = "yes" -- This helps ensure left border space
 vim.opt.foldcolumn = "1" -- This can help with left border too
 
 -- Create autocmd for window focus
-vim.api.nvim_create_autocmd(
-  { "WinEnter", "BufEnter", "WinLeave", "BufLeave" },
-  {
-    callback = function()
-      local wins = vim.api.nvim_list_wins()
-      for _, w in ipairs(wins) do
-        if w == vim.api.nvim_get_current_win() then
-          -- Current window gets highlighted border and background
-          vim.wo[w].winhighlight = "WinSeparator:WinSeparator,Normal:Normal"
-        else
-          -- Other windows get dim border and background
-          vim.wo[w].winhighlight = "WinSeparator:WinSeparatorNC,Normal:NormalNC"
-        end
+vim.api.nvim_create_autocmd({ "WinEnter", "BufEnter", "WinLeave", "BufLeave" }, {
+  callback = function()
+    local wins = vim.api.nvim_list_wins()
+    for _, w in ipairs(wins) do
+      if w == vim.api.nvim_get_current_win() then
+        -- Current window gets highlighted border and background
+        vim.wo[w].winhighlight = "WinSeparator:WinSeparator,Normal:Normal"
+      else
+        -- Other windows get dim border and background
+        vim.wo[w].winhighlight = "WinSeparator:WinSeparatorNC,Normal:NormalNC"
       end
-    end,
-  }
-)
+    end
+  end,
+})
