@@ -112,7 +112,7 @@ return {
               query = "@codeblock.outer",
               desc = "Previous code block start",
             },
-            C, -- ["[f"] = {
+            -- ["[f"] = {
             --   query = "@function.outer",
             --   desc = "Previous function start",
             -- },
