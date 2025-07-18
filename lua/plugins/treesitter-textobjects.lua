@@ -1,5 +1,4 @@
 return {
-  -- Treesitter for syntax highlighting and text-objects for selecting markdown code blocks
   "nvim-treesitter/nvim-treesitter-textobjects",
   dependencies = {
     "nvim-treesitter/nvim-treesitter",
@@ -51,33 +50,33 @@ return {
         select = {
           enable = true,
           lookahead = true, -- Automatically jump forward to textobj if cursor is outside
-          -- keymaps = {
-          --   -- Define a custom text object for markdown fenced code blocks
-          --   ["ic"] = {
-          --     query = "@codeblock.inner",
-          --     desc = "Select inside markdown code block",
-          --   },
-          --   ["ac"] = {
-          --     query = "@codeblock.outer",
-          --     desc = "Select around markdown code block",
-          --   },
-          --   ["if"] = {
-          --     query = "@function.inner",
-          --     desc = "Select inside function (TypeScript, etc.)",
-          --   },
-          --   ["af"] = {
-          --     query = "@function.outer",
-          --     desc = "Select around function (TypeScript, etc.)",
-          --   },
-          --   ["ik"] = {
-          --     query = "@class.inner",
-          --     desc = "Select inside class (TypeScript, etc.)",
-          --   },
-          --   ["ak"] = {
-          --     query = "@class.outer",
-          --     desc = "Select around class (TypeScript, etc.)",
-          --   },
-          -- },
+          keymaps = {
+            -- Define a custom text object for markdown fenced code blocks
+            ["ix"] = {
+              query = "@codeblock.inner",
+              desc = "Select inside markdown code block",
+            },
+            ["ax"] = {
+              query = "@codeblock.outer",
+              desc = "Select around markdown code block",
+            },
+            -- ["if"] = {
+            --   query = "@function.inner",
+            --   desc = "Select inside function (TypeScript, etc.)",
+            -- },
+            -- ["af"] = {
+            --   query = "@function.outer",
+            --   desc = "Select around function (TypeScript, etc.)",
+            -- },
+            -- ["ik"] = {
+            --   query = "@class.inner",
+            --   desc = "Select inside class (TypeScript, etc.)",
+            -- },
+            -- ["ak"] = {
+            --   query = "@class.outer",
+            --   desc = "Select around class (TypeScript, etc.)",
+            -- },
+          },
           -- Optionally, configure selection modes or other settings
           selection_modes = {
             ["@codeblock.inner"] = "V", -- Use linewise visual mode for inner selection
@@ -113,7 +112,7 @@ return {
               query = "@codeblock.outer",
               desc = "Previous code block start",
             },
-            -- ["[f"] = {
+            C, -- ["[f"] = {
             --   query = "@function.outer",
             --   desc = "Previous function start",
             -- },
