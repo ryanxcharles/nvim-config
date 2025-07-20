@@ -90,54 +90,54 @@ return {
         move = {
           enable = true,
           set_jumps = true, -- Add to jump list for navigation history
-          goto_next_start = {
-            ["]x"] = {
-              query = "@codeblock.outer",
-              desc = "Next code block start",
-            },
-            -- ["]f"] = {
-            --   query = "@function.outer",
-            --   desc = "Next function start",
-            -- },
-            -- ["]k"] = { query = "@class.outer", desc = "Next class start" },
-          },
-          goto_next_end = {
-            ["]X"] = {
-              query = "@codeblock.outer",
-              desc = "Next code block end",
-            },
-          },
-          goto_previous_start = {
-            ["[x"] = {
-              query = "@codeblock.outer",
-              desc = "Previous code block start",
-            },
-            -- ["[f"] = {
-            --   query = "@function.outer",
-            --   desc = "Previous function start",
-            -- },
-            -- ["[k"] = { query = "@class.outer", desc = "Previous class start" },
-          },
-          goto_previous_end = {
-            ["[X"] = {
-              query = "@codeblock.outer",
-              desc = "Previous code block end",
-            },
-          },
+          -- goto_next_start = {
+          --   ["]x"] = {
+          --     query = "@codeblock.outer",
+          --     desc = "Next code block start",
+          --   },
+          --   -- ["]f"] = {
+          --   --   query = "@function.outer",
+          --   --   desc = "Next function start",
+          --   -- },
+          --   -- ["]k"] = { query = "@class.outer", desc = "Next class start" },
+          -- },
+          -- goto_next_end = {
+          --   ["]X"] = {
+          --     query = "@codeblock.outer",
+          --     desc = "Next code block end",
+          --   },
+          -- },
+          -- goto_previous_start = {
+          --   ["[x"] = {
+          --     query = "@codeblock.outer",
+          --     desc = "Previous code block start",
+          --   },
+          --   -- ["[f"] = {
+          --   --   query = "@function.outer",
+          --   --   desc = "Previous function start",
+          --   -- },
+          --   -- ["[k"] = { query = "@class.outer", desc = "Previous class start" },
+          -- },
+          -- goto_previous_end = {
+          --   ["[X"] = {
+          --     query = "@codeblock.outer",
+          --     desc = "Previous code block end",
+          --   },
+          -- },
         },
       },
     })
 
-    -- Define the custom Tree-sitter queries for markdown code blocks
-    vim.treesitter.query.set(
-      "markdown",
-      "textobjects",
-      [[
-      (fenced_code_block
-        (code_fence_content) @codeblock.inner
-      ) @codeblock.outer
-    ]]
-    )
+    -- -- Define the custom Tree-sitter queries for markdown code blocks
+    -- vim.treesitter.query.set(
+    --   "markdown",
+    --   "textobjects",
+    --   [[
+    --   (fenced_code_block
+    --     (code_fence_content) @codeblock.inner
+    --   ) @codeblock.outer
+    -- ]]
+    -- )
 
     -- Enable Treesitter folding globally
     vim.opt.foldmethod = "expr"
