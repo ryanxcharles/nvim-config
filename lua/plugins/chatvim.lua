@@ -8,12 +8,12 @@ return {
   --   end,
   -- },
 
-  -- Chatvim: local install
-  {
-    dir = "~/dev/chatvim.nvim",
-    name = "chatvim.nvim",
-    config = function()
-      require("chatvim")
-    end,
-  },
+  -- -- Chatvim: local install
+  -- {
+  --   dir = "~/dev/chatvim.nvim",
+  --   name = "chatvim.nvim",
+  --   config = function()
+  --     require("chatvim")
+  --   end,
+  -- },
 }

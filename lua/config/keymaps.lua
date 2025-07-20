@@ -53,7 +53,6 @@ vim.api.nvim_set_keymap("n", "<Leader>chb", ":CloseHiddenBuffers<CR>", {})
 -- local opts = { noremap = true, silent = true }
 vim.api.nvim_set_keymap("n", "<Leader>cvc", ":ChatvimComplete<CR>", opts)
 vim.api.nvim_set_keymap("n", "<Leader>cvs", ":ChatvimStop<CR>", opts)
-vim.api.nvim_set_keymap("n", "<Leader>cvw", ":ChatvimWrite<CR>", opts)
 vim.api.nvim_set_keymap("n", "<Leader>cvnn", ":ChatvimNew<CR>", opts)
 vim.api.nvim_set_keymap("n", "<Leader>cvnl", ":ChatvimNewLeft<CR>", opts)
 vim.api.nvim_set_keymap("n", "<Leader>cvnr", ":ChatvimNewRight<CR>", opts)
