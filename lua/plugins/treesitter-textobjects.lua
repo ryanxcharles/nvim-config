@@ -47,46 +47,46 @@ return {
 
       -- Required for nvim-treesitter-textobjects
       textobjects = {
-        select = {
-          enable = true,
-          lookahead = true, -- Automatically jump forward to textobj if cursor is outside
-          keymaps = {
-            -- Define a custom text object for markdown fenced code blocks
-            ["ix"] = {
-              query = "@codeblock.inner",
-              desc = "Select inside markdown code block",
-            },
-            ["ax"] = {
-              query = "@codeblock.outer",
-              desc = "Select around markdown code block",
-            },
-            -- ["if"] = {
-            --   query = "@function.inner",
-            --   desc = "Select inside function (TypeScript, etc.)",
-            -- },
-            -- ["af"] = {
-            --   query = "@function.outer",
-            --   desc = "Select around function (TypeScript, etc.)",
-            -- },
-            -- ["ik"] = {
-            --   query = "@class.inner",
-            --   desc = "Select inside class (TypeScript, etc.)",
-            -- },
-            -- ["ak"] = {
-            --   query = "@class.outer",
-            --   desc = "Select around class (TypeScript, etc.)",
-            -- },
-          },
-          -- Optionally, configure selection modes or other settings
-          selection_modes = {
-            ["@codeblock.inner"] = "V", -- Use linewise visual mode for inner selection
-            ["@codeblock.outer"] = "V", -- Use linewise visual mode for outer selection
-            ["@function.inner"] = "V",
-            ["@function.outer"] = "V",
-            ["@class.inner"] = "V",
-            ["@class.outer"] = "V",
-          },
-        },
+        -- select = {
+        --   enable = true,
+        --   lookahead = true, -- Automatically jump forward to textobj if cursor is outside
+        --   keymaps = {
+        --     -- Define a custom text object for markdown fenced code blocks
+        --     ["ix"] = {
+        --       query = "@codeblock.inner",
+        --       desc = "Select inside markdown code block",
+        --     },
+        --     ["ax"] = {
+        --       query = "@codeblock.outer",
+        --       desc = "Select around markdown code block",
+        --     },
+        --     -- ["if"] = {
+        --     --   query = "@function.inner",
+        --     --   desc = "Select inside function (TypeScript, etc.)",
+        --     -- },
+        --     -- ["af"] = {
+        --     --   query = "@function.outer",
+        --     --   desc = "Select around function (TypeScript, etc.)",
+        --     -- },
+        --     -- ["ik"] = {
+        --     --   query = "@class.inner",
+        --     --   desc = "Select inside class (TypeScript, etc.)",
+        --     -- },
+        --     -- ["ak"] = {
+        --     --   query = "@class.outer",
+        --     --   desc = "Select around class (TypeScript, etc.)",
+        --     -- },
+        --   },
+        --   -- Optionally, configure selection modes or other settings
+        --   selection_modes = {
+        --     ["@codeblock.inner"] = "V", -- Use linewise visual mode for inner selection
+        --     ["@codeblock.outer"] = "V", -- Use linewise visual mode for outer selection
+        --     ["@function.inner"] = "V",
+        --     ["@function.outer"] = "V",
+        --     ["@class.inner"] = "V",
+        --     ["@class.outer"] = "V",
+        --   },
+        -- },
         move = {
           enable = true,
           set_jumps = true, -- Add to jump list for navigation history
