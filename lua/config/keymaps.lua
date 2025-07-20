@@ -12,20 +12,20 @@ vim.api.nvim_set_keymap("n", ";l", ":wincmd l<CR>", opts)
 vim.api.nvim_set_keymap("n", ";k", ":wincmd k<CR>", opts)
 vim.api.nvim_set_keymap("n", ";j", ":wincmd j<CR>", opts)
 
--- Scroll down by 25% of the window height
-vim.api.nvim_set_keymap(
-  "n",
-  "<Leader>j",
-  ":lua vim.cmd('normal! ' .. math.floor(vim.fn.winheight(0) * 0.25) .. 'jzz')<CR>",
-  opts
-)
--- Scroll up by 25% of the window height
-vim.api.nvim_set_keymap(
-  "n",
-  "<Leader>k",
-  ":lua vim.cmd('normal! ' .. math.floor(vim.fn.winheight(0) * 0.25) .. 'kzz')<CR>",
-  opts
-)
+-- -- Scroll down by 25% of the window height
+-- vim.api.nvim_set_keymap(
+--   "n",
+--   "<Leader>j",
+--   ":lua vim.cmd('normal! ' .. math.floor(vim.fn.winheight(0) * 0.25) .. 'jzz')<CR>",
+--   opts
+-- )
+-- -- Scroll up by 25% of the window height
+-- vim.api.nvim_set_keymap(
+--   "n",
+--   "<Leader>k",
+--   ":lua vim.cmd('normal! ' .. math.floor(vim.fn.winheight(0) * 0.25) .. 'kzz')<CR>",
+--   opts
+-- )
 
 -- close hidden buffers.
 function CloseHiddenBuffers()
