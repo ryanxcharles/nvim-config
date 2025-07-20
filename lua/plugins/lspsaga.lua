@@ -5,6 +5,10 @@ return {
     "nvim-tree/nvim-web-devicons", -- optional
   },
   config = function()
-    require("lspsaga").setup({})
+    require("lspsaga").setup({
+      ui = {
+        code_action = "",
+      },
+    })
   end,
 }
