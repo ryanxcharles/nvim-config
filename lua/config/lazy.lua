@@ -21,7 +21,7 @@ require("lazy").setup({
 
     -- override lazyvim with chatvim.lazy
     -- { "chatvim/LazyVim", import = "lazyvim.plugins" },
-    { dir = "~/dev/LazyVim", name = "LazyVim", import = "lazyvim.plugins" },
+    { "earthbucks/LazyVim", import = "lazyvim.plugins" },
 
     -- import/override with your plugins
     { import = "plugins" },
