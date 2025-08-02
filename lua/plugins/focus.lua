@@ -1,22 +1,22 @@
 return {
-  "nvim-focus/focus.nvim",
-  version = "*",
-  config = function()
-    -- require("focus").setup({})
-    require("focus").setup({
-      enable = true,
-      autoresize = {
-        -- enable = false, -- Disable resizing if you only want highlighting
-        minwidth = 90, -- Minimum width for the focused window
-      },
-      ui = {
-        cursorline = true, -- Highlight cursor line in active window
-        -- colorcolumn = false,
-        -- signcolumn = true,
-      },
-    })
-    -- Custom highlight for active vs inactive windows
-    vim.api.nvim_set_hl(0, "FocusCurrent", { bg = "#454545", bold = true }) -- Lighter active bg
-    vim.api.nvim_set_hl(0, "FocusInactive", { bg = "#252525" }) -- Darker inactive bg
-  end,
+  -- "nvim-focus/focus.nvim",
+  -- version = "*",
+  -- config = function()
+  --   -- require("focus").setup({})
+  --   require("focus").setup({
+  --     enable = true,
+  --     autoresize = {
+  --       -- enable = false, -- Disable resizing if you only want highlighting
+  --       minwidth = 40, -- Minimum width for the focused window
+  --     },
+  --     ui = {
+  --       cursorline = true, -- Highlight cursor line in active window
+  --       -- colorcolumn = false,
+  --       -- signcolumn = true,
+  --     },
+  --   })
+  --   -- Custom highlight for active vs inactive windows
+  --   vim.api.nvim_set_hl(0, "FocusCurrent", { bg = "#454545", bold = true }) -- Lighter active bg
+  --   vim.api.nvim_set_hl(0, "FocusInactive", { bg = "#252525" }) -- Darker inactive bg
+  -- end,
 }

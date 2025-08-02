@@ -1,0 +1,40 @@
+return {
+  -- {
+  --   "anuvyklack/windows.nvim",
+  --   dependencies = {
+  --     "anuvyklack/middleclass", -- Required dependency for windows.nvim
+  --     "anuvyklack/animation.nvim", -- Optional, for smooth resizing animations
+  --   },
+  --   config = function()
+  --     vim.o.winwidth = 60 -- Minimum width for inactive windows
+  --     vim.o.winminwidth = 60 -- Minimum width when resizing
+  --     vim.o.equalalways = false -- Prevent auto-equalizing window sizes
+  --
+  --     require("windows").setup({
+  --       autowidth = {
+  --         enable = true, -- Automatically widen active window
+  --         winwidth = 5, -- Add 5 columns to active window width (adjustable)
+  --         filetype = { -- Override for specific filetypes if needed
+  --           help = 2,
+  --         },
+  --       },
+  --       ignore = { -- Ignore certain windows from auto-width
+  --         buftype = { "quickfix" },
+  --         filetype = { "NvimTree", "neo-tree", "undotree", "gundo" },
+  --       },
+  --       animation = {
+  --         enable = true, -- Enable smooth resizing animations (requires animation.nvim)
+  --         duration = 300, -- Animation duration in milliseconds
+  --         fps = 30, -- Frames per second for animation
+  --         easing = "in_out_sine", -- Animation easing function
+  --       },
+  --     })
+  --
+  --     -- Optional: Keymappings for windows.nvim commands
+  --     vim.keymap.set("n", "<C-w>z", "<Cmd>WindowsMaximize<CR>", { desc = "Maximize current window" })
+  --     vim.keymap.set("n", "<C-w>_", "<Cmd>WindowsMaximizeVertically<CR>", { desc = "Maximize vertically" })
+  --     vim.keymap.set("n", "<C-w>|", "<Cmd>WindowsMaximizeHorizontally<CR>", { desc = "Maximize horizontally" })
+  --     vim.keymap.set("n", "<C-w>=", "<Cmd>WindowsEqualize<CR>", { desc = "Equalize windows" })
+  --   end,
+  -- },
+}
