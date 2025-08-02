@@ -7,7 +7,7 @@ return {
       enable = true,
       autoresize = {
         -- enable = false, -- Disable resizing if you only want highlighting
-        minwidth = 80, -- Minimum width for the focused window
+        minwidth = 90, -- Minimum width for the focused window
       },
       ui = {
         cursorline = true, -- Highlight cursor line in active window
