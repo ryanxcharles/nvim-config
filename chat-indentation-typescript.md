@@ -220,3 +220,140 @@ complex nesting in your code pattern.
 Try Solution 1 first, and let me know if that resolves the indentation issue!
 
 # === USER ===
+
+the option i chose is to disable treesitter indentation for typescript and
+typescriptreact files. that worked. however, i wonder, is there some way to fix
+treesitter? how can such a popular tool be broken for something so important?
+
+# === ASSISTANT ===
+
+You're absolutely right to be frustrated! This is indeed a surprisingly common
+issue with such a fundamental feature. Here's what's happening and what you can
+do about it:
+
+## Why Tree-sitter Indentation is "Broken"
+
+Tree-sitter indentation isn't technically broken—it's **incomplete**. Here's
+why:
+
+1. **Complex Language Patterns**: Your code has method chaining in object
+   literals with arrow functions and generics. Tree-sitter's indentation queries
+   need explicit rules for every syntactic pattern.
+
+2. **Community-Maintained**: Tree-sitter indentation rules are maintained by the
+   community, not the core Tree-sitter team. TypeScript is particularly complex.
+
+3. **Query-Based System**: Unlike traditional indenters that use heuristics,
+   Tree-sitter uses explicit queries. If a pattern isn't covered, it fails.
+
+## How to Actually Fix Tree-sitter
+
+If you want to contribute to fixing this (and help thousands of other
+developers), here's how:
+
+### 1. Find the TypeScript Indentation Queries
+
+```bash
+# Find where your Tree-sitter queries are stored
+:echo stdpath('data') . '/lazy/nvim-treesitter/queries/typescript/indents.scm'
+```
+
+### 2. Debug the Issue
+
+Add this to your config to see what Tree-sitter is doing:
+
+```lua
+-- Debug tree-sitter indentation
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = { "typescript" },
+  callback = function()
+    -- This will show you the syntax tree
+    vim.keymap.set("n", "<leader>ti", "<cmd>InspectTree<cr>", { buffer = true })
+    -- This will show indentation debugging
+    vim.keymap.set("n", "<leader>td", function()
+      local row = vim.api.nvim_win_get_cursor(0)[1]
+      print("Indent for line " .. row .. ": " .. vim.fn.indent(row))
+    end, { buffer = true })
+  end,
+})
+```
+
+### 3. The Actual Fix Location
+
+The issue is likely in the Tree-sitter TypeScript grammar's indentation queries.
+You can:
+
+**Option A: Local Fix**
+
+```bash
+# Copy the queries locally to modify them
+mkdir -p ~/.config/nvim/queries/typescript/
+cp "$(nvim --headless -c 'echo stdpath("data")' -c 'qa' 2>&1)/lazy/nvim-treesitter/queries/typescript/indents.scm" ~/.config/nvim/queries/typescript/
+```
+
+Then edit `~/.config/nvim/queries/typescript/indents.scm` to add rules for
+method chaining in objects.
+
+**Option B: Contribute Upstream** The real fix should go to:
+https://github.com/tree-sitter/tree-sitter-typescript
+
+### 4. What the Fix Might Look Like
+
+The indentation query probably needs something like:
+
+```scheme
+; Method chaining in object literals
+(object
+  (pair
+    value: (call_expression
+      function: (member_expression) @indent.begin))) @indent.end
+
+; Function expressions in object methods  
+(object
+  (pair
+    value: (arrow_function) @indent.begin)) @indent.end
+```
+
+## Why This Happens to Popular Tools
+
+This is actually a common pattern in open-source:
+
+1. **Core vs. Periphery**: Tree-sitter core is rock-solid, but language-specific
+   features like indentation are "periphery"
+2. **Maintainer Bandwidth**: The Tree-sitter team focuses on the parser, not
+   every language's edge cases
+3. **TypeScript Complexity**: TypeScript is one of the most syntactically
+   complex languages Tree-sitter supports
+
+## Better Alternatives
+
+If you want Tree-sitter parsing but better indentation:
+
+```lua
+-- Use tree-sitter for syntax highlighting, but vim's built-in for indentation
+{
+  "nvim-treesitter/nvim-treesitter",
+  opts = {
+    highlight = { enable = true },
+    indent = { 
+      enable = true,
+      disable = { "typescript", "typescriptreact", "javascript", "javascriptreact" }
+    },
+  },
+}
+
+-- Then use vim's built-in TypeScript indentation
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = { "typescript", "typescriptreact" },
+  callback = function()
+    vim.opt_local.cindent = true
+    vim.opt_local.cinoptions = "j1,(0,ws,Ws,g0"
+  end,
+})
+```
+
+The frustrating truth is that for complex languages like TypeScript, traditional
+indentation engines (like VSCode's) often work better than Tree-sitter's
+query-based approach. Your solution to disable it was the right call!
+
+# === USER ===
