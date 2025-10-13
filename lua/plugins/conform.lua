@@ -53,20 +53,6 @@ return {
         args = { "-" }, -- reads from stdin / writes to stdout
         stdin = true,
       },
-      biome = {
-        command = "biome",
-        args = function(self, ctx)
-          local config_path = find_file_in_file_parents("biome.json", ctx.filename)
-          return {
-            "format",
-            "--config-path",
-            config_path,
-            "--stdin-file-path",
-            ctx.filename,
-          }
-        end,
-        stdin = true,
-      },
       dprint = {
         command = "dprint",
         args = function(self, ctx)
