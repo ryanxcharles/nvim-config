@@ -204,37 +204,6 @@ require("lazy").setup({
         capabilities = require("cmp_nvim_lsp").default_capabilities(),
       })
 
-      lspconfig.biome.setup({
-        on_attach = function(client, bufnr)
-          -- Format on save (disabled for now)
-        end,
-        cmd = { "biome", "lsp-proxy" },
-        filetypes = {
-          "javascript",
-          "javascriptreact",
-          "json",
-          "jsonc",
-          "typescript",
-          "typescript.tsx",
-          "typescriptreact",
-          "astro",
-          "svelte",
-          "vue",
-          "css",
-        },
-        root_dir = lspconfig.util.root_pattern("biome.json"),
-        settings = {
-          biome = {
-            diagnostics = {
-              enable = true, -- Enable linting diagnostics
-            },
-            format = {
-              enable = true, -- Enable auto-formatting if desired
-            },
-          },
-        },
-      })
-
       lspconfig.tailwindcss.setup({
         on_attach = function(client, bufnr)
           -- Add any additional LSP settings or keybindings for Tailwind here

@@ -1,5 +1,6 @@
 return {
   "github/copilot.vim",
+  enabled = false,
   config = function()
     -- Vim sets .env files to filetype "sh" by default, but we don't want to
     -- disable copilot for .sh files, just .env. so we rename .env files to
