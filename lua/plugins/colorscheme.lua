@@ -1,6 +1,6 @@
 return {
-  "earthbucks/LazyVim",
-  opts = {
-    -- colorscheme = "catppuccin",
-  },
+  -- "earthbucks/LazyVim",
+  -- opts = {
+  --   -- colorscheme = "catppuccin",
+  -- },
 }

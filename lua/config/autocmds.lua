@@ -44,3 +44,11 @@ vim.api.nvim_set_hl(
   -- { fg = "#ffffff", bg = "#14161b", bold = false }
   { fg = "#ffffff", bg = "NONE", bold = false }
 ) -- Non-selected tabs
+
+-- Disable nvim-cmp completions for markdown files
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "markdown",
+  callback = function()
+    require("cmp").setup.buffer({ enabled = false })
+  end,
+})
